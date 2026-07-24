@@ -1,4 +1,4 @@
-# Open Design Cloud for Codex
+# Open Design Cloud plugin for Codex
 
 This package installs an independent `open-design-cloud` plugin in Codex Desktop and Codex CLI. Its bundled default runtime is the remote Vela service presented to users as Open Design Cloud; Local and Local BYOK remain explicit, separately installed options.
 

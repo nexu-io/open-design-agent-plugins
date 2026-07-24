@@ -28,7 +28,7 @@ here.
 
 - Marketplace: `open-design`
 - Plugin: `open-design-cloud`
-- Version: `0.1.0`
+- Version: `0.1.1`
 - Host: Codex only
 - Runtime: remote Open Design Cloud (Vela) MCP
 - Local Codex and Local BYOK: explicit, separate Open Design registrations; not
@@ -59,7 +59,11 @@ boundaries.
 
 ## Source and release boundary
 
-`plugins/open-design-cloud/` and `.agents/plugins/marketplace.json` were
+Host-specific payloads use `plugins/<host>/<plugin-name>/`. The current Codex
+payload is `plugins/codex/open-design-cloud/`; future Claude or Gemini packages
+can live beside `codex/` without mixing incompatible host manifests.
+
+`plugins/codex/open-design-cloud/` and `.agents/plugins/marketplace.json` were
 materialized by Open Design's `tools-pack codex-cloud-plugin candidate`
 generator. Make product changes and red specs in the Open Design repository,
 then generate and validate a fresh candidate. Do not hand-fork the generated

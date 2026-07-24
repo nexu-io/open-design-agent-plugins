@@ -12,7 +12,7 @@ Record host and distribution as independent dimensions:
 | `hostProduct` | `codex_desktop`, `codex_cli`, `claude_code`, `other`, `unknown` | Which agent host loaded or used the plugin |
 | `distributionMechanism` | `public_directory`, `git_marketplace`, `local_path`, `workspace_bundle`, `unknown` | How the plugin package was obtained |
 | `publisherClass` | `open_design_first_party`, `third_party`, `unknown` | Whether the distribution source is owned by Open Design |
-| `pluginVersion` | `0.1.0` | Immutable plugin payload version |
+| `pluginVersion` | `0.1.1` | Immutable plugin payload version |
 
 A GitHub repository installation is not a host. For example:
 

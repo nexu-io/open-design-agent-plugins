@@ -1,7 +1,7 @@
 {
   "schemaVersion": "open-design-codex-cloud-package/v1",
   "name": "open-design-cloud",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minimumCodexCliVersion": "0.144.6",
   "defaultMode": "cloud",
   "mcpServer": "open-design-cloud",

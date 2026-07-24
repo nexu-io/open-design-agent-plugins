@@ -106,7 +106,7 @@ Never report "Cloud works" when only package installation was verified.
 
 - Product code, OAuth, billing, artifact generation, and telemetry services
   belong in the Open Design and Vela repositories.
-- Treat `plugins/open-design-cloud/` and
+- Treat `plugins/codex/open-design-cloud/` and
   `.agents/plugins/marketplace.json` as generated distribution payloads.
 - Never expose or commit API keys, OAuth tokens, Codex auth state, plugin
   caches, logs, or test artifacts.
@@ -130,6 +130,13 @@ Enter only when the user asks to refresh, validate, or release the package.
 5. Replace only reviewed generated files and refresh provenance.
 6. Run the plugin validator and isolated Codex add/install/remove smoke.
 7. Keep changes unpushed unless the user separately authorizes publication.
+
+## Host directory convention
+
+Portable payloads live at `plugins/<host>/<plugin-name>/`. The supported
+Codex payload is `plugins/codex/open-design-cloud/`. Add `plugins/claude/` or
+`plugins/gemini/` only when a validated package for that host exists; do not
+copy Codex manifests into another host directory or create empty placeholders.
 
 The current `release-manifest.json` marks the source as
 `dirty-local-candidate`; it is suitable for local testing, not public release.

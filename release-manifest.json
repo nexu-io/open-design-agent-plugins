@@ -13,28 +13,29 @@
     "gitSource": "nexu-io/open-design-agent-plugins",
     "gitRef": "main",
     "manifest": ".agents/plugins/marketplace.json",
-    "sha256": "d5f6adf93ba2f7e797c8d5deaa1cc0bad7ba9b5a7610113360f694657cd9b8ee"
+    "sha256": "2b507450f40751d90d38e5d85c49c01c61dc0900144070d840ad405700f4acb1"
   },
   "plugin": {
     "name": "open-design-cloud",
-    "version": "0.1.0",
-    "path": "plugins/open-design-cloud",
-    "contentListSha256": "e774a7cba5b4a64d78d326f2ca23c68944d0638b3a801da5301d542fbaf90cdb"
+    "version": "0.1.1",
+    "path": "plugins/codex/open-design-cloud",
+    "contentListSha256": "4a329c8477e1a9cc5c10503de82847f2d1a61c8a8c3fc61f1f4f8856a018ae39"
   },
   "source": {
     "repository": "https://github.com/nexu-io/open-design",
     "commit": "1d845bb66214a51ba9ce089a8046aa5e816df242",
     "treeState": "dirty-local-candidate"
   },
-  "generatedAt": "2026-07-24T09:26:23Z",
+  "generatedAt": "2026-07-24T10:04:20Z",
   "validation": {
-    "validatedAt": "2026-07-24T09:52:33Z",
+    "validatedAt": "2026-07-24T10:04:20Z",
     "codexCliVersion": "0.144.6",
     "pluginCreatorValidator": "passed",
     "pluginRuntimeTests": "16 passed",
     "candidateGeneratorTests": "5 passed",
     "agentFirstEntrypointSmoke": "passed-local-candidate",
-    "gitMarketplaceInstallSmoke": "passed",
+    "gitMarketplaceInstallSmoke": "pending-host-layout-push",
+    "hostScopedLayout": "passed-local-codex-install",
     "isolatedMarketplaceInstallAndRemove": "passed",
     "mcpRegistration": "passed",
     "cloudOAuthRuntime": "not-run-external-endpoint"

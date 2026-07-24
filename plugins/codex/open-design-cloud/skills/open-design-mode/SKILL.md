@@ -1,6 +1,6 @@
 ---
 name: open-design-mode
-description: Route Open Design generation requests between the default Cloud service and an explicitly selected local Open Design installation without silent fallback or secret handling.
+description: Route Codex-hosted Open Design generation requests between the default Cloud service and an explicitly selected local installation without silent fallback or secret handling.
 ---
 
 # Open Design execution mode

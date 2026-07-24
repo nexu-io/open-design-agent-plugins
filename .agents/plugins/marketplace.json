@@ -8,7 +8,7 @@
       "name": "open-design-cloud",
       "source": {
         "source": "local",
-        "path": "./plugins/open-design-cloud"
+        "path": "./plugins/codex/open-design-cloud"
       },
       "policy": {
         "installation": "AVAILABLE",
