@@ -12,7 +12,7 @@ Record host and distribution as independent dimensions:
 | `hostProduct` | `codex_desktop`, `codex_cli`, `claude_code`, `other`, `unknown` | Which agent host loaded or used the plugin |
 | `distributionMechanism` | `public_directory`, `git_marketplace`, `local_path`, `workspace_bundle`, `unknown` | How the plugin package was obtained |
 | `publisherClass` | `open_design_first_party`, `third_party`, `unknown` | Whether the distribution source is owned by Open Design |
-| `pluginVersion` | `0.1.1` | Immutable plugin payload version |
+| `pluginVersion` | `0.2.0` | Immutable plugin payload version |
 
 A GitHub repository installation is not a host. For example:
 
@@ -34,14 +34,14 @@ query string.
 
 - `install`: authoritative channel/provider receipt that a package was
   installed.
-- `oauth_success`: Cloud authorization completed.
-- `plugin_activation`: first successful protected Cloud operation for a
-  consented account.
+- `cloud_sign_in_success`: Vela authorization completed through Open Design.
+- `plugin_activation`: first successful protected Cloud operation through the
+  local MCP for a consented account.
 - `task_start` / `artifact_success`: product funnel stages.
 
-Do not infer install count from OAuth, MCP initialization, manifest discovery,
-or activation. GitHub clone/view/download statistics are also not equivalent to
-plugin installs.
+Do not infer install count from Vela sign-in, local MCP initialization,
+manifest discovery, or activation. GitHub clone/view/download statistics are
+also not equivalent to plugin installs.
 
 If Codex, Claude Code, or a future marketplace does not expose trustworthy
 install receipts, keep that channel's install count unknown. A runtime may send

@@ -1,87 +1,82 @@
 ---
 name: open-design-mode
-description: Route Codex-hosted Open Design generation requests between the default Cloud service and an explicitly selected local installation without silent fallback or secret handling.
+description: Create Open Design artifacts through the local Open Design MCP, using remote Vela/AMR by default and Local Codex or BYOK only when explicitly selected.
 ---
 
 # Open Design execution mode
 
-Use this workflow whenever a user asks the Open Design plugin to create or continue an artifact.
+Use this workflow whenever a user asks the Open Design Cloud plugin to create
+or continue an artifact.
+
+## Required local boundary
+
+All modes use the independently registered local `open-design` MCP server. The
+plugin does not include an MCP transport and does not call a remote MCP domain.
+
+If `open-design` is unavailable, explain that Open Design must be installed and
+running. Ask the user to install or repair the Codex MCP registration from Open
+Design Settings → MCP server or by running `od mcp install codex`. Do not invent
+a localhost URL or run the macOS `/usr/bin/od` utility.
 
 ## Choose the mode
 
-Cloud is the default mode. Use the `open-design-cloud` tools unless the user explicitly asks to use a local Open Design installation.
+Cloud is the default mode. It uses the local Open Design daemon and bundled
+Vela CLI to reach the remote Vela/AMR service. Local Codex and BYOK are
+available only when the user explicitly selects them.
 
-Local Codex is a separate, optional mode. It runs the local `codex` CLI with
-the authentication already owned by `codex login`; it does not use OpenCode
-and does not accept an OpenAI API key through Open Design. Use it only when all
-of the following are true:
+Never switch modes because authentication, balance, transport, or generation
+failed. When the user explicitly switches modes, start a new execution context
+and request identifier. Reuse only the human-readable confirmed brief; never
+repeat its signed machine envelope.
 
-1. The user explicitly chose Local.
-2. The independently registered `open-design` MCP server is available.
-3. Its tools can reach the running Open Design daemon.
-4. `list_agents` reports the `codex` agent as available and authenticated.
+## Cloud workflow
 
-If Local was requested but `open-design` is unavailable, explain that Open Design must be running and ask the user to install the local MCP registration from Open Design Settings or by running `od mcp install codex`. Do not change MCP configuration yourself unless the user explicitly asks you to perform that installation.
+1. Call `collect_brief` on the `open-design` MCP server with the requested
+   artifact type and a concise project title.
+2. Let the user complete the rendered Open Design brief card. Use the readable
+   confirmed summary returned by the card; do not display or ask the user to
+   paste a signed confirmation token.
+3. Call `list_agents` and require the exact `amr` agent.
+4. Check `get_active_context` or list/create the target project.
+5. Call `start_run` with `agent: "amr"`. Do not substitute `codex`,
+   `opencode`, `byok-opencode`, or another runtime.
+6. Poll `get_run` until it reaches a terminal state and return the supplied
+   preview or Studio link.
 
-If the `codex` agent is missing, ask the user to install Codex CLI. If it is
-installed but `authStatus` is `missing` or `unknown`, ask the user to run
-`codex login` in their own terminal and then rescan agents. Do not ask for,
-copy, or save the user's OpenAI credential.
-
-BYOK is an optional Local mode backed by a secure daemon-owned credential
-profile. Use it only when the user explicitly chose BYOK and the independently
-registered `open-design` MCP server is available. The Cloud plugin and MCP
-tools never receive a raw provider credential.
-
-Never ask the user to paste an API key into chat, a command argument, an
-environment example, a manifest, an MCP tool argument, or a plaintext file.
-If the user has no profile, tell them to save one locally with the Open Design
-Settings UI or pipe it to `od byok save ... --api-key-stdin` in their own
-terminal. Do not solicit, transcribe, or repeat the key.
-
-## Preserve execution boundaries
-
-- Never switch modes because Cloud authentication, balance, transport, or runtime failed.
-- Never treat Local as a retry of a Cloud task.
-- When the user explicitly switches modes, start a new execution context and request identifier. Do not reuse Cloud billing, idempotency, project, or run identifiers in Local.
-- Tell the user which mode will run and who bears the cost before starting generation: Vela/Open Design Cloud for Cloud, the user's local agent/provider for Local.
-- Reuse the confirmed human-readable Brief across modes, but do not expose or repeat its signed machine confirmation envelope.
+If Vela reports that sign-in is required, ask the user to sign in once from the
+running Open Design app and retry. Never request, copy, or store a Vela token in
+chat or plugin files. Tell the user that Vela/Open Design Cloud bears the Cloud
+usage cost.
 
 ## Local Codex workflow
 
-Use the existing `open-design` MCP tools rather than reproducing the generator:
+Use this only when the user explicitly chose Local Codex:
 
-1. Confirm the requested artifact type and readable Brief.
+1. Confirm the requested artifact type and readable brief.
 2. Call `list_agents` and require the exact `codex` agent to be available and
-   authenticated. Do not substitute `opencode`, `byok-opencode`, Cloud, or
-   another local agent.
+   authenticated.
 3. Check `get_active_context` or list/create the target project.
-4. Call `start_run` with `agent: "codex"` only after the user chose Local.
-   Do not include `byokProfile`, `apiKey`, or provider credentials.
-5. Poll `get_run` until it reaches a terminal state.
-6. Return the preview or Studio link supplied by Open Design.
+4. Call `start_run` with `agent: "codex"` and no BYOK profile or credential.
+5. Poll `get_run` and return the preview or Studio link.
 
-Tell the user that Codex/OpenAI bears the Local usage cost. If the local daemon,
-Codex CLI login, or model is unavailable, report that Local diagnostic. Do not
-call Cloud or Local BYOK as a fallback.
+If Codex CLI is missing, ask the user to install it. If its authentication is
+missing or unknown, ask the user to run `codex login` and rescan agents. Local
+Codex does not use OpenCode and Open Design must never receive an OpenAI key.
 
 ## Local BYOK workflow
 
-BYOK is a distinct explicit mode, not a fallback for Cloud or ordinary Local:
+BYOK is a separate explicit mode, not a fallback:
 
-1. Confirm the requested artifact type and readable Brief.
-2. Call `list_byok_profiles` on the `open-design` MCP server.
-3. If no configured profile is available, direct the user to the Settings UI
-   or the stdin-only CLI setup command. Never ask for the credential.
-4. Ask the user to choose a profile when more than one configured profile is
-   available; the profile id and masked key tail are non-secret references.
+1. Confirm the requested artifact type and readable brief.
+2. Call `list_byok_profiles`.
+3. If no profile exists, direct the user to Open Design Settings or the
+   stdin-only `od byok save --api-key-stdin` command.
+4. If multiple profiles exist, ask the user to choose by non-secret profile id.
 5. Check `get_active_context` or list/create the target project.
-6. Call `start_run` with only `byokProfile: "<profile-id>"`. Do not include an
-   `apiKey`, provider token, or credential-shaped value in any MCP argument.
-7. Poll `get_run` until it reaches a terminal state and return the supplied
-   preview or Studio link.
+6. Call `start_run` with only `byokProfile: "<profile-id>"`.
+7. Poll `get_run` and return the preview or Studio link.
 
-Tell the user that their selected provider account bears BYOK usage costs. If
-the secure credential backend, profile, local daemon, OpenCode runtime, or model
-is unavailable, report that Local BYOK diagnostic and stop. Never retry through
-Cloud or another profile automatically.
+Never ask for or include a raw API key, provider token, or credential-shaped
+value in chat, an MCP argument, a manifest, an environment example, or a
+plaintext file. Tell the user that their selected provider account bears BYOK
+usage costs.

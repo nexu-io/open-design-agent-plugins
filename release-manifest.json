@@ -17,27 +17,30 @@
   },
   "plugin": {
     "name": "open-design-cloud",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "path": "plugins/codex/open-design-cloud",
-    "contentListSha256": "4a329c8477e1a9cc5c10503de82847f2d1a61c8a8c3fc61f1f4f8856a018ae39"
+    "contentListSha256": "cdd870a602bffc364eebd3bbd0a960d7a266c0d64cdff9265e4610e37053c744"
   },
   "source": {
     "repository": "https://github.com/nexu-io/open-design",
-    "commit": "1d845bb66214a51ba9ce089a8046aa5e816df242",
-    "treeState": "dirty-local-candidate"
+    "commit": "fb7e620abc8c1a48d088aa5aed54593ff287ab3d",
+    "treeState": "clean-commit"
   },
-  "generatedAt": "2026-07-24T10:04:20Z",
+  "generatedAt": "2026-07-24T12:50:59Z",
   "validation": {
-    "validatedAt": "2026-07-24T10:06:26Z",
+    "validatedAt": "2026-07-24T12:50:59Z",
     "codexCliVersion": "0.144.6",
     "pluginCreatorValidator": "passed",
-    "pluginRuntimeTests": "16 passed",
-    "candidateGeneratorTests": "5 passed",
+    "pluginRuntimeTests": "67 passed",
+    "candidateGeneratorTests": "253 passed",
+    "daemonBriefAppTests": "2 passed",
     "agentFirstEntrypointSmoke": "passed-local-candidate",
-    "gitMarketplaceInstallSmoke": "passed",
-    "hostScopedLayout": "passed-local-and-git-codex-install",
+    "gitMarketplaceInstallSmoke": "pending-0.2.0-push",
+    "hostScopedLayout": "passed-local-codex-install",
     "isolatedMarketplaceInstallAndRemove": "passed",
-    "mcpRegistration": "passed",
-    "cloudOAuthRuntime": "not-run-external-endpoint"
+    "mcpRegistration": "passed-local-open-design-stdio",
+    "briefApp": "passed-local-mcp",
+    "velaRuntime": "passed-auth-required-boundary",
+    "cloudGeneration": "not-run-requires-vela-login"
   }
 }

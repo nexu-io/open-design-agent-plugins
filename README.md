@@ -1,76 +1,82 @@
 # Open Design Agent Plugins
 
 This is an agent-first, lightweight distribution repository for Open Design
-plugins. The first supported host is Codex Desktop / Codex CLI.
+plugins. Codex Desktop / Codex CLI is the first supported host.
 
 ## Give this repository to an agent
 
-The agent entrypoint is [`AGENTS.md`](AGENTS.md). Give Codex this single
-instruction:
+Give Codex this instruction:
 
 > Read
 > `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`
-> and install Open Design Cloud into Codex. Follow the Install lane, verify the
-> plugin and MCP registration, do not run OAuth login, and report the result.
+> and install Open Design Cloud into Codex. Follow the Install lane, preserve
+> existing configuration, connect the plugin to the local `open-design` MCP,
+> and report any Open Design or Vela-login prerequisite.
 
-The Agent will preflight the Codex version, preserve unrelated configuration,
-install from this marketplace, verify the registered remote MCP, and tell you
-to start a new task. A reusable version of the prompt is in
+The detailed entrypoint is [`AGENTS.md`](AGENTS.md); a reusable prompt is in
 [`AGENT_PROMPT.md`](AGENT_PROMPT.md).
 
-The product implementation remains in
-[`nexu-io/open-design`](https://github.com/nexu-io/open-design). This repository
-contains only the portable plugin payload, Codex marketplace metadata, and
-distribution documentation. Do not implement Open Design or Vela business logic
-here.
+## Architecture
+
+The distribution plugin is intentionally small and contains no MCP server:
+
+```text
+Codex plugin
+  -> local open-design MCP
+  -> local Open Design daemon
+  -> bundled Vela CLI
+  -> remote Vela / AMR service
+```
+
+Users install and run Open Design, register its local MCP with Codex, and sign
+in to Vela once from Open Design. The plugin's default Cloud workflow uses
+`agent: "amr"` and the local MCP's interactive `collect_brief` card. There is
+no remote MCP dependency and no Codex-side Vela credential.
 
 ## Current package
 
 - Marketplace: `open-design`
 - Plugin: `open-design-cloud`
-- Version: `0.1.1`
+- Version: `0.2.0`
 - Host: Codex only
-- Runtime: remote Open Design Cloud (Vela) MCP
-- Local Codex and Local BYOK: explicit, separate Open Design registrations; not
-  bundled fallbacks
+- MCP: local `open-design` stdio registration
+- Cloud runtime: remote Vela/AMR via Open Design's bundled Vela CLI
+- Optional modes: Local Codex and Local BYOK, explicit and never fallbacks
 
 ## Direct installation
 
 ```bash
 codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
 codex plugin add open-design-cloud@open-design --json
-codex plugin list --json
-codex mcp get open-design-cloud --json
 ```
 
-Start a new Codex task after installation so that the plugin skills and MCP
-registration are picked up. Cloud login is a separate runtime step:
+Then start Open Design and install its Codex MCP registration from
+Settings → MCP server, or use the `od mcp install codex` command supplied by the
+running Open Design installation. Verify:
 
 ```bash
-codex mcp login open-design-cloud
+codex plugin list --json
+codex mcp get open-design --json
 ```
 
-The login command requires the real Open Design Cloud OAuth endpoints to be
-available. Package installation can be tested independently.
+Sign in to Vela from Open Design when Cloud generation requests it. Start a new
+Codex task after plugin installation, then invoke `@open-design-cloud`.
 
-See [docs/INSTALL_CODEX.md](docs/INSTALL_CODEX.md) for the isolated smoke test
-and [docs/TELEMETRY.md](docs/TELEMETRY.md) for install/activation measurement
-boundaries.
+See [docs/INSTALL_CODEX.md](docs/INSTALL_CODEX.md) for isolated validation and
+[docs/TELEMETRY.md](docs/TELEMETRY.md) for measurement boundaries.
 
 ## Source and release boundary
 
-Host-specific payloads use `plugins/<host>/<plugin-name>/`. The current Codex
-payload is `plugins/codex/open-design-cloud/`; future Claude or Gemini packages
-can live beside `codex/` without mixing incompatible host manifests.
+Product implementation remains in
+[`nexu-io/open-design`](https://github.com/nexu-io/open-design). This repository
+contains only the portable payload, marketplace metadata, release provenance,
+and installation documentation.
 
-`plugins/codex/open-design-cloud/` and `.agents/plugins/marketplace.json` were
-materialized by Open Design's `tools-pack codex-cloud-plugin candidate`
-generator. Make product changes and red specs in the Open Design repository,
-then generate and validate a fresh candidate. Do not hand-fork the generated
-plugin here.
+Open Design product releases do not automatically change this repository.
+Refresh the generated payload only when its plugin manifest, skill, package
+contract, minimum Codex version, or installation behavior changes. Pure product
+fixes behind the stable local MCP contract require a new Open Design release,
+not necessarily a new distribution-plugin version.
 
-The canonical distribution repository is
-[`nexu-io/open-design-agent-plugins`](https://github.com/nexu-io/open-design-agent-plugins).
-Publication still requires an explicit owner-approved commit and push; the
-current local candidate must not be treated as published merely because the
-remote repository exists.
+Host-specific payloads use `plugins/<host>/<plugin-name>/`; future Claude or
+Gemini packages can live beside `codex/` without mixing host manifests.

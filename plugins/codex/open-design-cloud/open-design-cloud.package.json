@@ -1,10 +1,20 @@
 {
-  "schemaVersion": "open-design-codex-cloud-package/v1",
+  "schemaVersion": "open-design-codex-cloud-package/v2",
   "name": "open-design-cloud",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "minimumCodexCliVersion": "0.144.6",
   "defaultMode": "cloud",
-  "mcpServer": "open-design-cloud",
+  "mcpServer": "open-design",
+  "localMcp": {
+    "installCommand": "od mcp install codex",
+    "discovery": "/api/mcp/install-info"
+  },
+  "cloudRuntime": {
+    "agent": "amr",
+    "authentication": "vela-login",
+    "apiUrl": "https://amr-api.open-design.ai",
+    "linkUrl": "https://amr-link.open-design.ai"
+  },
   "customUiResources": [
     {
       "uri": "ui://open-design-cloud/artifact-card-v1.html",
@@ -13,7 +23,7 @@
   ],
   "optionalModes": {
     "localCli": {
-      "status": "separate-installation",
+      "status": "shared-local-mcp",
       "mcpServer": "open-design",
       "installCommand": "od mcp install codex",
       "discovery": "/api/mcp/install-info",

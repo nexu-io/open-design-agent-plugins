@@ -1,6 +1,6 @@
 {
   "name": "open-design-cloud",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Create websites, prototypes, presentations, design systems, images, videos, audio, and documents through Open Design Cloud from Codex.",
   "author": {
     "name": "Open Design",
@@ -18,11 +18,10 @@
     "vela"
   ],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Open Design Cloud",
     "shortDescription": "Create eight artifact types in Open Design Cloud",
-    "longDescription": "Use Codex Desktop or Codex CLI to create and manage Open Design artifacts through the Vela-hosted Open Design Cloud runtime. The default Cloud path is remote and does not require a local Open Design daemon.",
+    "longDescription": "Use Codex Desktop or Codex CLI with a running local Open Design app. Its local MCP provides the interactive brief and sends Cloud generation through the bundled Vela CLI to the remote AMR service.",
     "developerName": "Open Design",
     "category": "Creativity",
     "capabilities": [

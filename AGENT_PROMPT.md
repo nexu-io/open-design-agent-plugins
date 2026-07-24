@@ -1,23 +1,19 @@
 # Agent installation prompt
 
-Use the following instruction in Codex Desktop or Codex CLI:
-
-> Read the `AGENTS.md` at the root of this repository. Install Open Design
-> Cloud into Codex using the **Install into Codex** lane. Verify the installed
-> plugin version and the `open-design-cloud` MCP registration. Preserve all
-> unrelated plugins, marketplaces, MCP servers, and auth state. Do not edit the
-> repository, run OAuth login, publish, push, or start local Open Design
-> services. Report exactly what was installed, what was verified, and what
-> still requires a new task or real Cloud OAuth.
-
-Repository-address prompt:
+Use this instruction in Codex Desktop or Codex CLI:
 
 > Read
-> `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`
-> and install Open Design Cloud into Codex. Follow the Install lane, verify the
-> plugin and MCP registration, do not run OAuth login, and report the result.
+> `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`.
+> Install Open Design Cloud into Codex using the **Install into Codex** lane.
+> Preserve unrelated plugins, marketplaces, MCP servers, and auth state.
+> Connect the plugin to the existing local `open-design` MCP if present. If it
+> is absent, verify that Open Design is installed and running, then use its
+> Settings → MCP server action or its resolved `od mcp install codex` command;
+> never invent a remote MCP URL or a fixed localhost path. Do not perform Vela
+> login, edit source, publish, or push. Report the installed plugin version,
+> local MCP status, and any remaining Open Design/Vela prerequisite.
 
-After the Agent completes installation, start a new Codex task and invoke
-`@open-design-cloud` with a concrete request, for example:
+After installation, sign in to Vela from Open Design if needed, start a new
+Codex task, and invoke:
 
 > @open-design-cloud Create a responsive website for an AI analytics startup.

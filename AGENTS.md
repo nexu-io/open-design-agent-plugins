@@ -8,29 +8,42 @@ Canonical distribution repository:
 
 ## First decide the operation
 
-Choose exactly one lane from the user's request:
+Choose exactly one lane:
 
-1. **Install or set up** — follow "Install into Codex" below. This is the
-   default when the user asks to use, install, try, or set up Open Design Cloud.
-2. **Inspect or explain** — read `README.md`, the marketplace manifest, and the
-   plugin manifest. Do not change Codex configuration.
+1. **Install or set up** — follow "Install into Codex" below.
+2. **Inspect or explain** — read `README.md`, `release-manifest.json`, the
+   marketplace manifest, and the plugin manifest. Do not change configuration.
 3. **Uninstall** — follow `docs/INSTALL_CODEX.md#uninstall`.
-4. **Refresh or release the package** — read "Maintainer lane" below. Never
-   enter this lane merely because the user asked to install.
-5. **Telemetry design** — read `docs/TELEMETRY.md`. Do not infer install counts
-   from runtime activation.
+4. **Refresh or release** — follow "Maintainer lane" below.
+5. **Telemetry design** — read `docs/TELEMETRY.md`.
 
-Do not scan another repository unless the selected lane names it.
+Do not scan the Open Design product repository unless the selected lane
+explicitly requires source refresh or source validation.
+
+## Architecture to preserve
+
+The plugin does not bundle or deploy an MCP server:
+
+```text
+Codex plugin
+  -> local open-design MCP
+  -> running local Open Design
+  -> bundled Vela CLI
+  -> remote Vela / AMR service
+```
+
+Open Design must be installed and running. The user signs in to Vela from Open
+Design; Codex never receives a Vela token. Cloud generation always calls the
+local MCP with `agent: "amr"`. Local Codex and BYOK share that MCP but remain
+explicit modes, never fallbacks.
 
 ## Install into Codex
 
-An explicit request to install or set up the plugin authorizes changes to the
-user's Codex plugin configuration. It does not authorize source edits, Git
-operations, OAuth login, deployment, or publication.
+An explicit request to install or set up authorizes changes to the user's Codex
+plugin and MCP configuration. It does not authorize source edits, Git pushes,
+Vela login, deployment, publication, or deleting unrelated configuration.
 
 ### 1. Preflight
-
-Use the canonical GitHub marketplace source:
 
 ```bash
 OD_AGENT_PLUGIN_SOURCE="nexu-io/open-design-agent-plugins"
@@ -38,105 +51,109 @@ codex --version
 git ls-remote https://github.com/nexu-io/open-design-agent-plugins.git main
 ```
 
-Require Codex CLI `0.144.6` or newer. If `codex` is missing or older, report the
-exact version blocker; do not install unrelated software without authorization.
-If the Git repository is unavailable or its `main` branch does not contain the
-marketplace manifest, report that distribution blocker; do not substitute a
-temporary or personal path.
+Require Codex CLI `0.144.6` or newer. Also require a compatible Open Design
+installation that contains the local MCP brief card and bundled Vela CLI. If
+Open Design is absent, do not substitute a remote MCP URL; report that product
+installation is required before runtime verification.
 
 ### 2. Inspect before mutating
 
 ```bash
 codex plugin marketplace list --json
 codex plugin list --json
+codex mcp get open-design --json
 ```
 
-If `open-design-cloud@open-design` is already installed at the version declared
-in `release-manifest.json`, skip reinstallation and continue to verification.
-If a marketplace named `open-design` already points at a different local path
-or Git source than `nexu-io/open-design-agent-plugins`, stop and report the name
-collision; do not remove or overwrite the user's configured source.
-Do not remove other marketplaces, plugins, or MCP servers.
+The last command may report that the MCP is not installed. If
+`open-design-cloud@open-design` is already at the version declared in
+`release-manifest.json`, do not reinstall it. If marketplace `open-design`
+points at a different source, stop and report the name collision. Never remove
+or overwrite unrelated marketplaces, plugins, MCP servers, or auth state.
 
-### 3. Install
-
-This is a non-default repository marketplace, so register its root explicitly:
+### 3. Install the plugin
 
 ```bash
 codex plugin marketplace add "$OD_AGENT_PLUGIN_SOURCE" --ref main --json
 codex plugin add open-design-cloud@open-design --json
 ```
 
-If the marketplace command reports `alreadyAdded: true`, that is success.
-Do not hand-edit Codex config or copy plugin files into a Codex home.
+`alreadyAdded: true` is success. Do not hand-edit Codex configuration or copy
+plugin files into a Codex home.
 
-### 4. Verify
+### 4. Ensure the local MCP registration
+
+If `codex mcp get open-design --json` already succeeds, preserve it. Otherwise
+Open Design must be running. Ask the user to use Settings → MCP server, or run
+the `od mcp install codex` command supplied by that Open Design installation.
+This command resolves `/api/mcp/install-info`; do not guess a localhost port,
+hard-code a source checkout path, or invoke the unrelated macOS `/usr/bin/od`.
+
+Do not run `codex mcp login`: Vela login belongs in Open Design, not Codex MCP.
+Do not perform the interactive Vela login unless the user separately asks.
+
+### 5. Verify
 
 ```bash
 codex plugin list --json
-codex mcp get open-design-cloud --json
+codex mcp get open-design --json
 ```
 
 Required evidence:
 
 - plugin id `open-design-cloud@open-design`;
 - installed version equals `release-manifest.json`;
-- MCP is enabled;
-- transport is `streamable_http`;
-- URL is `https://mcp.open-design.ai/mcp`;
-- no bearer token or secret is embedded.
+- MCP name is `open-design` and is enabled;
+- transport is stdio with an absolute Open Design launch command;
+- no bearer token, API key, or Vela credential is embedded.
 
-Do not run `codex mcp login open-design-cloud` unless the user explicitly asks
-to authenticate or complete a Cloud runtime smoke. Login is interactive and
-depends on the real Open Design Cloud OAuth service.
+If Open Design is running, a runtime smoke may additionally verify that
+`collect_brief` exposes the versioned MCP Apps resource and `list_agents`
+contains `amr`. An unauthenticated `start_run(..., agent: "amr")` must stop at
+the Vela sign-in boundary, not fall back to another runtime.
 
-### 5. Hand back
+### 6. Hand back
 
-Tell the user:
+Report:
 
 - whether installation was new or already present;
-- installed plugin/version and MCP URL;
-- that they must start a new Codex task to load the plugin snapshot;
-- that they can invoke `@open-design-cloud` and provide a design request;
-- whether OAuth/runtime behavior was tested or remains an external blocker.
+- installed plugin id and version;
+- local MCP identity and whether its runtime was reached;
+- that Vela login is completed from Open Design;
+- that a new Codex task is needed to load the plugin snapshot;
+- whether artifact generation was tested or remains pending login/quota.
 
 Never report "Cloud works" when only package installation was verified.
 
 ## Safety boundaries
 
-- Product code, OAuth, billing, artifact generation, and telemetry services
+- Product code, Vela auth/billing, artifact generation, and runtime telemetry
   belong in the Open Design and Vela repositories.
 - Treat `plugins/codex/open-design-cloud/` and
   `.agents/plugins/marketplace.json` as generated distribution payloads.
-- Never expose or commit API keys, OAuth tokens, Codex auth state, plugin
-  caches, logs, or test artifacts.
-- Cloud is remote; installation does not require starting the Open Design
-  daemon, Electron app, OpenCode, or BYOK.
-- A Cloud failure must not silently fall back to Local Codex or BYOK.
-- Do not change Git remotes, push, publish, deploy, create a PR, or create an
-  issue without explicit authorization.
-- Do not label OAuth success, MCP initialization, GitHub clone/download, or
-  first runtime use as an installation.
+- Never expose or commit credentials, Codex auth state, plugin caches, logs, or
+  smoke-test artifacts.
+- There is no remote MCP dependency or fallback.
+- Do not change Git remotes, push, publish, create a PR, or create an issue
+  without explicit authorization.
 
 ## Maintainer lane
 
-Enter only when the user asks to refresh, validate, or release the package.
+Enter only when the user asks to refresh, validate, or release:
 
 1. Read `README.md`, `release-manifest.json`, and
    `docs/INSTALL_CODEX.md#unpublished-candidate-smoke`.
-2. Validate the source package in the Open Design repository.
+2. Validate the source package at a specific Open Design commit.
 3. Generate a candidate into a new empty directory outside that repository.
-4. Compare it with this repository's generated payload.
-5. Replace only reviewed generated files and refresh provenance.
-6. Run the plugin validator and isolated Codex add/install/remove smoke.
-7. Keep changes unpushed unless the user separately authorizes publication.
+4. Replace only reviewed generated payload files and update provenance.
+   Recompute the payload digest from its root with:
+   `find . -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 | shasum -a 256`.
+5. Run the plugin validator, package tests, isolated Codex install, local MCP
+   brief-card smoke, and AMR auth-boundary smoke.
+6. Clean exact temporary roots and projects.
+7. Keep changes unpushed unless publication was explicitly authorized.
 
 ## Host directory convention
 
-Portable payloads live at `plugins/<host>/<plugin-name>/`. The supported
-Codex payload is `plugins/codex/open-design-cloud/`. Add `plugins/claude/` or
-`plugins/gemini/` only when a validated package for that host exists; do not
-copy Codex manifests into another host directory or create empty placeholders.
-
-The current `release-manifest.json` marks the source as
-`dirty-local-candidate`; it is suitable for local testing, not public release.
+Portable payloads live at `plugins/<host>/<plugin-name>/`. The supported Codex
+payload is `plugins/codex/open-design-cloud/`. Add Claude or Gemini directories
+only when a validated host-specific package exists.

@@ -2,40 +2,41 @@
 
 ## Supported environment
 
-- Codex Desktop or Codex CLI
-- Codex CLI `0.144.6` or newer
-- Current package selector: `open-design-cloud@open-design`
+- Codex Desktop or Codex CLI `0.144.6` or newer
+- A compatible Open Design installation with bundled Vela CLI
+- Plugin selector `open-design-cloud@open-design`
+- Local MCP identity `open-design`
 
 ## Normal Git marketplace install
-
-Register the canonical Git marketplace, then install the plugin:
 
 ```bash
 codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
 codex plugin add open-design-cloud@open-design --json
 ```
 
-Verify the package and its MCP registration:
+Start Open Design. Register its local MCP from Settings → MCP server, or use the
+`od mcp install codex` command supplied by the active installation. This command
+discovers `/api/mcp/install-info`; do not hard-code a port or source path.
 
 ```bash
 codex plugin list --json
-codex mcp get open-design-cloud --json
+codex mcp get open-design --json
 ```
 
 Expected MCP identity:
 
-- Name: `open-design-cloud`
-- Transport: Streamable HTTP
-- URL: `https://mcp.open-design.ai/mcp`
-- Authentication: OAuth on first protected use
+- Name: `open-design`
+- Transport: stdio
+- Command: absolute Open Design Node/CLI launch command
+- Authentication: Vela login remains in Open Design
 
-Start a new Codex task after installation. The current task may keep the plugin
-snapshot it loaded at startup.
+The plugin has no `.mcp.json` and no remote MCP endpoint. Start a new Codex task
+after installation so it loads the new plugin snapshot.
 
 ## Published Git marketplace smoke
 
-Use an empty temporary `CODEX_HOME` so normal Codex configuration, OAuth state,
-and plugins are untouched:
+An isolated `CODEX_HOME` can verify package installation without touching normal
+Codex state:
 
 ```bash
 OD_CODEX_PLUGIN_TEST_HOME="$(mktemp -d /tmp/open-design-plugin-codex-home.XXXXXX)"
@@ -44,21 +45,26 @@ CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace add \
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin add \
   open-design-cloud@open-design --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
-CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex mcp get \
-  open-design-cloud --json
-CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin remove \
-  open-design-cloud@open-design --json
-CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace remove \
-  open-design --json
 ```
 
-Delete only the exact temporary directory printed or assigned above after
-checking its path. Do not point cleanup at a normal Codex home.
+Plugin installation alone does not create the independent local MCP. For a full
+smoke, start an isolated Open Design runtime and run its resolved
+`od mcp install codex` operation with the same isolated `CODEX_HOME`, then:
+
+```bash
+CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex mcp get open-design --json
+```
+
+Verify the local MCP exposes `collect_brief`, the versioned MCP Apps HTML
+resource, and `amr`; then verify an unauthenticated
+`start_run(..., agent: "amr")` stops at the Vela sign-in boundary. Remove the
+smoke project and stop the isolated runtime.
+
+Delete only the exact temporary roots created by the smoke.
 
 ## Unpublished candidate smoke
 
-Maintainers may validate working-tree changes before publication by substituting
-the current repository root for the Git source:
+Maintainers may substitute the current repository root for the Git source:
 
 ```bash
 OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
@@ -68,32 +74,27 @@ CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace add \
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin add \
   open-design-cloud@open-design --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
-CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex mcp get \
-  open-design-cloud --json
 ```
 
-This local-source path is test evidence only. Never present it to users as the
-normal installation route.
+This local source is test evidence only, never the normal user installation
+route.
 
 ## Agent completion report
 
-An installation agent should report all of:
+Report all of:
 
 - whether the marketplace/plugin was newly installed or already present;
-- the installed plugin id and version;
-- the MCP transport and URL;
-- whether OAuth/runtime testing was requested and completed;
+- installed plugin id and version;
+- whether local `open-design` MCP registration exists and was reachable;
+- whether brief-card and AMR runtime checks were completed;
+- whether Vela login or quota remains;
 - the new-task requirement.
-
-Package installation alone is not evidence that OAuth or Cloud generation is
-healthy.
 
 ## Authentication boundary
 
-`codex mcp login open-design-cloud` is not an installation test. It depends on
-the real Open Design Cloud OAuth discovery, authorization, and redirect
-endpoints. Record external endpoint failures separately; do not change the
-package or silently fall back to Local Codex/BYOK.
+Do not run `codex mcp login`. Vela sign-in is completed through Open Design and
+is stored by the local Vela CLI integration. Codex uses that login state only
+through the local MCP.
 
 ## Uninstall
 
@@ -102,5 +103,6 @@ codex plugin remove open-design-cloud@open-design --json
 codex plugin marketplace remove open-design --json
 ```
 
-Removing the Cloud plugin must not remove the separately registered local
-`open-design` MCP server or any Open Design application data.
+Removing the plugin does not remove the independently registered `open-design`
+MCP or Open Design application data. Remove those only on a separate explicit
+request.
