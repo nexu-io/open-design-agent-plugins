@@ -32,7 +32,7 @@
   },
   "generatedAt": "2026-07-24T16:57:42Z",
   "validation": {
-    "validatedAt": "2026-07-24T16:57:42Z",
+    "validatedAt": "2026-07-24T16:59:25Z",
     "codexCliVersion": "0.144.6",
     "pluginCreatorValidator": "passed",
     "skillValidator": "passed",
@@ -41,7 +41,7 @@
     "velaOAuthE2E": "3 passed",
     "velaAgentTests": "passed",
     "agentFirstEntrypointSmoke": "passed-local-0.3.0-candidate",
-    "gitMarketplaceInstallSmoke": "pending-0.3.0-main-push",
+    "gitMarketplaceInstallSmoke": "passed-0.3.0-main",
     "hostScopedLayout": "passed-local-codex-install",
     "isolatedMarketplaceInstallAndRemove": "passed",
     "mcpRegistration": "passed-local-open-design-stdio",
