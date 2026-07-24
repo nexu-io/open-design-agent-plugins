@@ -11,7 +11,8 @@
 Register this non-default local marketplace, then install the plugin:
 
 ```bash
-codex plugin marketplace add /Users/cheems/cjj_project/open-design-agent-plugins --json
+OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
+codex plugin marketplace add "$OD_AGENT_PLUGIN_REPO" --json
 codex plugin add open-design-cloud@open-design --json
 ```
 
@@ -39,8 +40,9 @@ and plugins are untouched:
 
 ```bash
 OD_CODEX_PLUGIN_TEST_HOME="$(mktemp -d /tmp/open-design-plugin-codex-home.XXXXXX)"
+OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace add \
-  /Users/cheems/cjj_project/open-design-agent-plugins --json
+  "$OD_AGENT_PLUGIN_REPO" --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin add \
   open-design-cloud@open-design --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
@@ -54,6 +56,19 @@ CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace remove \
 
 Delete only the exact temporary directory printed or assigned above after
 checking its path. Do not point cleanup at a normal Codex home.
+
+## Agent completion report
+
+An installation agent should report all of:
+
+- whether the marketplace/plugin was newly installed or already present;
+- the installed plugin id and version;
+- the MCP transport and URL;
+- whether OAuth/runtime testing was requested and completed;
+- the new-task requirement.
+
+Package installation alone is not evidence that OAuth or Cloud generation is
+healthy.
 
 ## Authentication boundary
 

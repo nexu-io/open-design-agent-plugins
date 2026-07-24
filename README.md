@@ -1,7 +1,21 @@
 # Open Design Agent Plugins
 
-This is the lightweight distribution repository for Open Design agent plugins.
-The first supported host is Codex Desktop / Codex CLI.
+This is an agent-first, lightweight distribution repository for Open Design
+plugins. The first supported host is Codex Desktop / Codex CLI.
+
+## Give this repository to an agent
+
+The agent entrypoint is [`AGENTS.md`](AGENTS.md). For the current local checkout,
+you can give Codex this single instruction:
+
+> Read `/Users/cheems/cjj_project/open-design-agent-plugins/AGENTS.md` and
+> install Open Design Cloud into Codex. Follow the Install lane, verify the
+> plugin and MCP registration, do not run OAuth login, and report the result.
+
+The Agent will preflight the Codex version, preserve unrelated configuration,
+install from this marketplace, verify the registered remote MCP, and tell you
+to start a new task. A reusable version of the prompt is in
+[`AGENT_PROMPT.md`](AGENT_PROMPT.md).
 
 The product implementation remains in
 [`nexu-io/open-design`](https://github.com/nexu-io/open-design). This repository
@@ -19,10 +33,11 @@ here.
 - Local Codex and Local BYOK: explicit, separate Open Design registrations; not
   bundled fallbacks
 
-## Local installation
+## Direct local installation
 
 ```bash
-codex plugin marketplace add /Users/cheems/cjj_project/open-design-agent-plugins --json
+OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
+codex plugin marketplace add "$OD_AGENT_PLUGIN_REPO" --json
 codex plugin add open-design-cloud@open-design --json
 codex plugin list --json
 codex mcp get open-design-cloud --json
