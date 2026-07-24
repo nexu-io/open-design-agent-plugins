@@ -28,14 +28,14 @@
   },
   "generatedAt": "2026-07-24T10:04:20Z",
   "validation": {
-    "validatedAt": "2026-07-24T10:04:20Z",
+    "validatedAt": "2026-07-24T10:06:26Z",
     "codexCliVersion": "0.144.6",
     "pluginCreatorValidator": "passed",
     "pluginRuntimeTests": "16 passed",
     "candidateGeneratorTests": "5 passed",
     "agentFirstEntrypointSmoke": "passed-local-candidate",
-    "gitMarketplaceInstallSmoke": "pending-host-layout-push",
-    "hostScopedLayout": "passed-local-codex-install",
+    "gitMarketplaceInstallSmoke": "passed",
+    "hostScopedLayout": "passed-local-and-git-codex-install",
     "isolatedMarketplaceInstallAndRemove": "passed",
     "mcpRegistration": "passed",
     "cloudOAuthRuntime": "not-run-external-endpoint"
