@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "open-design-agent-plugin-distribution/v1",
+  "repositoryName": "open-design-agent-plugins",
+  "distributionStatus": "local-development",
+  "supportedHosts": [
+    "codex"
+  ],
+  "marketplace": {
+    "name": "open-design",
+    "manifest": ".agents/plugins/marketplace.json",
+    "sha256": "d5f6adf93ba2f7e797c8d5deaa1cc0bad7ba9b5a7610113360f694657cd9b8ee"
+  },
+  "plugin": {
+    "name": "open-design-cloud",
+    "version": "0.1.0",
+    "path": "plugins/open-design-cloud",
+    "contentListSha256": "d5679ca6397349fe02305e5dbaf9a2ad4e1ad95ac2ca0447db9b4c8d74e65c0e"
+  },
+  "source": {
+    "repository": "https://github.com/nexu-io/open-design",
+    "localPath": "/Users/cheems/cjj_project/open-design",
+    "commit": "1d845bb66214a51ba9ce089a8046aa5e816df242",
+    "treeState": "dirty-local-candidate"
+  },
+  "generatedAt": "2026-07-24T09:26:23Z",
+  "validation": {
+    "validatedAt": "2026-07-24T09:28:14Z",
+    "codexCliVersion": "0.144.6",
+    "pluginCreatorValidator": "passed",
+    "pluginRuntimeTests": "16 passed",
+    "candidateGeneratorTests": "5 passed",
+    "isolatedMarketplaceInstallAndRemove": "passed",
+    "mcpRegistration": "passed",
+    "cloudOAuthRuntime": "not-run-external-endpoint"
+  }
+}

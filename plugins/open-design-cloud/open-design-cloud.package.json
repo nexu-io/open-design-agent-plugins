@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "open-design-codex-cloud-package/v1",
+  "name": "open-design-cloud",
+  "version": "0.1.0",
+  "minimumCodexCliVersion": "0.144.6",
+  "defaultMode": "cloud",
+  "mcpServer": "open-design-cloud",
+  "customUiResources": [
+    {
+      "uri": "ui://open-design-cloud/artifact-card-v1.html",
+      "mediaType": "text/html;profile=mcp-app"
+    }
+  ],
+  "optionalModes": {
+    "localCli": {
+      "status": "separate-installation",
+      "mcpServer": "open-design",
+      "installCommand": "od mcp install codex",
+      "discovery": "/api/mcp/install-info",
+      "agent": "codex",
+      "authentication": "codex-login",
+      "loginCommand": "codex login"
+    },
+    "byok": {
+      "status": "secure-profile",
+      "mcpServer": "open-design",
+      "setupCommand": "od byok save --api-key-stdin",
+      "discovery": "/api/byok/profiles"
+    }
+  }
+}

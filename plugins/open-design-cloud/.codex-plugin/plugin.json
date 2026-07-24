@@ -1,0 +1,42 @@
+{
+  "name": "open-design-cloud",
+  "version": "0.1.0",
+  "description": "Create websites, prototypes, presentations, design systems, images, videos, audio, and documents through Open Design Cloud from Codex.",
+  "author": {
+    "name": "Open Design",
+    "email": "support@open-design.ai",
+    "url": "https://open-design.ai/"
+  },
+  "homepage": "https://open-design.ai/",
+  "repository": "https://github.com/nexu-io/open-design",
+  "license": "Apache-2.0",
+  "keywords": [
+    "design",
+    "codex",
+    "mcp",
+    "open-design-cloud",
+    "vela"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Open Design Cloud",
+    "shortDescription": "Create eight artifact types in Open Design Cloud",
+    "longDescription": "Use Codex Desktop or Codex CLI to create and manage Open Design artifacts through the Vela-hosted Open Design Cloud runtime. The default Cloud path is remote and does not require a local Open Design daemon.",
+    "developerName": "Open Design",
+    "category": "Creativity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://open-design.ai/",
+    "privacyPolicyURL": "https://open-design.ai/privacy/",
+    "termsOfServiceURL": "https://open-design.ai/terms/",
+    "defaultPrompt": [
+      "Create a responsive website with Open Design Cloud.",
+      "Turn this product idea into an interactive prototype.",
+      "Create a presentation with a coherent visual system."
+    ],
+    "brandColor": "#111111"
+  }
+}
