@@ -2,7 +2,7 @@
 
 This package teaches Codex Desktop and Codex CLI how to create artifacts with
 Open Design Cloud. The plugin does not ship an MCP server. It reuses the local
-`open-design` MCP registration owned by a running Open Design app:
+`open-design` MCP registration owned by an installed Open Design runtime:
 
 ```text
 Codex plugin
@@ -12,9 +12,11 @@ Codex plugin
   -> remote Vela / AMR service
 ```
 
-Install and run Open Design first. In Open Design, sign in to Vela once and
-install the Codex MCP registration from Settings → MCP server, or run the
-equivalent command exposed by the active Open Design installation:
+Install Open Design first. Its GUI does not need to remain open: the packaged
+MCP registration starts the signed runtime headlessly whenever its daemon is
+stopped. Install the registration from Settings → MCP server, with the packaged
+`--headless --mcp-install codex` operation, or with the equivalent command
+exposed by the active Open Design installation:
 
 ```bash
 od mcp install codex
@@ -31,22 +33,27 @@ or namespace changes.
 Cloud is the default mode. The local MCP provides `collect_brief` and its MCP
 Apps selection card, then Open Design starts generation with `agent: "amr"`.
 Vela owns remote authentication, quota, and generation. If the local MCP is
-unavailable, start Open Design and repair its Codex MCP registration. If Vela
-reports that sign-in is required, sign in from Open Design and retry; never
-paste a Vela credential into chat.
+unavailable, repair its Codex registration from the installed runtime. If Vela
+reports that sign-in is required, the plugin calls `start_vela_login` and
+`get_vela_login_status` to complete browser authorization without requiring the
+Open Design GUI; never paste a Vela credential into chat.
+
+One confirmed action receives one stable `requestId`. Transport retries reuse
+the exact request, and `get_run` only polls. If Vela reports insufficient
+balance, the plugin preserves the original run, shows the recharge URL, waits
+for explicit user confirmation, and resumes with the same request plus
+`resume: true`.
 
 Cloud failures never switch to Local Codex or BYOK automatically.
 
 ## Local candidate install
 
-Generate a disposable marketplace outside the repository and test it with an
-isolated Codex home:
+Test the repository itself with an isolated Codex home:
 
 ```bash
-OD_CODEX_MARKETPLACE_ROOT="$(mktemp -d /tmp/open-design-codex-marketplace.XXXXXX)"
 OD_CODEX_TEST_HOME="$(mktemp -d /tmp/open-design-codex-home.XXXXXX)"
-pnpm tools-pack codex-cloud-plugin candidate --output "$OD_CODEX_MARKETPLACE_ROOT"
-CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin marketplace add "$OD_CODEX_MARKETPLACE_ROOT" --json
+OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
+CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin marketplace add "$OD_AGENT_PLUGIN_REPO" --json
 CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin add open-design-cloud@open-design --json
 CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin list --json
 ```

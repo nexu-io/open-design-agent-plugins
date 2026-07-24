@@ -1,7 +1,7 @@
 {
   "name": "open-design-cloud",
-  "version": "0.2.0",
-  "description": "Create websites, prototypes, presentations, design systems, images, videos, audio, and documents through Open Design Cloud from Codex.",
+  "version": "0.3.0",
+  "description": "Create Open Design artifacts from Codex through Vela Cloud, Local Codex, or secure BYOK.",
   "author": {
     "name": "Open Design",
     "email": "support@open-design.ai",
@@ -20,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Open Design Cloud",
-    "shortDescription": "Create eight artifact types in Open Design Cloud",
-    "longDescription": "Use Codex Desktop or Codex CLI with a running local Open Design app. Its local MCP provides the interactive brief and sends Cloud generation through the bundled Vela CLI to the remote AMR service.",
+    "shortDescription": "Create Open Design artifacts in three explicit modes",
+    "longDescription": "Use Codex Desktop or Codex CLI with an installed Open Design runtime. Its local MCP starts headlessly, provides an interactive brief, and runs Vela Cloud by default or Local Codex and secure BYOK when explicitly selected.",
     "developerName": "Open Design",
     "category": "Creativity",
     "capabilities": [

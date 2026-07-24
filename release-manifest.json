@@ -17,30 +17,39 @@
   },
   "plugin": {
     "name": "open-design-cloud",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "path": "plugins/codex/open-design-cloud",
-    "contentListSha256": "cdd870a602bffc364eebd3bbd0a960d7a266c0d64cdff9265e4610e37053c744"
+    "contentListSha256": "c7025ced0aa09943c3587db7c579b1d446642c0d85b82fde7b6b526ccac007dd"
   },
   "source": {
     "repository": "https://github.com/nexu-io/open-design",
-    "commit": "fb7e620abc8c1a48d088aa5aed54593ff287ab3d",
+    "commit": "13dc6c5d464df6e802a2661e90c8acfad8e94609",
     "treeState": "clean-commit"
   },
-  "generatedAt": "2026-07-24T12:50:59Z",
+  "velaCompatibility": {
+    "repository": "https://github.com/powerformer/vela",
+    "commit": "0dc0182c31c72dcdc34c0733f4bed942b83bce88"
+  },
+  "generatedAt": "2026-07-24T16:57:42Z",
   "validation": {
-    "validatedAt": "2026-07-24T12:53:07Z",
+    "validatedAt": "2026-07-24T16:57:42Z",
     "codexCliVersion": "0.144.6",
     "pluginCreatorValidator": "passed",
-    "pluginRuntimeTests": "67 passed",
-    "candidateGeneratorTests": "253 passed",
-    "daemonBriefAppTests": "2 passed",
-    "agentFirstEntrypointSmoke": "passed-local-candidate",
-    "gitMarketplaceInstallSmoke": "passed-0.2.0-main",
+    "skillValidator": "passed",
+    "openDesignFocusedTests": "122 passed",
+    "velaApiTests": "556 passed",
+    "velaOAuthE2E": "3 passed",
+    "velaAgentTests": "passed",
+    "agentFirstEntrypointSmoke": "passed-local-0.3.0-candidate",
+    "gitMarketplaceInstallSmoke": "pending-0.3.0-main-push",
     "hostScopedLayout": "passed-local-codex-install",
     "isolatedMarketplaceInstallAndRemove": "passed",
     "mcpRegistration": "passed-local-open-design-stdio",
-    "briefApp": "passed-local-mcp",
-    "velaRuntime": "passed-auth-required-boundary",
-    "cloudGeneration": "not-run-requires-vela-login"
+    "briefApp": "passed-real-codex-desktop-card",
+    "requestDeduplication": "passed-response-loss-and-restart",
+    "rechargeResume": "passed-same-logical-run",
+    "cloudGeneration": "passed-real-local-mcp-vela",
+    "localCodexGeneration": "passed-real-codex-login",
+    "secureByokGeneration": "passed-real-openrouter-profile"
   }
 }

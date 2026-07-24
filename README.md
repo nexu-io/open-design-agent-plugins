@@ -28,16 +28,17 @@ Codex plugin
   -> remote Vela / AMR service
 ```
 
-Users install and run Open Design, register its local MCP with Codex, and sign
-in to Vela once from Open Design. The plugin's default Cloud workflow uses
-`agent: "amr"` and the local MCP's interactive `collect_brief` card. There is
-no remote MCP dependency and no Codex-side Vela credential.
+Users install Open Design and register its local MCP with Codex. The signed
+runtime starts headlessly when needed; its Electron window does not need to
+stay open. The plugin's default Cloud workflow uses `agent: "amr"`, browser
+login through narrow local MCP tools, and the interactive `collect_brief` card.
+There is no remote MCP dependency and no Codex-side Vela credential.
 
 ## Current package
 
 - Marketplace: `open-design`
 - Plugin: `open-design-cloud`
-- Version: `0.2.0`
+- Version: `0.3.0`
 - Host: Codex only
 - MCP: local `open-design` stdio registration
 - Cloud runtime: remote Vela/AMR via Open Design's bundled Vela CLI
@@ -50,17 +51,20 @@ codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
 codex plugin add open-design-cloud@open-design --json
 ```
 
-Then start Open Design and install its Codex MCP registration from
-Settings → MCP server, or use the `od mcp install codex` command supplied by the
-running Open Design installation. Verify:
+Then install its Codex MCP registration from Settings → MCP server, through the
+signed packaged `--headless --mcp-install codex` operation, or with the
+`od mcp install codex` command supplied by that Open Design installation.
+Verify:
 
 ```bash
 codex plugin list --json
 codex mcp get open-design --json
 ```
 
-Sign in to Vela from Open Design when Cloud generation requests it. Start a new
-Codex task after plugin installation, then invoke `@open-design-cloud`.
+When Cloud generation needs Vela login, the plugin can open browser
+authorization through the local MCP without opening the Open Design GUI. Start
+a new Codex task after plugin installation, then invoke
+`@open-design-cloud`.
 
 See [docs/INSTALL_CODEX.md](docs/INSTALL_CODEX.md) for isolated validation and
 [docs/TELEMETRY.md](docs/TELEMETRY.md) for measurement boundaries.

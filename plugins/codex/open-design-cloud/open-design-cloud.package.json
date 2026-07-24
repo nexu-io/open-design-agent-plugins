@@ -1,13 +1,32 @@
 {
   "schemaVersion": "open-design-codex-cloud-package/v2",
   "name": "open-design-cloud",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "minimumCodexCliVersion": "0.144.6",
   "defaultMode": "cloud",
   "mcpServer": "open-design",
   "localMcp": {
     "installCommand": "od mcp install codex",
-    "discovery": "/api/mcp/install-info"
+    "packagedInstallArgs": [
+      "--headless",
+      "--mcp-install",
+      "codex"
+    ],
+    "discovery": "/api/mcp/install-info",
+    "headlessBootstrap": true,
+    "requiredTools": [
+      "collect_brief",
+      "confirm_brief",
+      "get_vela_login_status",
+      "start_vela_login",
+      "start_run",
+      "get_run"
+    ],
+    "requestContract": {
+      "requestId": "stable-per-confirmed-action",
+      "transportRetry": "reuse-identical-request",
+      "rechargeResume": "reuse-identical-request-with-resume-true"
+    }
   },
   "cloudRuntime": {
     "agent": "amr",
@@ -29,13 +48,16 @@
       "discovery": "/api/mcp/install-info",
       "agent": "codex",
       "authentication": "codex-login",
-      "loginCommand": "codex login"
+      "loginCommand": "codex login",
+      "requestId": "required"
     },
     "byok": {
       "status": "secure-profile",
       "mcpServer": "open-design",
       "setupCommand": "od byok save --api-key-stdin",
-      "discovery": "/api/byok/profiles"
+      "discovery": "/api/byok/profiles",
+      "credentialReference": "non-secret-profile-id",
+      "requestId": "required"
     }
   }
 }

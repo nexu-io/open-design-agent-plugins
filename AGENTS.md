@@ -32,10 +32,12 @@ Codex plugin
   -> remote Vela / AMR service
 ```
 
-Open Design must be installed and running. The user signs in to Vela from Open
-Design; Codex never receives a Vela token. Cloud generation always calls the
-local MCP with `agent: "amr"`. Local Codex and BYOK share that MCP but remain
-explicit modes, never fallbacks.
+Open Design must be installed. Its Electron GUI need not be open: the registered
+local MCP starts the signed packaged runtime headlessly when needed. Vela
+browser login is initiated through narrow Open Design MCP tools; Codex never
+receives a Vela token. Cloud generation always calls the local MCP with
+`agent: "amr"`. Local Codex and BYOK share that MCP but remain explicit modes,
+never fallbacks.
 
 ## Install into Codex
 
@@ -53,8 +55,10 @@ git ls-remote https://github.com/nexu-io/open-design-agent-plugins.git main
 
 Require Codex CLI `0.144.6` or newer. Also require a compatible Open Design
 installation that contains the local MCP brief card and bundled Vela CLI. If
-Open Design is absent, do not substitute a remote MCP URL; report that product
-installation is required before runtime verification.
+Open Design is absent, ask for confirmation before opening the official
+`https://open-design.ai/download/` page. The user completes the operating
+system's signed-app installation. Do not substitute a remote MCP URL, silently
+download an installer, or execute an unverified install script.
 
 ### 2. Inspect before mutating
 
@@ -82,10 +86,12 @@ plugin files into a Codex home.
 
 ### 4. Ensure the local MCP registration
 
-If `codex mcp get open-design --json` already succeeds, preserve it. Otherwise
-Open Design must be running. Ask the user to use Settings → MCP server, or run
-the `od mcp install codex` command supplied by that Open Design installation.
-This command resolves `/api/mcp/install-info`; do not guess a localhost port,
+If `codex mcp get open-design --json` already succeeds, preserve it. Otherwise,
+resolve the installed signed Open Design application and use its packaged
+`--headless --mcp-install codex` operation. The Settings → MCP server action or
+the `od mcp install codex` command supplied by an active installation are
+equivalent supported paths. The resulting registration discovers the daemon
+and restarts it headlessly when stopped. Do not guess a localhost port,
 hard-code a source checkout path, or invoke the unrelated macOS `/usr/bin/od`.
 
 Do not run `codex mcp login`: Vela login belongs in Open Design, not Codex MCP.
@@ -120,7 +126,9 @@ Report:
 - local MCP identity and whether its runtime was reached;
 - that Vela login is completed from Open Design;
 - that a new Codex task is needed to load the plugin snapshot;
-- whether artifact generation was tested or remains pending login/quota.
+- whether artifact generation was tested or remains pending login/quota;
+- that one confirmed generation uses one stable request id and that retries
+  never silently change mode.
 
 Never report "Cloud works" when only package installation was verified.
 

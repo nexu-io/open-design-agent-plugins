@@ -3,7 +3,8 @@
 ## Supported environment
 
 - Codex Desktop or Codex CLI `0.144.6` or newer
-- A compatible Open Design installation with bundled Vela CLI
+- A compatible Open Design installation with bundled Vela CLI; its GUI does
+  not need to be open
 - Plugin selector `open-design-cloud@open-design`
 - Local MCP identity `open-design`
 
@@ -14,9 +15,16 @@ codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
 codex plugin add open-design-cloud@open-design --json
 ```
 
-Start Open Design. Register its local MCP from Settings → MCP server, or use the
-`od mcp install codex` command supplied by the active installation. This command
-discovers `/api/mcp/install-info`; do not hard-code a port or source path.
+If Open Design is not installed, ask before opening the official
+`https://open-design.ai/download/` page. The user completes the operating
+system's signed-app installation. Do not silently download or execute an
+installer.
+
+Register the local MCP from Settings → MCP server, use the installed signed
+application's `--headless --mcp-install codex` operation, or use the
+`od mcp install codex` command supplied by an active installation. The
+registration starts the packaged runtime headlessly when its daemon is stopped;
+do not hard-code a port or source path.
 
 ```bash
 codex plugin list --json
@@ -28,7 +36,8 @@ Expected MCP identity:
 - Name: `open-design`
 - Transport: stdio
 - Command: absolute Open Design Node/CLI launch command
-- Authentication: Vela login remains in Open Design
+- Authentication: Vela login remains in Open Design and is initiated through
+  `start_vela_login` when required
 
 The plugin has no `.mcp.json` and no remote MCP endpoint. Start a new Codex task
 after installation so it loads the new plugin snapshot.
@@ -55,10 +64,13 @@ smoke, start an isolated Open Design runtime and run its resolved
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex mcp get open-design --json
 ```
 
-Verify the local MCP exposes `collect_brief`, the versioned MCP Apps HTML
-resource, and `amr`; then verify an unauthenticated
-`start_run(..., agent: "amr")` stops at the Vela sign-in boundary. Remove the
-smoke project and stop the isolated runtime.
+Verify the local MCP exposes `collect_brief`, `confirm_brief`,
+`start_vela_login`, `get_vela_login_status`, `start_run`, and `get_run`, plus
+the versioned MCP Apps HTML resource and `amr`. Verify that a repeated
+`start_run` with identical arguments and `requestId` resolves to the same
+logical run. An unauthenticated Cloud request must stop at the Vela sign-in
+boundary, not switch modes. Remove the smoke project and stop the isolated
+runtime.
 
 Delete only the exact temporary roots created by the smoke.
 
@@ -92,9 +104,22 @@ Report all of:
 
 ## Authentication boundary
 
-Do not run `codex mcp login`. Vela sign-in is completed through Open Design and
-is stored by the local Vela CLI integration. Codex uses that login state only
-through the local MCP.
+Do not run `codex mcp login`. Vela sign-in is initiated through Open Design's
+`start_vela_login` MCP tool and stored by the local Vela CLI integration. Codex
+uses that login state only through the local MCP; opening the Open Design GUI is
+not required.
+
+## Run and billing recovery contract
+
+For each confirmed brief and explicitly chosen mode, generate one stable
+`requestId`. Call `start_run` once and use only `get_run` for polling. A lost
+response is retried with identical arguments and the same `requestId`.
+
+When Vela reports insufficient balance, keep the original project, brief,
+request id, and run. Show the supplied recharge URL and wait for the user to
+confirm top-up. Then send the identical request with `resume: true`. Never
+create a second logical run, infer billing locally, or fall back to Local Codex
+or BYOK.
 
 ## Uninstall
 
