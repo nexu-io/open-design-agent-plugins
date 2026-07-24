@@ -10,10 +10,11 @@ Use the following instruction in Codex Desktop or Codex CLI:
 > services. Report exactly what was installed, what was verified, and what
 > still requires a new task or real Cloud OAuth.
 
-For this local checkout, the complete one-line prompt is:
+Repository-address prompt:
 
-> Read `/Users/cheems/cjj_project/open-design-agent-plugins/AGENTS.md` and
-> install Open Design Cloud into Codex. Follow the Install lane, verify the
+> Read
+> `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`
+> and install Open Design Cloud into Codex. Follow the Install lane, verify the
 > plugin and MCP registration, do not run OAuth login, and report the result.
 
 After the Agent completes installation, start a new Codex task and invoke

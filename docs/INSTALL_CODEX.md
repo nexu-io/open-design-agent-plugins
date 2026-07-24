@@ -6,13 +6,12 @@
 - Codex CLI `0.144.6` or newer
 - Current package selector: `open-design-cloud@open-design`
 
-## Normal local install
+## Normal Git marketplace install
 
-Register this non-default local marketplace, then install the plugin:
+Register the canonical Git marketplace, then install the plugin:
 
 ```bash
-OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
-codex plugin marketplace add "$OD_AGENT_PLUGIN_REPO" --json
+codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
 codex plugin add open-design-cloud@open-design --json
 ```
 
@@ -33,16 +32,15 @@ Expected MCP identity:
 Start a new Codex task after installation. The current task may keep the plugin
 snapshot it loaded at startup.
 
-## Isolated smoke test
+## Published Git marketplace smoke
 
 Use an empty temporary `CODEX_HOME` so normal Codex configuration, OAuth state,
 and plugins are untouched:
 
 ```bash
 OD_CODEX_PLUGIN_TEST_HOME="$(mktemp -d /tmp/open-design-plugin-codex-home.XXXXXX)"
-OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace add \
-  "$OD_AGENT_PLUGIN_REPO" --json
+  nexu-io/open-design-agent-plugins --ref main --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin add \
   open-design-cloud@open-design --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
@@ -56,6 +54,26 @@ CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace remove \
 
 Delete only the exact temporary directory printed or assigned above after
 checking its path. Do not point cleanup at a normal Codex home.
+
+## Unpublished candidate smoke
+
+Maintainers may validate working-tree changes before publication by substituting
+the current repository root for the Git source:
+
+```bash
+OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
+OD_CODEX_PLUGIN_TEST_HOME="$(mktemp -d /tmp/open-design-plugin-candidate-home.XXXXXX)"
+CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace add \
+  "$OD_AGENT_PLUGIN_REPO" --json
+CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin add \
+  open-design-cloud@open-design --json
+CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
+CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex mcp get \
+  open-design-cloud --json
+```
+
+This local-source path is test evidence only. Never present it to users as the
+normal installation route.
 
 ## Agent completion report
 

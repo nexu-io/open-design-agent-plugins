@@ -3,6 +3,9 @@
 This repository is designed to be operated by an agent. Codex is the only
 supported host in this revision.
 
+Canonical distribution repository:
+`https://github.com/nexu-io/open-design-agent-plugins`.
+
 ## First decide the operation
 
 Choose exactly one lane from the user's request:
@@ -27,17 +30,19 @@ operations, OAuth login, deployment, or publication.
 
 ### 1. Preflight
 
-Run from this repository:
+Use the canonical GitHub marketplace source:
 
 ```bash
-OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
+OD_AGENT_PLUGIN_SOURCE="nexu-io/open-design-agent-plugins"
 codex --version
-test -f "$OD_AGENT_PLUGIN_REPO/.agents/plugins/marketplace.json"
-test -f "$OD_AGENT_PLUGIN_REPO/plugins/open-design-cloud/.codex-plugin/plugin.json"
+git ls-remote https://github.com/nexu-io/open-design-agent-plugins.git main
 ```
 
 Require Codex CLI `0.144.6` or newer. If `codex` is missing or older, report the
 exact version blocker; do not install unrelated software without authorization.
+If the Git repository is unavailable or its `main` branch does not contain the
+marketplace manifest, report that distribution blocker; do not substitute a
+temporary or personal path.
 
 ### 2. Inspect before mutating
 
@@ -49,8 +54,8 @@ codex plugin list --json
 If `open-design-cloud@open-design` is already installed at the version declared
 in `release-manifest.json`, skip reinstallation and continue to verification.
 If a marketplace named `open-design` already points at a different local path
-or Git source, stop and report the name collision; do not remove or overwrite
-the user's configured source.
+or Git source than `nexu-io/open-design-agent-plugins`, stop and report the name
+collision; do not remove or overwrite the user's configured source.
 Do not remove other marketplaces, plugins, or MCP servers.
 
 ### 3. Install
@@ -58,7 +63,7 @@ Do not remove other marketplaces, plugins, or MCP servers.
 This is a non-default repository marketplace, so register its root explicitly:
 
 ```bash
-codex plugin marketplace add "$OD_AGENT_PLUGIN_REPO" --json
+codex plugin marketplace add "$OD_AGENT_PLUGIN_SOURCE" --ref main --json
 codex plugin add open-design-cloud@open-design --json
 ```
 
@@ -108,7 +113,7 @@ Never report "Cloud works" when only package installation was verified.
 - Cloud is remote; installation does not require starting the Open Design
   daemon, Electron app, OpenCode, or BYOK.
 - A Cloud failure must not silently fall back to Local Codex or BYOK.
-- Do not add a Git remote, push, publish, deploy, create a PR, or create an
+- Do not change Git remotes, push, publish, deploy, create a PR, or create an
   issue without explicit authorization.
 - Do not label OAuth success, MCP initialization, GitHub clone/download, or
   first runtime use as an installation.
@@ -118,14 +123,13 @@ Never report "Cloud works" when only package installation was verified.
 Enter only when the user asks to refresh, validate, or release the package.
 
 1. Read `README.md`, `release-manifest.json`, and
-   `docs/INSTALL_CODEX.md#isolated-smoke-test`.
+   `docs/INSTALL_CODEX.md#unpublished-candidate-smoke`.
 2. Validate the source package in the Open Design repository.
 3. Generate a candidate into a new empty directory outside that repository.
 4. Compare it with this repository's generated payload.
 5. Replace only reviewed generated files and refresh provenance.
 6. Run the plugin validator and isolated Codex add/install/remove smoke.
-7. Keep release work local unless the user separately authorizes a remote or
-   publication.
+7. Keep changes unpushed unless the user separately authorizes publication.
 
 The current `release-manifest.json` marks the source as
 `dirty-local-candidate`; it is suitable for local testing, not public release.

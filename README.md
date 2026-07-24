@@ -5,11 +5,12 @@ plugins. The first supported host is Codex Desktop / Codex CLI.
 
 ## Give this repository to an agent
 
-The agent entrypoint is [`AGENTS.md`](AGENTS.md). For the current local checkout,
-you can give Codex this single instruction:
+The agent entrypoint is [`AGENTS.md`](AGENTS.md). Give Codex this single
+instruction:
 
-> Read `/Users/cheems/cjj_project/open-design-agent-plugins/AGENTS.md` and
-> install Open Design Cloud into Codex. Follow the Install lane, verify the
+> Read
+> `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`
+> and install Open Design Cloud into Codex. Follow the Install lane, verify the
 > plugin and MCP registration, do not run OAuth login, and report the result.
 
 The Agent will preflight the Codex version, preserve unrelated configuration,
@@ -33,11 +34,10 @@ here.
 - Local Codex and Local BYOK: explicit, separate Open Design registrations; not
   bundled fallbacks
 
-## Direct local installation
+## Direct installation
 
 ```bash
-OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
-codex plugin marketplace add "$OD_AGENT_PLUGIN_REPO" --json
+codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
 codex plugin add open-design-cloud@open-design --json
 codex plugin list --json
 codex mcp get open-design-cloud --json
@@ -65,6 +65,8 @@ generator. Make product changes and red specs in the Open Design repository,
 then generate and validate a fresh candidate. Do not hand-fork the generated
 plugin here.
 
-This repository is currently local-only. It has no Git remote and must not be
-pushed until the owner explicitly chooses the public repository and release
-channel.
+The canonical distribution repository is
+[`nexu-io/open-design-agent-plugins`](https://github.com/nexu-io/open-design-agent-plugins).
+Publication still requires an explicit owner-approved commit and push; the
+current local candidate must not be treated as published merely because the
+remote repository exists.
