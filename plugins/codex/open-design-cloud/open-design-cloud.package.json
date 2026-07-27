@@ -1,8 +1,10 @@
 {
-  "schemaVersion": "open-design-codex-cloud-package/v2",
+  "schemaVersion": "open-design-codex-cloud-package/v3",
   "name": "open-design-cloud",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "minimumCodexCliVersion": "0.144.6",
+  "minimumOpenDesignVersion": "0.17.0",
+  "telemetrySchemaVersion": 3,
   "defaultMode": "cloud",
   "mcpServer": "open-design",
   "localMcp": {
@@ -14,14 +16,75 @@
     ],
     "discovery": "/api/mcp/install-info",
     "headlessBootstrap": true,
-    "requiredTools": [
-      "collect_brief",
-      "confirm_brief",
-      "get_vela_login_status",
-      "start_vela_login",
-      "start_run",
-      "get_run"
-    ],
+    "capabilities": {
+      "core": {
+        "requiredTools": [
+          "collect_brief",
+          "confirm_brief",
+          "get_active_context",
+          "list_projects",
+          "create_project",
+          "start_run",
+          "get_run"
+        ]
+      },
+      "cloud": {
+        "requiredTools": [
+          "collect_brief",
+          "confirm_brief",
+          "get_active_context",
+          "list_projects",
+          "create_project",
+          "start_run",
+          "get_run",
+          "get_vela_login_status",
+          "start_vela_login",
+          "list_agents"
+        ]
+      },
+      "localCodex": {
+        "requiredTools": [
+          "collect_brief",
+          "confirm_brief",
+          "get_active_context",
+          "list_projects",
+          "create_project",
+          "start_run",
+          "get_run",
+          "list_agents"
+        ]
+      },
+      "byok": {
+        "requiredTools": [
+          "collect_brief",
+          "confirm_brief",
+          "get_active_context",
+          "list_projects",
+          "create_project",
+          "start_run",
+          "get_run",
+          "list_byok_profiles"
+        ]
+      },
+      "optional": {
+        "tools": [
+          "get_artifact"
+        ],
+        "requiredForDefaultDelivery": false,
+        "capabilityCheck": "before-use"
+      }
+    },
+    "pluginWorkflowContract": {
+      "context": {
+        "id": "open-design-cloud",
+        "version": "0.4.0",
+        "distributionMechanism": "git_marketplace",
+        "publisherClass": "open_design_first_party"
+      },
+      "attributionQuality": "self_reported",
+      "firstObservedTool": "collect_brief",
+      "pluginWorkflowId": "server-issued-stable-per-workflow"
+    },
     "requestContract": {
       "requestId": "stable-per-confirmed-action",
       "transportRetry": "reuse-identical-request",

@@ -54,11 +54,12 @@ git ls-remote https://github.com/nexu-io/open-design-agent-plugins.git main
 ```
 
 Require Codex CLI `0.144.6` or newer. Also require a compatible Open Design
-installation that contains the local MCP brief card and bundled Vela CLI. If
-Open Design is absent, ask for confirmation before opening the official
-`https://open-design.ai/download/` page. The user completes the operating
-system's signed-app installation. Do not substitute a remote MCP URL, silently
-download an installer, or execute an unverified install script.
+installation at version `0.17.0` or newer. That release boundary contains the
+telemetry-v3 Plugin workflow contract, local MCP brief card, and bundled Vela
+CLI. If Open Design is absent or older, ask for confirmation before opening
+the official `https://open-design.ai/download/` page. The user completes the
+operating system's signed-app installation. Do not substitute a remote MCP
+URL, silently download an installer, or execute an unverified install script.
 
 ### 2. Inspect before mutating
 
@@ -108,6 +109,7 @@ Required evidence:
 
 - plugin id `open-design-cloud@open-design`;
 - installed version equals `release-manifest.json`;
+- Open Design satisfies the package's `minimumOpenDesignVersion`;
 - MCP name is `open-design` and is enabled;
 - transport is stdio with an absolute Open Design launch command;
 - no bearer token, API key, or Vela credential is embedded.
@@ -129,6 +131,8 @@ Report:
 - whether artifact generation was tested or remains pending login/quota;
 - that one confirmed generation uses one stable request id and that retries
   never silently change mode.
+- that the first observed Plugin tool establishes one server-issued workflow
+  id which is preserved through terminal delivery.
 
 Never report "Cloud works" when only package installation was verified.
 

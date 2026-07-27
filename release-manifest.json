@@ -1,10 +1,10 @@
 {
-  "schemaVersion": "open-design-agent-plugin-distribution/v1",
+  "schemaVersion": "open-design-agent-plugin-distribution/v2",
   "repositoryName": "open-design-agent-plugins",
   "primaryAudience": "agent",
   "agentEntrypoint": "AGENTS.md",
   "distributionRepository": "https://github.com/nexu-io/open-design-agent-plugins",
-  "distributionStatus": "public-git-candidate",
+  "distributionStatus": "unreleased-candidate",
   "supportedHosts": [
     "codex"
   ],
@@ -17,39 +17,74 @@
   },
   "plugin": {
     "name": "open-design-cloud",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "path": "plugins/codex/open-design-cloud",
-    "contentListSha256": "c7025ced0aa09943c3587db7c579b1d446642c0d85b82fde7b6b526ccac007dd"
+    "contentListSha256": "9dac0c26b6c055b20fee7b2b6ade3b0e8454f745c8da2b5b9fa958ac2ccc5555",
+    "minimumCodexCliVersion": "0.144.6",
+    "minimumOpenDesignVersion": "0.17.0",
+    "telemetrySchemaVersion": 3
   },
   "source": {
     "repository": "https://github.com/nexu-io/open-design",
-    "commit": "13dc6c5d464df6e802a2661e90c8acfad8e94609",
-    "treeState": "clean-commit"
+    "commit": null,
+    "treeState": "pending-compatible-open-design-release"
   },
   "velaCompatibility": {
     "repository": "https://github.com/powerformer/vela",
-    "commit": "0dc0182c31c72dcdc34c0733f4bed942b83bce88"
+    "commit": null,
+    "treeState": "pending-plugin-attribution-release"
   },
-  "generatedAt": "2026-07-24T16:57:42Z",
+  "generatedAt": "2026-07-27T15:24:31Z",
   "validation": {
-    "validatedAt": "2026-07-24T16:59:25Z",
-    "codexCliVersion": "0.144.6",
+    "status": "local-distribution-validated",
+    "validatedAt": "2026-07-27T16:09:39Z",
+    "codexCliVersion": "0.145.0",
+    "packageTests": "5 passed",
+    "distributionValidator": "passed",
     "pluginCreatorValidator": "passed",
     "skillValidator": "passed",
-    "openDesignFocusedTests": "122 passed",
-    "velaApiTests": "556 passed",
-    "velaOAuthE2E": "3 passed",
-    "velaAgentTests": "passed",
-    "agentFirstEntrypointSmoke": "passed-local-0.3.0-candidate",
-    "gitMarketplaceInstallSmoke": "passed-0.3.0-main",
-    "hostScopedLayout": "passed-local-codex-install",
-    "isolatedMarketplaceInstallAndRemove": "passed",
-    "mcpRegistration": "passed-local-open-design-stdio",
-    "briefApp": "passed-real-codex-desktop-card",
-    "requestDeduplication": "passed-response-loss-and-restart",
-    "rechargeResume": "passed-same-logical-run",
-    "cloudGeneration": "passed-real-local-mcp-vela",
-    "localCodexGeneration": "passed-real-codex-login",
-    "secureByokGeneration": "passed-real-openrouter-profile"
+    "isolatedMarketplaceInstall": "passed-local-candidate-install-list-remove",
+    "compatibleOpenDesignRuntime": "pending-0.17.0-release",
+    "telemetryV3EndToEnd": "pending-open-design-and-vela-compatible-releases"
+  },
+  "previousRelease": {
+    "distributionStatus": "public-git-candidate",
+    "plugin": {
+      "name": "open-design-cloud",
+      "version": "0.3.0",
+      "path": "plugins/codex/open-design-cloud",
+      "contentListSha256": "c7025ced0aa09943c3587db7c579b1d446642c0d85b82fde7b6b526ccac007dd"
+    },
+    "source": {
+      "repository": "https://github.com/nexu-io/open-design",
+      "commit": "13dc6c5d464df6e802a2661e90c8acfad8e94609",
+      "treeState": "clean-commit"
+    },
+    "velaCompatibility": {
+      "repository": "https://github.com/powerformer/vela",
+      "commit": "0dc0182c31c72dcdc34c0733f4bed942b83bce88"
+    },
+    "generatedAt": "2026-07-24T16:57:42Z",
+    "validation": {
+      "validatedAt": "2026-07-24T16:59:25Z",
+      "codexCliVersion": "0.144.6",
+      "pluginCreatorValidator": "passed",
+      "skillValidator": "passed",
+      "openDesignFocusedTests": "122 passed",
+      "velaApiTests": "556 passed",
+      "velaOAuthE2E": "3 passed",
+      "velaAgentTests": "passed",
+      "agentFirstEntrypointSmoke": "passed-local-0.3.0-candidate",
+      "gitMarketplaceInstallSmoke": "passed-0.3.0-main",
+      "hostScopedLayout": "passed-local-codex-install",
+      "isolatedMarketplaceInstallAndRemove": "passed",
+      "mcpRegistration": "passed-local-open-design-stdio",
+      "briefApp": "passed-real-codex-desktop-card",
+      "requestDeduplication": "passed-response-loss-and-restart",
+      "rechargeResume": "passed-same-logical-run",
+      "cloudGeneration": "passed-real-local-mcp-vela",
+      "localCodexGeneration": "passed-real-codex-login",
+      "secureByokGeneration": "passed-real-openrouter-profile"
+    }
   }
 }

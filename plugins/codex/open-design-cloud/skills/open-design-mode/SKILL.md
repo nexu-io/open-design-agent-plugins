@@ -42,6 +42,39 @@ generation failed. When the user explicitly switches modes, start a new
 execution context and request identifier. Reuse only the human-readable
 confirmed brief; never repeat its signed machine envelope.
 
+## Start one attributed workflow
+
+This first-party Git marketplace package uses this exact bounded
+`externalPluginContext`:
+
+```text
+externalPluginContext = {
+  id: "open-design-cloud",
+  version: "0.4.0",
+  distributionMechanism: "git_marketplace",
+  publisherClass: "open_design_first_party"
+}
+```
+
+Do not add host names, paths, branch names, prompts, brief answers, account
+data, or credentials.
+
+1. Send `externalPluginContext` with `collect_brief`. If the user explicitly
+   skips the interactive questions, still call `collect_brief` once with
+   `skip: true` and the same Context so the local MCP can establish attribution
+   before login, project, or run work begins.
+2. Preserve the server-issued `pluginWorkflowId`. The rendered Brief card
+   inherits the workflow through its draft; use the same `pluginWorkflowId`
+   returned after confirmation.
+3. Pass that exact `pluginWorkflowId` to every later login, agent discovery,
+   project, run, polling, and optional artifact-context tool call.
+4. Never invent an id, replace it after a retry, infer it from a project or
+   latest run, or attach it to an unrelated direct MCP call.
+
+If the MCP rejects these fields or does not return a workflow id, stop and
+report that this plugin requires Open Design 0.17.0 or newer. Do not remove the
+context, silently lose attribution, use a remote MCP, or change execution mode.
+
 ## One confirmed action, one request
 
 After the brief and execution mode are confirmed, create one opaque stable
@@ -51,6 +84,9 @@ transport retry is required.
 
 - Call `start_run` once for the confirmed action.
 - Use only `get_run` to poll. Polling must never call `start_run` again.
+- Keep the same `requestId` and `pluginWorkflowId` for retries and recharge
+  resume. The workflow id attributes the whole Plugin journey; the request id
+  deduplicates one confirmed generation.
 - A changed prompt, project, confirmed mode, agent, or BYOK profile is a new
   logical generation and receives a new `requestId`.
 - Never reuse a `requestId` with different arguments.
@@ -58,21 +94,24 @@ transport retry is required.
 
 ## Cloud workflow
 
-1. Call `collect_brief` on the `open-design` MCP server with the requested
-   artifact type and a concise project title.
+1. Start the attributed workflow above by calling `collect_brief` on the
+   `open-design` MCP server with the requested artifact type and a concise
+   project title.
 2. Let the user complete the rendered Open Design brief card. Use the readable
    confirmed summary returned by the card; do not display or ask the user to
    paste a signed confirmation token.
-3. Call `get_vela_login_status`. If signed out, call `start_vela_login`, show
-   the returned activation URL and user code, then poll
-   `get_vela_login_status`. The Open Design GUI is not required.
-4. Call `list_agents` and require the exact `amr` agent.
-5. Check `get_active_context` or list/create the target project.
+3. Call `get_vela_login_status` with the workflow id. If signed out, call
+   `start_vela_login` with the same id, show the returned activation URL and
+   user code, then poll `get_vela_login_status` with the same id. The Open
+   Design GUI is not required.
+4. Call `list_agents` with the workflow id and require the exact `amr` agent.
+5. Check `get_active_context` or list/create the target project, always carrying
+   the workflow id.
 6. Create one `requestId`, then call `start_run` with that `requestId` and
-   `agent: "amr"`. Do not substitute `codex`, `opencode`, `byok-opencode`, or
-   another runtime.
-7. Poll `get_run` until it reaches a terminal state and return the supplied
-   preview or Studio link.
+   `pluginWorkflowId`, plus `agent: "amr"`. Do not substitute `codex`,
+   `opencode`, `byok-opencode`, or another runtime.
+7. Poll `get_run` with the same `pluginWorkflowId` until it reaches a terminal
+   state and return the supplied preview or Studio link.
 
 Never request, copy, or store a Vela token in chat or plugin files. Tell the
 user that Vela/Open Design Cloud bears the Cloud usage cost.
@@ -84,8 +123,9 @@ If `get_run` reports insufficient balance:
 2. Show the returned recharge URL and wait for the user to say that top-up is
    complete. Do not loop automatically.
 3. After that explicit confirmation, call `start_run` with the exact original
-   arguments and `requestId`, plus `resume: true`.
-4. Continue polling the same logical run with `get_run`.
+   arguments, `requestId`, and `pluginWorkflowId`, plus `resume: true`.
+4. Continue polling the same logical run with `get_run` and the same workflow
+   id.
 
 Do not create another project or logical run, and do not infer whether Vela
 charged the account. Vela owns the remote operation, wallet, and billing truth.
@@ -94,13 +134,16 @@ charged the account. Vela owns the remote operation, wallet, and billing truth.
 
 Use this only when the user explicitly chose Local Codex:
 
-1. Confirm the requested artifact type and readable brief.
+1. Start the attributed workflow above and confirm the requested artifact type
+   and readable brief.
 2. Call `list_agents` and require the exact `codex` agent to be available and
-   authenticated.
-3. Check `get_active_context` or list/create the target project.
+   authenticated, carrying the workflow id.
+3. Check `get_active_context` or list/create the target project with the same
+   workflow id.
 4. Create one `requestId`, then call `start_run` with that `requestId`,
-   `agent: "codex"`, and no BYOK profile or credential.
-5. Poll `get_run` and return the preview or Studio link.
+   `pluginWorkflowId`, `agent: "codex"`, and no BYOK profile or credential.
+5. Poll `get_run` with the same workflow id and return the preview or Studio
+   link.
 
 If Codex CLI is missing, ask the user to install it. If its authentication is
 missing or unknown, ask the user to run `codex login` and rescan agents. Local
@@ -110,17 +153,39 @@ Codex does not use OpenCode and Open Design must never receive an OpenAI key.
 
 BYOK is a separate explicit mode, not a fallback:
 
-1. Confirm the requested artifact type and readable brief.
-2. Call `list_byok_profiles`.
+1. Start the attributed workflow above and confirm the requested artifact type
+   and readable brief.
+2. Call `list_byok_profiles` with the workflow id.
 3. If no profile exists, direct the user to Open Design Settings or the
    stdin-only `od byok save --api-key-stdin` command.
 4. If multiple profiles exist, ask the user to choose by non-secret profile id.
-5. Check `get_active_context` or list/create the target project.
-6. Create one `requestId`, then call `start_run` with that `requestId` and only
-   the non-secret `byokProfile: "<profile-id>"` runtime selector.
-7. Poll `get_run` and return the preview or Studio link.
+5. Check `get_active_context` or list/create the target project with the same
+   workflow id.
+6. Create one `requestId`, then call `start_run` with that `requestId`,
+   `pluginWorkflowId`, and only the non-secret
+   `byokProfile: "<profile-id>"` runtime selector.
+7. Poll `get_run` with the same workflow id and return the preview or Studio
+   link.
 
 Never ask for or include a raw API key, provider token, or credential-shaped
 value in chat, an MCP argument, a manifest, an environment example, or a
 plaintext file. Tell the user that their selected provider account bears BYOK
 usage costs.
+
+## Optional artifact context
+
+Terminal `get_run` is the default delivery path. Return its canonical Preview
+or Studio reference without forcing a source download.
+
+Only when the agent genuinely needs source context and `get_artifact` is
+advertised:
+
+1. Pass the same `pluginWorkflowId` to `get_artifact`; this optional call must
+   use the exact project returned by the linked run.
+2. Select an entry and bounded include/byte options appropriate to the task.
+   Treat `truncated: true` as partial context, not a complete project archive.
+3. Keep the workflow link in follow-up reasoning. Never infer it from the
+   project's latest run or substitute another run's project.
+
+If `get_artifact` is absent, continue with the default Preview/Studio delivery.
+Its absence must not block Cloud, Local Codex, or BYOK generation.

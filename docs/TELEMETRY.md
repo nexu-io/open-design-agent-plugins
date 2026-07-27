@@ -9,10 +9,10 @@ Record host and distribution as independent dimensions:
 
 | Dimension | Examples | Meaning |
 | --- | --- | --- |
-| `hostProduct` | `codex_desktop`, `codex_cli`, `claude_code`, `other`, `unknown` | Which agent host loaded or used the plugin |
-| `distributionMechanism` | `public_directory`, `git_marketplace`, `local_path`, `workspace_bundle`, `unknown` | How the plugin package was obtained |
+| `hostProduct` | `codex_desktop`, `codex_cli`, `codex_unknown`, `claude_code`, `unknown` | Which bounded agent host Open Design observed; use `codex_unknown` when the Codex surface cannot be distinguished reliably |
+| `distributionMechanism` | `git_marketplace`, `local_repo`, `manual`, `unknown` | How the plugin package was obtained |
 | `publisherClass` | `open_design_first_party`, `third_party`, `unknown` | Whether the distribution source is owned by Open Design |
-| `pluginVersion` | `0.2.0` | Immutable plugin payload version |
+| `pluginVersion` | `0.4.0` | Immutable plugin payload version |
 
 A GitHub repository installation is not a host. For example:
 
@@ -49,21 +49,60 @@ best-effort host/channel labels for diagnostic segmentation, but client headers
 are forgeable and must not drive access control, billing, abuse decisions, or
 an official install counter.
 
-## Current implementation fact
+For this Codex Git marketplace channel, the dashboard contract is therefore
+`official_installs=N/A / source_unavailable`. First observed use and activated
+installations are separate, explicitly labelled proxy metrics.
 
-Vela currently stores the consent-gated Open Design Cloud funnel and keeps
-`platformInstalls: null`. Its event schema supports only
-`codex_desktop`, `codex_cli`, and `codex_unknown`, and it has no distribution
-mechanism or publisher dimension. The host/version headers are suitable only
-for best-effort product analytics.
+## Current implementation facts
 
-Before Claude Code or Git-based public distribution is claimed as measured:
+The released Vela baseline has a general analytics registry, durable PostgreSQL
+storage, optional PostHog fan-out, and an authenticated Open Design trace/score
+relay. The compatible Vela candidate branch extends that existing analytics
+path with bounded Plugin correlation, stable operation/result fields, recovery
+correlation, and a destination-specific allowlist/projection for the Open
+Design PostHog project. It does not create a second billing or analytics
+pipeline, and it does not mirror account, payment, balance, cost, prompt, raw
+error, or credential data into Open Design PostHog.
 
-1. confirm a durable metrics-consent source;
-2. extend the Vela schema and migrations with bounded enums;
-3. define the trusted install receipt/source for each channel;
-4. add privacy/redaction and spoofing tests;
-5. keep unknown/unsupported channels explicit instead of guessing.
+The compatible Open Design candidate validates the bounded context, issues the
+workflow identifier, persists logical-run and Artifact origin correlation, and
+emits telemetry schema v3 through the existing consented Open Design analytics
+path. These candidate implementations are not production evidence until their
+reviewed commits are released together and a controlled production smoke
+confirms the same schemas. There is still no Codex publisher install receipt or
+`platformInstalls` implementation; official install count remains unavailable.
+
+The 0.4.0 distribution candidate declares telemetry schema v3 and sends only
+this bounded self-reported context on `collect_brief`. A skipped interactive
+Brief still calls `collect_brief` once with `skip: true`:
+
+```json
+{
+  "id": "open-design-cloud",
+  "version": "0.4.0",
+  "distributionMechanism": "git_marketplace",
+  "publisherClass": "open_design_first_party"
+}
+```
+
+Open Design 0.17.0 or newer must validate that object, issue one
+`pluginWorkflowId`, and carry the workflow through Brief, login, project, run,
+terminal delivery, and optional Artifact context. A compatible Vela release
+must contain the destination-specific projection before Plugin-attributed Cloud
+events are mirrored. Until both compatible product versions and production
+validation exist, this repository's metadata is a contract declaration, not
+evidence that the events were received.
+
+Before Git-based public distribution is claimed as measured:
+
+1. validate the bounded context and mode-aware workflow against a compatible
+   Open Design release;
+2. release and production-validate Vela's bounded schemas and safe Open Design
+   PostHog projection for Cloud-only Plugin correlation;
+3. keep `official_installs=N/A / source_unavailable` until a trustworthy
+   publisher receipt exists;
+4. add privacy, redaction, spoofing, retry, and workflow-mismatch tests;
+5. keep unknown or unsupported channels explicit instead of guessing.
 
 The local smoke of this repository is test evidence only and must not be sent
 as a production install event.

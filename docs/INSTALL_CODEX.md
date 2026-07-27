@@ -3,8 +3,8 @@
 ## Supported environment
 
 - Codex Desktop or Codex CLI `0.144.6` or newer
-- A compatible Open Design installation with bundled Vela CLI; its GUI does
-  not need to be open
+- Open Design `0.17.0` or newer with bundled Vela CLI; its GUI does not need to
+  be open
 - Plugin selector `open-design-cloud@open-design`
 - Local MCP identity `open-design`
 
@@ -64,13 +64,15 @@ smoke, start an isolated Open Design runtime and run its resolved
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex mcp get open-design --json
 ```
 
-Verify the local MCP exposes `collect_brief`, `confirm_brief`,
-`start_vela_login`, `get_vela_login_status`, `start_run`, and `get_run`, plus
-the versioned MCP Apps HTML resource and `amr`. Verify that a repeated
-`start_run` with identical arguments and `requestId` resolves to the same
-logical run. An unauthenticated Cloud request must stop at the Vela sign-in
-boundary, not switch modes. Remove the smoke project and stop the isolated
-runtime.
+Verify the local MCP exposes the package's mode-aware capability contract:
+core Brief/project/run tools; Cloud login and `list_agents`; Local Codex
+`list_agents`; BYOK `list_byok_profiles`; and optional `get_artifact`. Verify
+the versioned MCP Apps HTML resource and exact `amr` runtime. The first
+observed Plugin call must accept the bounded context and return one
+`pluginWorkflowId`; later tools preserve that id. A repeated `start_run` with
+identical arguments and `requestId` must resolve to the same logical run. An
+unauthenticated Cloud request must stop at the Vela sign-in boundary, not
+switch modes. Remove the smoke project and stop the isolated runtime.
 
 Delete only the exact temporary roots created by the smoke.
 

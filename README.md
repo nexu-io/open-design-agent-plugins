@@ -38,8 +38,10 @@ There is no remote MCP dependency and no Codex-side Vela credential.
 
 - Marketplace: `open-design`
 - Plugin: `open-design-cloud`
-- Version: `0.3.0`
+- Candidate version: `0.4.0`
 - Host: Codex only
+- Minimum Open Design: `0.17.0`
+- Telemetry contract: schema v3, self-reported Plugin attribution
 - MCP: local `open-design` stdio registration
 - Cloud runtime: remote Vela/AMR via Open Design's bundled Vela CLI
 - Optional modes: Local Codex and Local BYOK, explicit and never fallbacks
@@ -78,9 +80,9 @@ and installation documentation.
 
 Open Design product releases do not automatically change this repository.
 Refresh the generated payload only when its plugin manifest, skill, package
-contract, minimum Codex version, or installation behavior changes. Pure product
-fixes behind the stable local MCP contract require a new Open Design release,
-not necessarily a new distribution-plugin version.
+contract, minimum Codex/Open Design version, or installation behavior changes.
+Pure product fixes behind the stable local MCP contract require a new Open
+Design release, not necessarily a new distribution-plugin version.
 
 Host-specific payloads use `plugins/<host>/<plugin-name>/`; future Claude or
 Gemini packages can live beside `codex/` without mixing host manifests.

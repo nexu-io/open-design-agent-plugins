@@ -92,8 +92,13 @@ only the non-secret profile id.
 - `.codex-plugin/plugin.json` is the only Codex plugin manifest.
 - There is no bundled `.mcp.json` and no remote MCP domain.
 - `open-design-cloud.package.json` pins the local MCP registration contract,
-  canonical Vela endpoints, `agent: "amr"`, and the versioned MCP Apps resource.
+  Open Design `0.17.0` minimum, telemetry schema v3, mode-aware tools,
+  canonical Vela endpoints, `agent: "amr"`, and the versioned MCP Apps
+  resource.
 - `skills/open-design-mode/SKILL.md` keeps Cloud, Local Codex, and BYOK routing
-  explicit and prevents silent fallback.
+  explicit, establishes one bounded self-reported Plugin workflow, keeps the
+  generation request stable, and prevents silent fallback.
+- Terminal `get_run` is the default delivery. `get_artifact` is an optional
+  bounded context read and carries the same server-issued workflow id.
 - Update both package versions, run the validator, and run an isolated Codex
   installation smoke for each release.

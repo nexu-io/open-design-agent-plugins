@@ -7,9 +7,10 @@ Use this instruction in Codex Desktop or Codex CLI:
 > Install Open Design Cloud into Codex using the **Install into Codex** lane.
 > Preserve unrelated plugins, marketplaces, MCP servers, and auth state.
 > Connect the plugin to the existing local `open-design` MCP if present. If it
-> is absent, verify that Open Design is installed. If it is missing, ask before
-> opening `https://open-design.ai/download/`; do not silently run an installer.
-> If it is installed, use its resolved signed headless MCP-install operation.
+> is absent, verify that Open Design 0.17.0 or newer is installed. If it is
+> missing or older, ask before opening `https://open-design.ai/download/`; do
+> not silently run an installer. If it is installed, use its resolved signed
+> headless MCP-install operation.
 > Never invent a remote MCP URL, a fixed localhost path, or a source checkout
 > path. Preserve the user's explicit choice between Vela Cloud, Local Codex,
 > and secure BYOK. Do not edit source, publish, or push. Report the installed
