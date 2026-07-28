@@ -1,6 +1,6 @@
 ---
 name: open-design-mode
-description: Create Open Design artifacts through the local Open Design MCP, using Vela Cloud by default and Local Codex or secure BYOK only when explicitly selected.
+description: Create and refine websites, slides, prototypes, and design systems through the local Open Design MCP. Use Open Design Cloud by default, or Local Codex and secure BYOK only when the user explicitly selects them.
 ---
 
 # Open Design execution mode
@@ -33,14 +33,35 @@ If `open-design` is unavailable:
 
 ## Choose the mode
 
-Cloud is the default mode. It uses the local Open Design daemon and bundled
-Vela CLI to reach the remote Vela/AMR service. Local Codex and BYOK are
-available only when the user explicitly selects them.
+Open Design Cloud is the default mode. It uses the local Open Design daemon and
+its bundled cloud runtime. Local Codex and BYOK are available only when the
+user explicitly selects them.
 
 Never switch modes because authentication, balance, transport, quota, or
 generation failed. When the user explicitly switches modes, start a new
 execution context and request identifier. Reuse only the human-readable
 confirmed brief; never repeat its signed machine envelope.
+
+## Keep implementation names out of user-facing copy
+
+Match status updates, errors, and final delivery prose to the language of the
+user's current request. In user-facing text, use only these product terms:
+Open Design Cloud, Local Codex, secure BYOK, and Open Design Cloud account or
+credits.
+
+Some MCP tool names and machine parameters below retain compatibility
+identifiers such as `get_vela_login_status`, `start_vela_login`, and `amr`.
+Treat them as machine-only protocol values. Never quote, explain, or expose
+those identifiers, raw agent selectors, internal endpoints, or service account
+names in user-facing prose. Translate tool errors into the product terms above
+without changing the actual MCP argument values.
+
+Before every `collect_brief` call, derive a normalized BCP-47 `locale` from the
+language of the user's current message and pass it to the tool. For example,
+use `zh-CN` for a Simplified Chinese request and `en` for an English request.
+Use the Host UI locale only when the current message language is genuinely
+indeterminate, then fall back to `en`. Keep question ids, option values,
+artifact types, and other machine fields unchanged across locales.
 
 ## Start one attributed workflow
 
@@ -50,7 +71,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design-cloud",
-  version: "0.4.0",
+  version: "0.4.1",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }
@@ -92,7 +113,39 @@ transport retry is required.
 - Never reuse a `requestId` with different arguments.
 - Never display a request id as user-facing content.
 
-## Cloud workflow
+## Keep the current task alive through terminal delivery
+
+After `start_run` returns a `runId`, preserve it and follow this gate in every
+mode:
+
+1. Continue polling the same `runId` with `get_run` and the same
+   `pluginWorkflowId`, normally every 30–60 seconds.
+2. Do not end the current task while `get_run` reports `queued` or `running`.
+   A concise progress update is allowed, but continue the polling loop in this
+   task. Never promise that a later message will arrive after the current task
+   ends.
+3. Stop polling only for a terminal state, an explicit recharge/user-input
+   boundary, or an explicit user request to cancel.
+4. For `succeeded`, prefer the exact `studioUrl` returned by this run and fall
+   back to the exact `previewUrl`. Render the selected value as a clickable
+   Markdown link. Never copy a URL from another run, project, tool history, or
+   a previously rendered output panel.
+5. If a successful result contains neither URL, say that the artifact was
+   generated but no usable delivery link was returned. Preserve the tool
+   result for diagnosis and do not claim complete delivery. Do not call
+   `get_artifact` merely to manufacture a link.
+6. For `failed` or `canceled`, report that terminal result clearly and do not
+   present a stale link as success.
+
+On Codex Desktop, only when the host exposes a callable host-provided in-app
+Browser capability, best-effort open the selected terminal link once. Do not
+assume that capability exists, install another plugin, or substitute the system
+browser. In Codex CLI, or when the Browser capability is unavailable, return
+the clickable link without treating the missing open action as a generation
+failure. Repeated polls, transport retries, and recharge resume must not open
+duplicate tabs for the same deliverable.
+
+## Open Design Cloud workflow
 
 1. Start the attributed workflow above by calling `collect_brief` on the
    `open-design` MCP server with the requested artifact type and a concise
@@ -104,17 +157,17 @@ transport retry is required.
    `start_vela_login` with the same id, show the returned activation URL and
    user code, then poll `get_vela_login_status` with the same id. The Open
    Design GUI is not required.
-4. Call `list_agents` with the workflow id and require the exact `amr` agent.
+4. Call `list_agents` with the workflow id and require the machine-only `amr`
+   runtime selector.
 5. Check `get_active_context` or list/create the target project, always carrying
    the workflow id.
 6. Create one `requestId`, then call `start_run` with that `requestId` and
    `pluginWorkflowId`, plus `agent: "amr"`. Do not substitute `codex`,
    `opencode`, `byok-opencode`, or another runtime.
-7. Poll `get_run` with the same `pluginWorkflowId` until it reaches a terminal
-   state and return the supplied preview or Studio link.
+7. Follow the terminal delivery gate above for this exact run.
 
-Never request, copy, or store a Vela token in chat or plugin files. Tell the
-user that Vela/Open Design Cloud bears the Cloud usage cost.
+Never request, copy, or store a cloud credential in chat or plugin files. Tell
+the user that their Open Design Cloud account bears Cloud usage costs.
 
 If `get_run` reports insufficient balance:
 
@@ -127,8 +180,9 @@ If `get_run` reports insufficient balance:
 4. Continue polling the same logical run with `get_run` and the same workflow
    id.
 
-Do not create another project or logical run, and do not infer whether Vela
-charged the account. Vela owns the remote operation, wallet, and billing truth.
+Do not create another project or logical run, and do not infer whether the
+account was charged. Open Design Cloud owns the remote operation, credits, and
+billing truth.
 
 ## Local Codex workflow
 
@@ -142,8 +196,7 @@ Use this only when the user explicitly chose Local Codex:
    workflow id.
 4. Create one `requestId`, then call `start_run` with that `requestId`,
    `pluginWorkflowId`, `agent: "codex"`, and no BYOK profile or credential.
-5. Poll `get_run` with the same workflow id and return the preview or Studio
-   link.
+5. Follow the terminal delivery gate above for this exact run.
 
 If Codex CLI is missing, ask the user to install it. If its authentication is
 missing or unknown, ask the user to run `codex login` and rescan agents. Local
@@ -164,8 +217,7 @@ BYOK is a separate explicit mode, not a fallback:
 6. Create one `requestId`, then call `start_run` with that `requestId`,
    `pluginWorkflowId`, and only the non-secret
    `byokProfile: "<profile-id>"` runtime selector.
-7. Poll `get_run` with the same workflow id and return the preview or Studio
-   link.
+7. Follow the terminal delivery gate above for this exact run.
 
 Never ask for or include a raw API key, provider token, or credential-shaped
 value in chat, an MCP argument, a manifest, an environment example, or a

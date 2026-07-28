@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -15,6 +15,10 @@ function readJson(relativePath) {
 
 function readPlugin(relativePath) {
   return readFileSync(new URL(relativePath, pluginRoot), "utf8");
+}
+
+function readPluginBuffer(relativePath) {
+  return readFileSync(new URL(relativePath, pluginRoot));
 }
 
 const coreTools = [
@@ -44,11 +48,17 @@ test("candidate versions and telemetry compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.4.0");
-  assert.equal(pluginManifest.version, "0.4.0");
-  assert.equal(releaseManifest.plugin.version, "0.4.0");
+  assert.equal(packageContract.version, "0.4.1");
+  assert.equal(pluginManifest.version, "0.4.1");
+  assert.equal(releaseManifest.plugin.version, "0.4.1");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
+  assert.deepEqual(packageContract.customUiResources, [
+    {
+      uri: "ui://open-design-cloud/artifact-card-v2.html",
+      mediaType: "text/html;profile=mcp-app",
+    },
+  ]);
   assert.equal(releaseManifest.distributionStatus, "unreleased-candidate");
   assert.equal(
     releaseManifest.previousRelease?.plugin?.version,
@@ -93,7 +103,7 @@ test("skill carries one bounded plugin workflow through delivery", () => {
 
   for (const requiredFragment of [
     'id: "open-design-cloud"',
-    'version: "0.4.0"',
+    'version: "0.4.1"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -113,6 +123,121 @@ test("skill carries one bounded plugin workflow through delivery", () => {
   assert.match(skill, /get_artifact[\s\S]*optional/i);
   assert.match(skill, /get_artifact[\s\S]*project/i);
   assert.match(skill, /same `requestId`/i);
+});
+
+test("public plugin and skill metadata match the approved acceptance copy", () => {
+  const pluginManifest = JSON.parse(
+    readPlugin(".codex-plugin/plugin.json"),
+  );
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+  const skillMetadata = readPlugin(
+    "skills/open-design-mode/agents/openai.yaml",
+  );
+
+  assert.equal(
+    pluginManifest.interface.shortDescription,
+    "Create websites, slides, and design systems from Codex.",
+  );
+  assert.equal(
+    pluginManifest.interface.longDescription,
+    "Generate and edit websites, presentations, prototypes, and design systems with Open Design directly from Codex.",
+  );
+  assert.equal(
+    pluginManifest.interface.supportURL,
+    "https://github.com/nexu-io/open-design/issues",
+  );
+  assert.deepEqual(pluginManifest.interface.defaultPrompt, [
+    "Recreate the Open Design landing page: https://open-design.ai/",
+    "Create an academic presentation on generative AI and design.",
+    "Create an Apple-style design system with tokens and core components.",
+  ]);
+  assert.match(skillMetadata, /display_name: "Create with Open Design"/);
+  assert.match(
+    skillMetadata,
+    /short_description: "Generate and refine websites, slides, prototypes, and design systems\."/,
+  );
+  assert.match(
+    skillMetadata,
+    /default_prompt: "Use \$open-design-mode to create or refine an Open Design artifact\."/,
+  );
+
+  const frontmatter = skill.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
+  const publicMetadata = [
+    pluginManifest.description,
+    pluginManifest.interface.shortDescription,
+    pluginManifest.interface.longDescription,
+    skillMetadata,
+    frontmatter,
+  ].join("\n");
+  assert.doesNotMatch(publicMetadata, /\b(?:Vela|AMR|amr)\b|agent\s*:/i);
+});
+
+test("official Open Design artwork is packaged for plugin and skill surfaces", () => {
+  const pluginManifest = JSON.parse(
+    readPlugin(".codex-plugin/plugin.json"),
+  );
+  assert.equal(
+    pluginManifest.interface.composerIcon,
+    "./assets/open-design.png",
+  );
+  assert.equal(pluginManifest.interface.logo, "./assets/open-design.png");
+
+  for (const relativePath of [
+    "assets/open-design.png",
+    "skills/open-design-mode/assets/open-design.png",
+  ]) {
+    assert.equal(existsSync(new URL(relativePath, pluginRoot)), true);
+    const image = readPluginBuffer(relativePath);
+    assert.equal(image.subarray(1, 4).toString("ascii"), "PNG");
+  }
+});
+
+test("skill keeps one run alive until terminal delivery and degrades browser opening safely", () => {
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+
+  assert.match(
+    skill,
+    /Do not end the current task while `get_run` reports `queued` or\s+`running`/i,
+  );
+  assert.match(
+    skill,
+    /Continue polling the same `runId`[\s\S]*30–60 seconds/i,
+  );
+  assert.match(
+    skill,
+    /Never promise that a later message will arrive after the current task\s+ends/i,
+  );
+  assert.match(
+    skill,
+    /prefer the exact `studioUrl`[\s\S]*fall\s+back to the exact `previewUrl`/i,
+  );
+  assert.match(
+    skill,
+    /neither URL[\s\S]*do not claim complete delivery/i,
+  );
+  assert.match(
+    skill,
+    /host-provided in-app\s+Browser capability[\s\S]*best-effort/i,
+  );
+  assert.match(
+    skill,
+    /Codex CLI[\s\S]*Browser capability is unavailable[\s\S]*clickable link/i,
+  );
+});
+
+test("skill passes the current user language to every brief collection", () => {
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+
+  assert.match(
+    skill,
+    /Before every `collect_brief` call[\s\S]*normalized BCP-47 `locale`[\s\S]*current message/i,
+  );
+  assert.match(skill, /`zh-CN`[\s\S]*Simplified Chinese request/i);
+  assert.match(skill, /`en`[\s\S]*English request/i);
+  assert.match(
+    skill,
+    /Host UI locale only when the current message language is genuinely\s+indeterminate[\s\S]*fall back to `en`/i,
+  );
 });
 
 test("portable payload contains no remote MCP, secret, or machine path", () => {

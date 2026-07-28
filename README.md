@@ -38,7 +38,7 @@ There is no remote MCP dependency and no Codex-side Vela credential.
 
 - Marketplace: `open-design`
 - Plugin: `open-design-cloud`
-- Candidate version: `0.4.0`
+- Candidate version: `0.4.1`
 - Host: Codex only
 - Minimum Open Design: `0.17.0`
 - Telemetry contract: schema v3, self-reported Plugin attribution

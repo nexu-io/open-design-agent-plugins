@@ -68,6 +68,16 @@ const skill = readFileSync(
   join(pluginRoot, "skills", "open-design-mode", "SKILL.md"),
   "utf8",
 );
+const skillMetadata = readFileSync(
+  join(
+    pluginRoot,
+    "skills",
+    "open-design-mode",
+    "agents",
+    "openai.yaml",
+  ),
+  "utf8",
+);
 
 assert.equal(packageContract.name, "open-design-cloud");
 assert.equal(packageContract.version, pluginManifest.version);
@@ -75,8 +85,55 @@ assert.equal(packageContract.version, releaseManifest.plugin.version);
 assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
 assert.equal(packageContract.telemetrySchemaVersion, 3);
 assert.equal(packageContract.mcpServer, "open-design");
+assert.deepEqual(packageContract.customUiResources, [
+  {
+    uri: "ui://open-design-cloud/artifact-card-v2.html",
+    mediaType: "text/html;profile=mcp-app",
+  },
+]);
 assert.equal(releaseManifest.distributionStatus, "unreleased-candidate");
 assert.equal(releaseManifest.previousRelease.plugin.version, "0.3.0");
+
+assert.equal(
+  pluginManifest.interface.shortDescription,
+  "Create websites, slides, and design systems from Codex.",
+);
+assert.equal(
+  pluginManifest.interface.longDescription,
+  "Generate and edit websites, presentations, prototypes, and design systems with Open Design directly from Codex.",
+);
+assert.equal(
+  pluginManifest.interface.supportURL,
+  "https://github.com/nexu-io/open-design/issues",
+);
+assert.deepEqual(pluginManifest.interface.defaultPrompt, [
+  "Recreate the Open Design landing page: https://open-design.ai/",
+  "Create an academic presentation on generative AI and design.",
+  "Create an Apple-style design system with tokens and core components.",
+]);
+assert.equal(
+  pluginManifest.interface.composerIcon,
+  "./assets/open-design.png",
+);
+assert.equal(pluginManifest.interface.logo, "./assets/open-design.png");
+assert.equal(existsSync(join(pluginRoot, "assets", "open-design.png")), true);
+assert.match(skillMetadata, /display_name: "Create with Open Design"/);
+assert.match(
+  skillMetadata,
+  /short_description: "Generate and refine websites, slides, prototypes, and design systems\."/,
+);
+assert.equal(
+  existsSync(
+    join(
+      pluginRoot,
+      "skills",
+      "open-design-mode",
+      "assets",
+      "open-design.png",
+    ),
+  ),
+  true,
+);
 
 const context = packageContract.localMcp.pluginWorkflowContract.context;
 assert.deepEqual(Object.keys(context).sort(), [
@@ -133,6 +190,22 @@ assert.match(skill, /externalPluginContext/);
 assert.match(skill, /same `pluginWorkflowId`[\s\S]*get_artifact/i);
 assert.match(skill, /same `requestId`/i);
 assert.match(skill, /Open Design 0\.17\.0 or newer/);
+assert.match(
+  skill,
+  /Do not end the current task while `get_run` reports `queued` or\s+`running`/i,
+);
+assert.match(
+  skill,
+  /prefer the exact `studioUrl`[\s\S]*fall\s+back to the exact `previewUrl`/i,
+);
+assert.match(
+  skill,
+  /host-provided in-app\s+Browser capability[\s\S]*best-effort/i,
+);
+assert.match(
+  skill,
+  /Before every `collect_brief` call[\s\S]*normalized BCP-47 `locale`[\s\S]*current message/i,
+);
 
 assert.equal(
   contentListDigest(pluginRoot),
