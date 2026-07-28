@@ -1,0 +1,7 @@
+interface:
+  display_name: "Create with Open Design"
+  short_description: "Generate and refine websites, slides, prototypes, and design systems."
+  icon_small: "./assets/open-design.png"
+  icon_large: "./assets/open-design.png"
+  brand_color: "#111111"
+  default_prompt: "Use $open-design-mode to create or refine an Open Design artifact."

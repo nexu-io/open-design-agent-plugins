@@ -17,9 +17,9 @@
   },
   "plugin": {
     "name": "open-design-cloud",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "path": "plugins/codex/open-design-cloud",
-    "contentListSha256": "9dac0c26b6c055b20fee7b2b6ade3b0e8454f745c8da2b5b9fa958ac2ccc5555",
+    "contentListSha256": "50680c4d4b3f86d20d206259e25cba68263b71dda4e28d2650173d90364d1c9c",
     "minimumCodexCliVersion": "0.144.6",
     "minimumOpenDesignVersion": "0.17.0",
     "telemetrySchemaVersion": 3
@@ -34,16 +34,16 @@
     "commit": null,
     "treeState": "pending-plugin-attribution-release"
   },
-  "generatedAt": "2026-07-27T15:24:31Z",
+  "generatedAt": "2026-07-28T10:36:06Z",
   "validation": {
     "status": "local-distribution-validated",
-    "validatedAt": "2026-07-27T16:09:39Z",
+    "validatedAt": "2026-07-28T10:36:06Z",
     "codexCliVersion": "0.145.0",
-    "packageTests": "5 passed",
+    "packageTests": "9 passed",
     "distributionValidator": "passed",
-    "pluginCreatorValidator": "passed",
+    "pluginCreatorValidator": "helper-schema-lacks-supportURL; codex-cli-0.145.0-ingestion-passed",
     "skillValidator": "passed",
-    "isolatedMarketplaceInstall": "passed-local-candidate-install-list-remove",
+    "isolatedMarketplaceInstall": "passed-0.4.1-local-candidate-install-list",
     "compatibleOpenDesignRuntime": "pending-0.17.0-release",
     "telemetryV3EndToEnd": "pending-open-design-and-vela-compatible-releases"
   },

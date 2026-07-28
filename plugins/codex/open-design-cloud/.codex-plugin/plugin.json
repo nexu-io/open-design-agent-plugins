@@ -1,7 +1,7 @@
 {
   "name": "open-design-cloud",
-  "version": "0.4.0",
-  "description": "Create Open Design artifacts from Codex through Vela Cloud, Local Codex, or secure BYOK.",
+  "version": "0.4.1",
+  "description": "Create and refine websites, slides, prototypes, and design systems with Open Design from Codex.",
   "author": {
     "name": "Open Design",
     "email": "support@open-design.ai",
@@ -14,14 +14,13 @@
     "design",
     "codex",
     "mcp",
-    "open-design-cloud",
-    "vela"
+    "open-design-cloud"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Open Design Cloud",
-    "shortDescription": "Create Open Design artifacts in three explicit modes",
-    "longDescription": "Use Codex Desktop or Codex CLI with an installed Open Design runtime. Its local MCP starts headlessly, provides an interactive brief, and runs Vela Cloud by default or Local Codex and secure BYOK when explicitly selected.",
+    "shortDescription": "Create websites, slides, and design systems from Codex.",
+    "longDescription": "Generate and edit websites, presentations, prototypes, and design systems with Open Design directly from Codex.",
     "developerName": "Open Design",
     "category": "Creativity",
     "capabilities": [
@@ -29,13 +28,16 @@
       "Write"
     ],
     "websiteURL": "https://open-design.ai/",
+    "supportURL": "https://github.com/nexu-io/open-design/issues",
     "privacyPolicyURL": "https://open-design.ai/privacy/",
     "termsOfServiceURL": "https://open-design.ai/terms/",
     "defaultPrompt": [
-      "Create a responsive website with Open Design Cloud.",
-      "Turn this product idea into an interactive prototype.",
-      "Create a presentation with a coherent visual system."
+      "Recreate the Open Design landing page: https://open-design.ai/",
+      "Create an academic presentation on generative AI and design.",
+      "Create an Apple-style design system with tokens and core components."
     ],
-    "brandColor": "#111111"
+    "brandColor": "#111111",
+    "composerIcon": "./assets/open-design.png",
+    "logo": "./assets/open-design.png"
   }
 }
