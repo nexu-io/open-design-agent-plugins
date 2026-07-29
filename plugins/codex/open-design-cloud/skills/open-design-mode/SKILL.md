@@ -71,7 +71,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design-cloud",
-  version: "0.4.3",
+  version: "0.4.4",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }
@@ -99,6 +99,21 @@ data, or credentials.
 If the MCP rejects these fields or does not return a workflow id, stop and
 report that this plugin requires Open Design 0.17.0 or newer. Do not remove the
 context, silently lose attribution, use a remote MCP, or change execution mode.
+
+### If the brief card cannot render
+
+The MCP tool must remain usable when the Host cannot render its optional UI.
+If Codex reports that the MCP app or its sandbox failed to load, do not call
+`collect_brief` again. Read `questionForm` from that call's structured result,
+present the same labels and human-readable options as a compact plain-text
+question in the current task, and wait for the user's choices. Then call
+`confirm_brief` once with the original `briefDraftId`, `nonce`, normalized
+answer values, locale, and workflow context.
+
+Never expose or ask the user to copy `briefDraftId`, `nonce`, option ids, a
+signed confirmation, or other machine fields. This is a presentation fallback
+only: it must preserve the same draft, attribution, execution mode, and
+one-confirmation rule.
 
 ## One confirmed action, one request
 

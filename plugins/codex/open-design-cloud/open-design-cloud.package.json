@@ -1,7 +1,7 @@
 {
   "schemaVersion": "open-design-codex-cloud-package/v3",
   "name": "open-design-cloud",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "minimumCodexCliVersion": "0.144.6",
   "minimumOpenDesignVersion": "0.17.0",
   "telemetrySchemaVersion": 3,
@@ -77,7 +77,7 @@
     "pluginWorkflowContract": {
       "context": {
         "id": "open-design-cloud",
-        "version": "0.4.3",
+        "version": "0.4.4",
         "distributionMechanism": "git_marketplace",
         "publisherClass": "open_design_first_party"
       },
@@ -99,7 +99,7 @@
   },
   "customUiResources": [
     {
-      "uri": "ui://open-design-cloud/artifact-card-v3.html",
+      "uri": "ui://open-design-cloud/artifact-card-v4.html",
       "mediaType": "text/html;profile=mcp-app"
     }
   ],
