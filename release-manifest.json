@@ -13,13 +13,13 @@
     "gitSource": "nexu-io/open-design-agent-plugins",
     "gitRef": "main",
     "manifest": ".agents/plugins/marketplace.json",
-    "sha256": "2b507450f40751d90d38e5d85c49c01c61dc0900144070d840ad405700f4acb1"
+    "sha256": "40ff1b5e1d623714569571dc258e15aeee2a2fd730201e5b3a904ed49e4edb81"
   },
   "plugin": {
-    "name": "open-design-cloud",
-    "version": "0.4.4",
-    "path": "plugins/codex/open-design-cloud",
-    "contentListSha256": "bb637c1e7893e031e10992033f4b26facb4ecea44bbd0a44c65614b7ef54c40e",
+    "name": "open-design",
+    "version": "0.5.0",
+    "path": "plugins/codex/open-design",
+    "contentListSha256": "a0cf68183ac93494aabd3e17248824232159064ef55ea966fd1d5e508fe912e8",
     "minimumCodexCliVersion": "0.144.6",
     "minimumOpenDesignVersion": "0.17.0",
     "telemetrySchemaVersion": 3
@@ -34,57 +34,17 @@
     "commit": null,
     "treeState": "pending-plugin-attribution-release"
   },
-  "generatedAt": "2026-07-29T08:01:45Z",
+  "generatedAt": "2026-07-29T08:59:00Z",
   "validation": {
     "status": "local-distribution-validated",
-    "validatedAt": "2026-07-29T03:20:06Z",
+    "validatedAt": "2026-07-29T09:00:00Z",
     "codexCliVersion": "0.145.0",
     "packageTests": "9 passed",
     "distributionValidator": "passed",
     "pluginCreatorValidator": "helper-schema-lacks-supportURL; codex-cli-0.145.0-ingestion-passed",
     "skillValidator": "passed",
-    "isolatedMarketplaceInstall": "pending-0.4.4-sandbox-compatibility-candidate",
+    "isolatedMarketplaceInstall": "passed-local-open-design-0.5.0",
     "compatibleOpenDesignRuntime": "pending-0.17.0-release",
     "telemetryV3EndToEnd": "pending-open-design-and-vela-compatible-releases"
-  },
-  "previousRelease": {
-    "distributionStatus": "public-git-candidate",
-    "plugin": {
-      "name": "open-design-cloud",
-      "version": "0.3.0",
-      "path": "plugins/codex/open-design-cloud",
-      "contentListSha256": "c7025ced0aa09943c3587db7c579b1d446642c0d85b82fde7b6b526ccac007dd"
-    },
-    "source": {
-      "repository": "https://github.com/nexu-io/open-design",
-      "commit": "13dc6c5d464df6e802a2661e90c8acfad8e94609",
-      "treeState": "clean-commit"
-    },
-    "velaCompatibility": {
-      "repository": "https://github.com/powerformer/vela",
-      "commit": "0dc0182c31c72dcdc34c0733f4bed942b83bce88"
-    },
-    "generatedAt": "2026-07-24T16:57:42Z",
-    "validation": {
-      "validatedAt": "2026-07-24T16:59:25Z",
-      "codexCliVersion": "0.144.6",
-      "pluginCreatorValidator": "passed",
-      "skillValidator": "passed",
-      "openDesignFocusedTests": "122 passed",
-      "velaApiTests": "556 passed",
-      "velaOAuthE2E": "3 passed",
-      "velaAgentTests": "passed",
-      "agentFirstEntrypointSmoke": "passed-local-0.3.0-candidate",
-      "gitMarketplaceInstallSmoke": "passed-0.3.0-main",
-      "hostScopedLayout": "passed-local-codex-install",
-      "isolatedMarketplaceInstallAndRemove": "passed",
-      "mcpRegistration": "passed-local-open-design-stdio",
-      "briefApp": "passed-real-codex-desktop-card",
-      "requestDeduplication": "passed-response-loss-and-restart",
-      "rechargeResume": "passed-same-logical-run",
-      "cloudGeneration": "passed-real-local-mcp-vela",
-      "localCodexGeneration": "passed-real-codex-login",
-      "secureByokGeneration": "passed-real-openrouter-profile"
-    }
   }
 }

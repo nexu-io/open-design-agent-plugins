@@ -18,4 +18,4 @@ Use this instruction in Codex Desktop or Codex CLI:
 
 After installation, start a new Codex task and invoke:
 
-> @open-design-cloud Create a responsive website for an AI analytics startup.
+> @open-design Create a responsive website for an AI analytics startup.

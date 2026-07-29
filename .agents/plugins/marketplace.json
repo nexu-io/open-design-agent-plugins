@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "open-design-cloud",
+      "name": "open-design",
       "source": {
         "source": "local",
-        "path": "./plugins/codex/open-design-cloud"
+        "path": "./plugins/codex/open-design"
       },
       "policy": {
         "installation": "AVAILABLE",

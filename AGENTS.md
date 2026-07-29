@@ -70,7 +70,7 @@ codex mcp get open-design --json
 ```
 
 The last command may report that the MCP is not installed. If
-`open-design-cloud@open-design` is already at the version declared in
+`open-design@open-design` is already at the version declared in
 `release-manifest.json`, do not reinstall it. If marketplace `open-design`
 points at a different source, stop and report the name collision. Never remove
 or overwrite unrelated marketplaces, plugins, MCP servers, or auth state.
@@ -79,7 +79,7 @@ or overwrite unrelated marketplaces, plugins, MCP servers, or auth state.
 
 ```bash
 codex plugin marketplace add "$OD_AGENT_PLUGIN_SOURCE" --ref main --json
-codex plugin add open-design-cloud@open-design --json
+codex plugin add open-design@open-design --json
 ```
 
 `alreadyAdded: true` is success. Do not hand-edit Codex configuration or copy
@@ -107,7 +107,7 @@ codex mcp get open-design --json
 
 Required evidence:
 
-- plugin id `open-design-cloud@open-design`;
+- plugin id `open-design@open-design`;
 - installed version equals `release-manifest.json`;
 - Open Design satisfies the package's `minimumOpenDesignVersion`;
 - MCP name is `open-design` and is enabled;
@@ -140,7 +140,7 @@ Never report "Cloud works" when only package installation was verified.
 
 - Product code, Vela auth/billing, artifact generation, and runtime telemetry
   belong in the Open Design and Vela repositories.
-- Treat `plugins/codex/open-design-cloud/` and
+- Treat `plugins/codex/open-design/` and
   `.agents/plugins/marketplace.json` as generated distribution payloads.
 - Never expose or commit credentials, Codex auth state, plugin caches, logs, or
   smoke-test artifacts.
@@ -167,5 +167,5 @@ Enter only when the user asks to refresh, validate, or release:
 ## Host directory convention
 
 Portable payloads live at `plugins/<host>/<plugin-name>/`. The supported Codex
-payload is `plugins/codex/open-design-cloud/`. Add Claude or Gemini directories
+payload is `plugins/codex/open-design/`. Add Claude or Gemini directories
 only when a validated host-specific package exists.

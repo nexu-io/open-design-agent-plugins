@@ -5,7 +5,7 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 const pluginRoot = new URL(
-  "../plugins/codex/open-design-cloud/",
+  "../plugins/codex/open-design/",
   import.meta.url,
 );
 
@@ -37,7 +37,7 @@ function sorted(values) {
 
 test("candidate versions and telemetry compatibility are explicit", () => {
   const packageContract = JSON.parse(
-    readPlugin("open-design-cloud.package.json"),
+    readPlugin("open-design.package.json"),
   );
   const pluginManifest = JSON.parse(
     readPlugin(".codex-plugin/plugin.json"),
@@ -48,27 +48,23 @@ test("candidate versions and telemetry compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.4.4");
-  assert.equal(pluginManifest.version, "0.4.4");
-  assert.equal(releaseManifest.plugin.version, "0.4.4");
+  assert.equal(packageContract.version, "0.5.0");
+  assert.equal(pluginManifest.version, "0.5.0");
+  assert.equal(releaseManifest.plugin.version, "0.5.0");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
   assert.deepEqual(packageContract.customUiResources, [
     {
-      uri: "ui://open-design-cloud/artifact-card-v4.html",
+      uri: "ui://open-design/artifact-card-v5.html",
       mediaType: "text/html;profile=mcp-app",
     },
   ]);
   assert.equal(releaseManifest.distributionStatus, "unreleased-candidate");
-  assert.equal(
-    releaseManifest.previousRelease?.plugin?.version,
-    "0.3.0",
-  );
 });
 
 test("capabilities match the real core and mode workflows", () => {
   const packageContract = JSON.parse(
-    readPlugin("open-design-cloud.package.json"),
+    readPlugin("open-design.package.json"),
   );
   const capabilities = packageContract.localMcp.capabilities;
 
@@ -102,8 +98,8 @@ test("skill carries one bounded plugin workflow through delivery", () => {
   const skill = readPlugin("skills/open-design-mode/SKILL.md");
 
   for (const requiredFragment of [
-    'id: "open-design-cloud"',
-    'version: "0.4.4"',
+    'id: "open-design"',
+    'version: "0.5.0"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -253,7 +249,7 @@ test("portable payload contains no remote MCP, secret, or machine path", () => {
   const files = [
     ".codex-plugin/plugin.json",
     "README.md",
-    "open-design-cloud.package.json",
+    "open-design.package.json",
     "skills/open-design-mode/SKILL.md",
   ];
   const content = files

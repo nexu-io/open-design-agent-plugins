@@ -5,14 +5,14 @@
 - Codex Desktop or Codex CLI `0.144.6` or newer
 - Open Design `0.17.0` or newer with bundled Vela CLI; its GUI does not need to
   be open
-- Plugin selector `open-design-cloud@open-design`
+- Plugin selector `open-design@open-design`
 - Local MCP identity `open-design`
 
 ## Normal Git marketplace install
 
 ```bash
 codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
-codex plugin add open-design-cloud@open-design --json
+codex plugin add open-design@open-design --json
 ```
 
 If Open Design is not installed, ask before opening the official
@@ -52,7 +52,7 @@ OD_CODEX_PLUGIN_TEST_HOME="$(mktemp -d /tmp/open-design-plugin-codex-home.XXXXXX
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace add \
   nexu-io/open-design-agent-plugins --ref main --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin add \
-  open-design-cloud@open-design --json
+  open-design@open-design --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
 ```
 
@@ -86,7 +86,7 @@ OD_CODEX_PLUGIN_TEST_HOME="$(mktemp -d /tmp/open-design-plugin-candidate-home.XX
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin marketplace add \
   "$OD_AGENT_PLUGIN_REPO" --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin add \
-  open-design-cloud@open-design --json
+  open-design@open-design --json
 CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
 ```
 
@@ -126,7 +126,7 @@ or BYOK.
 ## Uninstall
 
 ```bash
-codex plugin remove open-design-cloud@open-design --json
+codex plugin remove open-design@open-design --json
 codex plugin marketplace remove open-design --json
 ```
 

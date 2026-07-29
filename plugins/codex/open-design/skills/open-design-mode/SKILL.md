@@ -70,8 +70,8 @@ This first-party Git marketplace package uses this exact bounded
 
 ```text
 externalPluginContext = {
-  id: "open-design-cloud",
-  version: "0.4.4",
+  id: "open-design",
+  version: "0.5.0",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }

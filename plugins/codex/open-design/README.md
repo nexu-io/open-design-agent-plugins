@@ -55,7 +55,7 @@ Test the repository itself with an isolated Codex home:
 OD_CODEX_TEST_HOME="$(mktemp -d /tmp/open-design-codex-home.XXXXXX)"
 OD_AGENT_PLUGIN_REPO="$(git rev-parse --show-toplevel)"
 CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin marketplace add "$OD_AGENT_PLUGIN_REPO" --json
-CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin add open-design-cloud@open-design --json
+CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin add open-design@open-design --json
 CODEX_HOME="$OD_CODEX_TEST_HOME" codex plugin list --json
 ```
 
@@ -92,7 +92,7 @@ only the non-secret profile id.
 
 - `.codex-plugin/plugin.json` is the only Codex plugin manifest.
 - There is no bundled `.mcp.json` and no remote MCP domain.
-- `open-design-cloud.package.json` pins the local MCP registration contract,
+- `open-design.package.json` pins the local MCP registration contract,
   Open Design `0.17.0` minimum, telemetry schema v3, mode-aware tools,
   canonical Vela endpoints, `agent: "amr"`, and the versioned MCP Apps
   resource.

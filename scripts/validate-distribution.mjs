@@ -10,7 +10,7 @@ import { join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
-const pluginRoot = join(root, "plugins", "codex", "open-design-cloud");
+const pluginRoot = join(root, "plugins", "codex", "open-design");
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
@@ -55,7 +55,7 @@ function contentListDigest(directory) {
 }
 
 const packageContract = readJson(
-  join(pluginRoot, "open-design-cloud.package.json"),
+  join(pluginRoot, "open-design.package.json"),
 );
 const pluginManifest = readJson(
   join(pluginRoot, ".codex-plugin", "plugin.json"),
@@ -79,7 +79,7 @@ const skillMetadata = readFileSync(
   "utf8",
 );
 
-assert.equal(packageContract.name, "open-design-cloud");
+assert.equal(packageContract.name, "open-design");
 assert.equal(packageContract.version, pluginManifest.version);
 assert.equal(packageContract.version, releaseManifest.plugin.version);
 assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
@@ -87,12 +87,11 @@ assert.equal(packageContract.telemetrySchemaVersion, 3);
 assert.equal(packageContract.mcpServer, "open-design");
 assert.deepEqual(packageContract.customUiResources, [
   {
-    uri: "ui://open-design-cloud/artifact-card-v4.html",
+    uri: "ui://open-design/artifact-card-v5.html",
     mediaType: "text/html;profile=mcp-app",
   },
 ]);
 assert.equal(releaseManifest.distributionStatus, "unreleased-candidate");
-assert.equal(releaseManifest.previousRelease.plugin.version, "0.3.0");
 
 assert.equal(
   pluginManifest.interface.displayName,
@@ -147,7 +146,7 @@ assert.deepEqual(Object.keys(context).sort(), [
   "version",
 ]);
 assert.deepEqual(context, {
-  id: "open-design-cloud",
+  id: "open-design",
   version: packageContract.version,
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party",
@@ -217,10 +216,10 @@ assert.equal(
 );
 assert.equal(marketplace.name, "open-design");
 assert.equal(marketplace.plugins.length, 1);
-assert.equal(marketplace.plugins[0].name, "open-design-cloud");
+assert.equal(marketplace.plugins[0].name, "open-design");
 assert.equal(
   marketplace.plugins[0].source.path,
-  "./plugins/codex/open-design-cloud",
+  "./plugins/codex/open-design",
 );
 
 assert.equal(existsSync(join(pluginRoot, ".mcp.json")), false);
