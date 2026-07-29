@@ -87,7 +87,7 @@ assert.equal(packageContract.telemetrySchemaVersion, 3);
 assert.equal(packageContract.mcpServer, "open-design");
 assert.deepEqual(packageContract.customUiResources, [
   {
-    uri: "ui://open-design-cloud/artifact-card-v2.html",
+    uri: "ui://open-design-cloud/artifact-card-v3.html",
     mediaType: "text/html;profile=mcp-app",
   },
 ]);

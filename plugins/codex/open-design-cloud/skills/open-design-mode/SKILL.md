@@ -71,7 +71,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design-cloud",
-  version: "0.4.2",
+  version: "0.4.3",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }
@@ -84,6 +84,10 @@ data, or credentials.
    skips the interactive questions, still call `collect_brief` once with
    `skip: true` and the same Context so the local MCP can establish attribution
    before login, project, or run work begins.
+   For one logical artifact request, call `collect_brief` exactly once. If its
+   card is still loading, wait for that same card to receive its result; do not
+   issue a second `collect_brief` to replace it. Only a new artifact request or
+   an explicit user restart begins another Brief workflow.
 2. Preserve the server-issued `pluginWorkflowId`. The rendered Brief card
    inherits the workflow through its draft; use the same `pluginWorkflowId`
    returned after confirmation.

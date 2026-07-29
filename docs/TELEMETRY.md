@@ -12,7 +12,7 @@ Record host and distribution as independent dimensions:
 | `hostProduct` | `codex_desktop`, `codex_cli`, `codex_unknown`, `claude_code`, `unknown` | Which bounded agent host Open Design observed; use `codex_unknown` when the Codex surface cannot be distinguished reliably |
 | `distributionMechanism` | `git_marketplace`, `local_repo`, `manual`, `unknown` | How the plugin package was obtained |
 | `publisherClass` | `open_design_first_party`, `third_party`, `unknown` | Whether the distribution source is owned by Open Design |
-| `pluginVersion` | `0.4.2` | Immutable plugin payload version |
+| `pluginVersion` | `0.4.3` | Immutable plugin payload version |
 
 A GitHub repository installation is not a host. For example:
 
@@ -72,14 +72,14 @@ reviewed commits are released together and a controlled production smoke
 confirms the same schemas. There is still no Codex publisher install receipt or
 `platformInstalls` implementation; official install count remains unavailable.
 
-The 0.4.2 distribution candidate declares telemetry schema v3 and sends only
+The 0.4.3 distribution candidate declares telemetry schema v3 and sends only
 this bounded self-reported context on `collect_brief`. A skipped interactive
 Brief still calls `collect_brief` once with `skip: true`:
 
 ```json
 {
   "id": "open-design-cloud",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "distributionMechanism": "git_marketplace",
   "publisherClass": "open_design_first_party"
 }

@@ -48,14 +48,14 @@ test("candidate versions and telemetry compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.4.2");
-  assert.equal(pluginManifest.version, "0.4.2");
-  assert.equal(releaseManifest.plugin.version, "0.4.2");
+  assert.equal(packageContract.version, "0.4.3");
+  assert.equal(pluginManifest.version, "0.4.3");
+  assert.equal(releaseManifest.plugin.version, "0.4.3");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
   assert.deepEqual(packageContract.customUiResources, [
     {
-      uri: "ui://open-design-cloud/artifact-card-v2.html",
+      uri: "ui://open-design-cloud/artifact-card-v3.html",
       mediaType: "text/html;profile=mcp-app",
     },
   ]);
@@ -103,7 +103,7 @@ test("skill carries one bounded plugin workflow through delivery", () => {
 
   for (const requiredFragment of [
     'id: "open-design-cloud"',
-    'version: "0.4.2"',
+    'version: "0.4.3"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -119,6 +119,8 @@ test("skill carries one bounded plugin workflow through delivery", () => {
     skill,
     /externalPluginContext[\s\S]*collect_brief[\s\S]*skip: true/i,
   );
+  assert.match(skill, /call `collect_brief` exactly once/i);
+  assert.match(skill, /wait for that same card/i);
   assert.match(skill, /same `pluginWorkflowId`[\s\S]*get_artifact/i);
   assert.match(skill, /get_artifact[\s\S]*optional/i);
   assert.match(skill, /get_artifact[\s\S]*project/i);
