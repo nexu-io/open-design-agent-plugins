@@ -4,7 +4,7 @@ Use this instruction in Codex Desktop or Codex CLI:
 
 > Read
 > `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`.
-> Install Open Design Cloud into Codex using the **Install into Codex** lane.
+> Install the Open Design plugin into Codex using the **Install into Codex** lane.
 > Preserve unrelated plugins, marketplaces, MCP servers, and auth state.
 > Connect the plugin to the existing local `open-design` MCP if present. If it
 > is absent, verify that Open Design 0.17.0 or newer is installed. If it is

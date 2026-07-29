@@ -1,7 +1,7 @@
 {
   "schemaVersion": "open-design-codex-cloud-package/v3",
   "name": "open-design-cloud",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "minimumCodexCliVersion": "0.144.6",
   "minimumOpenDesignVersion": "0.17.0",
   "telemetrySchemaVersion": 3,
@@ -77,7 +77,7 @@
     "pluginWorkflowContract": {
       "context": {
         "id": "open-design-cloud",
-        "version": "0.4.1",
+        "version": "0.4.2",
         "distributionMechanism": "git_marketplace",
         "publisherClass": "open_design_first_party"
       },

@@ -95,6 +95,10 @@ assert.equal(releaseManifest.distributionStatus, "unreleased-candidate");
 assert.equal(releaseManifest.previousRelease.plugin.version, "0.3.0");
 
 assert.equal(
+  pluginManifest.interface.displayName,
+  "Open Design",
+);
+assert.equal(
   pluginManifest.interface.shortDescription,
   "Create websites, slides, and design systems from Codex.",
 );

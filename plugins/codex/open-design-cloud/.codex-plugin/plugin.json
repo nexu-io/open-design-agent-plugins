@@ -1,6 +1,6 @@
 {
   "name": "open-design-cloud",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Create and refine websites, slides, prototypes, and design systems with Open Design from Codex.",
   "author": {
     "name": "Open Design",
@@ -18,7 +18,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Open Design Cloud",
+    "displayName": "Open Design",
     "shortDescription": "Create websites, slides, and design systems from Codex.",
     "longDescription": "Generate and edit websites, presentations, prototypes, and design systems with Open Design directly from Codex.",
     "developerName": "Open Design",

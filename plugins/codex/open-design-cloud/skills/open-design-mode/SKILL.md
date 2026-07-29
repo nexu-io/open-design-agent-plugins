@@ -5,7 +5,7 @@ description: Create and refine websites, slides, prototypes, and design systems 
 
 # Open Design execution mode
 
-Use this workflow whenever a user asks the Open Design Cloud plugin to create
+Use this workflow whenever a user asks the Open Design plugin to create
 or continue an artifact.
 
 ## Required local boundary
@@ -71,7 +71,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design-cloud",
-  version: "0.4.1",
+  version: "0.4.2",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }

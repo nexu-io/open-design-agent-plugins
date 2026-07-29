@@ -48,9 +48,9 @@ test("candidate versions and telemetry compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.4.1");
-  assert.equal(pluginManifest.version, "0.4.1");
-  assert.equal(releaseManifest.plugin.version, "0.4.1");
+  assert.equal(packageContract.version, "0.4.2");
+  assert.equal(pluginManifest.version, "0.4.2");
+  assert.equal(releaseManifest.plugin.version, "0.4.2");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
   assert.deepEqual(packageContract.customUiResources, [
@@ -103,7 +103,7 @@ test("skill carries one bounded plugin workflow through delivery", () => {
 
   for (const requiredFragment of [
     'id: "open-design-cloud"',
-    'version: "0.4.1"',
+    'version: "0.4.2"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -134,6 +134,10 @@ test("public plugin and skill metadata match the approved acceptance copy", () =
     "skills/open-design-mode/agents/openai.yaml",
   );
 
+  assert.equal(
+    pluginManifest.interface.displayName,
+    "Open Design",
+  );
   assert.equal(
     pluginManifest.interface.shortDescription,
     "Create websites, slides, and design systems from Codex.",

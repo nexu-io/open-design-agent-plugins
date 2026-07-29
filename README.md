@@ -9,7 +9,7 @@ Give Codex this instruction:
 
 > Read
 > `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`
-> and install Open Design Cloud into Codex. Follow the Install lane, preserve
+> and install the Open Design plugin into Codex. Follow the Install lane, preserve
 > existing configuration, connect the plugin to the local `open-design` MCP,
 > and report any Open Design or Vela-login prerequisite.
 
@@ -38,7 +38,9 @@ There is no remote MCP dependency and no Codex-side Vela credential.
 
 - Marketplace: `open-design`
 - Plugin: `open-design-cloud`
-- Candidate version: `0.4.1`
+- Display name: `Open Design`
+- Stable plugin selector: `open-design-cloud@open-design`
+- Candidate version: `0.4.2`
 - Host: Codex only
 - Minimum Open Design: `0.17.0`
 - Telemetry contract: schema v3, self-reported Plugin attribution

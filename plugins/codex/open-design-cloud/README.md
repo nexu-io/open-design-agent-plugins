@@ -1,7 +1,8 @@
-# Open Design Cloud plugin for Codex
+# Open Design plugin for Codex
 
 This package teaches Codex Desktop and Codex CLI how to create artifacts with
-Open Design Cloud. The plugin does not ship an MCP server. It reuses the local
+Open Design. Open Design Cloud remains the default execution mode. The plugin
+does not ship an MCP server. It reuses the local
 `open-design` MCP registration owned by an installed Open Design runtime:
 
 ```text
