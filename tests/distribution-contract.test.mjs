@@ -48,9 +48,9 @@ test("candidate versions and telemetry compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.5.1");
-  assert.equal(pluginManifest.version, "0.5.1");
-  assert.equal(releaseManifest.plugin.version, "0.5.1");
+  assert.equal(packageContract.version, "0.5.2");
+  assert.equal(pluginManifest.version, "0.5.2");
+  assert.equal(releaseManifest.plugin.version, "0.5.2");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
   assert.deepEqual(packageContract.customUiResources, [
@@ -99,7 +99,7 @@ test("skill carries one bounded plugin workflow through delivery", () => {
 
   for (const requiredFragment of [
     'id: "open-design"',
-    'version: "0.5.1"',
+    'version: "0.5.2"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -222,11 +222,15 @@ test("skill keeps one run alive and proactively opens terminal delivery when sup
   );
   assert.match(
     skill,
-    /host-provided in-app Browser[\s\S]*immediately use it[\s\S]*exactly once[\s\S]*before the final response/i,
+    /as soon as the current run first returns a\s+`studioUrl`[\s\S]*host-provided in-app Browser[\s\S]*exactly once/i,
   );
   assert.match(
     skill,
-    /required delivery step[\s\S]*not an optional suggestion[\s\S]*must not wait for the\s+user/i,
+    /no running-state Studio tab was opened[\s\S]*selected terminal link exactly once before the final response/i,
+  );
+  assert.match(
+    skill,
+    /required delivery fallback[\s\S]*not an\s+optional suggestion[\s\S]*must not wait for the user/i,
   );
   assert.match(
     skill,
@@ -256,6 +260,14 @@ test("skill preserves an explicit mode until the user confirms a switch", () => 
   assert.match(
     skill,
     /Every `start_run` for a Local Codex logical generation[\s\S]*`agent: "codex"`/i,
+  );
+  assert.match(
+    skill,
+    /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*Open Design[\s>]*Cloud login/i,
+  );
+  assert.match(
+    skill,
+    /transport retry[\s\S]*byte-identical prompt including the child-runtime boundary/i,
   );
   assert.match(
     skill,

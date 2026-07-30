@@ -85,10 +85,14 @@ exact `codex` runtime and call every Local Codex
 `start_run(..., agent: "codex")`. Keep that mode selected through terminal
 delivery. If it is unavailable or out of quota, explain the failure and offer
 retry or an explicit switch; never enter Cloud sign-in or BYOK automatically.
+The run prompt also carries a bounded child-runtime instruction that prevents
+the child Codex from invoking the Open Design Plugin or local MCP recursively.
 
-On Codex Desktop, a successful terminal run immediately opens its `studioUrl`
-in the host-provided in-app Browser when that capability is callable, falling
-back to `previewUrl`. Codex CLI and hosts without that capability receive the
+On Codex Desktop, the first current-run `studioUrl` returned while generation
+is running opens immediately in the host-provided in-app Browser when that
+capability is callable. If no Studio URL was available earlier, successful
+terminal delivery opens `studioUrl` or falls back to `previewUrl`. Each run
+opens at most one tab. Codex CLI and hosts without that capability receive the
 same clickable link without treating the missing open action as generation
 failure.
 
