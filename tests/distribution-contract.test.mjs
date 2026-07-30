@@ -48,9 +48,9 @@ test("candidate versions and telemetry compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.5.0");
-  assert.equal(pluginManifest.version, "0.5.0");
-  assert.equal(releaseManifest.plugin.version, "0.5.0");
+  assert.equal(packageContract.version, "0.5.1");
+  assert.equal(pluginManifest.version, "0.5.1");
+  assert.equal(releaseManifest.plugin.version, "0.5.1");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
   assert.deepEqual(packageContract.customUiResources, [
@@ -99,7 +99,7 @@ test("skill carries one bounded plugin workflow through delivery", () => {
 
   for (const requiredFragment of [
     'id: "open-design"',
-    'version: "0.5.0"',
+    'version: "0.5.1"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -197,7 +197,7 @@ test("official Open Design artwork is packaged for plugin and skill surfaces", (
   }
 });
 
-test("skill keeps one run alive until terminal delivery and degrades browser opening safely", () => {
+test("skill keeps one run alive and proactively opens terminal delivery when supported", () => {
   const skill = readPlugin("skills/open-design-mode/SKILL.md");
 
   assert.match(
@@ -222,11 +222,44 @@ test("skill keeps one run alive until terminal delivery and degrades browser ope
   );
   assert.match(
     skill,
-    /host-provided in-app\s+Browser capability[\s\S]*best-effort/i,
+    /host-provided in-app Browser[\s\S]*immediately use it[\s\S]*exactly once[\s\S]*before the final response/i,
+  );
+  assert.match(
+    skill,
+    /required delivery step[\s\S]*not an optional suggestion[\s\S]*must not wait for the\s+user/i,
   );
   assert.match(
     skill,
     /Codex CLI[\s\S]*Browser capability is unavailable[\s\S]*clickable link/i,
+  );
+});
+
+test("skill preserves an explicit mode until the user confirms a switch", () => {
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+
+  assert.match(
+    skill,
+    /Resolve the execution mode[\s\S]*before calling\s+`collect_brief`/i,
+  );
+  assert.match(
+    skill,
+    /remains selected through Brief collection[\s\S]*terminal delivery/i,
+  );
+  assert.match(
+    skill,
+    /Never silently switch modes[\s\S]*Switch only after the user\s+explicitly confirms/i,
+  );
+  assert.match(
+    skill,
+    /Local Codex[\s\S]*Do not call `get_vela_login_status` or `start_vela_login`/i,
+  );
+  assert.match(
+    skill,
+    /Every `start_run` for a Local Codex logical generation[\s\S]*`agent: "codex"`/i,
+  );
+  assert.match(
+    skill,
+    /out of quota[\s\S]*offer[\s\S]*switch explicitly[\s\S]*Never invoke either alternative until the user confirms/i,
   );
 });
 

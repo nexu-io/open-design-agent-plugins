@@ -40,7 +40,7 @@ There is no remote MCP dependency and no Codex-side Vela credential.
 - Plugin: `open-design`
 - Display name: `Open Design`
 - Stable plugin selector: `open-design@open-design`
-- Candidate version: `0.5.0`
+- Candidate version: `0.5.1`
 - Host: Codex only
 - Minimum Open Design: `0.17.0`
 - Telemetry contract: schema v3, self-reported Plugin attribution

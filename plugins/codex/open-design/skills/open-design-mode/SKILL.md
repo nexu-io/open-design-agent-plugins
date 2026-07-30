@@ -37,10 +37,23 @@ Open Design Cloud is the default mode. It uses the local Open Design daemon and
 its bundled cloud runtime. Local Codex and BYOK are available only when the
 user explicitly selects them.
 
-Never switch modes because authentication, balance, transport, quota, or
-generation failed. When the user explicitly switches modes, start a new
-execution context and request identifier. Reuse only the human-readable
-confirmed brief; never repeat its signed machine envelope.
+Resolve the execution mode from the user's current request before calling
+`collect_brief`. An explicit choice such as Local Codex, Open Design Cloud, or
+secure BYOK remains selected through Brief collection, confirmation, project
+selection, generation, polling, and terminal delivery for that logical
+generation.
+
+Never silently switch modes because authentication, balance, transport, quota,
+or generation failed. Explain the failure and offer the user applicable
+choices, such as retrying the selected mode, completing its authentication, or
+switching to another available mode. State when the alternative uses an Open
+Design Cloud account or a BYOK provider account. Switch only after the user
+explicitly confirms the new mode.
+
+After an explicit switch, start a new execution context and request identifier.
+Reuse only the human-readable confirmed brief; never repeat its signed machine
+envelope. The selected mode may change between logical generations, but one
+logical generation must never drift between modes.
 
 ## Keep implementation names out of user-facing copy
 
@@ -71,7 +84,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design",
-  version: "0.5.0",
+  version: "0.5.1",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }
@@ -156,13 +169,19 @@ mode:
 6. For `failed` or `canceled`, report that terminal result clearly and do not
    present a stale link as success.
 
-On Codex Desktop, only when the host exposes a callable host-provided in-app
-Browser capability, best-effort open the selected terminal link once. Do not
-assume that capability exists, install another plugin, or substitute the system
-browser. In Codex CLI, or when the Browser capability is unavailable, return
-the clickable link without treating the missing open action as a generation
-failure. Repeated polls, transport retries, and recharge resume must not open
-duplicate tabs for the same deliverable.
+On Codex Desktop, when the host exposes a callable host-provided in-app Browser
+capability, immediately use it to open the selected terminal link exactly once
+before the final response. This is a required delivery step whenever that
+capability is available, not an optional suggestion, and must not wait for the
+user to ask for a preview or remind the agent to open it. Do not install another
+plugin, substitute the system browser, or claim the link was opened unless the
+Browser call succeeded.
+
+In Codex CLI, when the Browser capability is unavailable, or if its call fails,
+return the clickable link and explain the open-action limitation without
+treating it as a generation failure. Repeated polls, transport retries,
+recharge resume, and repeated terminal reads must not open duplicate tabs for
+the same deliverable.
 
 ## Open Design Cloud workflow
 
@@ -209,17 +228,25 @@ Use this only when the user explicitly chose Local Codex:
 
 1. Start the attributed workflow above and confirm the requested artifact type
    and readable brief.
-2. Call `list_agents` and require the exact `codex` agent to be available and
+2. Do not call `get_vela_login_status` or `start_vela_login` while Local Codex
+   remains selected. A Local Codex request must not enter the Open Design Cloud
+   sign-in or credit flow.
+3. Call `list_agents` and require the exact `codex` agent to be available and
    authenticated, carrying the workflow id.
-3. Check `get_active_context` or list/create the target project with the same
+4. Check `get_active_context` or list/create the target project with the same
    workflow id.
-4. Create one `requestId`, then call `start_run` with that `requestId`,
+5. Create one `requestId`, then call `start_run` with that `requestId`,
    `pluginWorkflowId`, `agent: "codex"`, and no BYOK profile or credential.
-5. Follow the terminal delivery gate above for this exact run.
+   Every `start_run` for a Local Codex logical generation, including an
+   identical transport retry, must carry `agent: "codex"`.
+6. Follow the terminal delivery gate above for this exact run.
 
 If Codex CLI is missing, ask the user to install it. If its authentication is
 missing or unknown, ask the user to run `codex login` and rescan agents. Local
 Codex does not use OpenCode and Open Design must never receive an OpenAI key.
+If Local Codex is unavailable or out of quota, explain the cause and offer to
+retry after the user resolves it or to switch explicitly to Open Design Cloud
+or secure BYOK. Never invoke either alternative until the user confirms it.
 
 ## Local BYOK workflow
 

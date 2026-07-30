@@ -203,7 +203,15 @@ assert.match(
 );
 assert.match(
   skill,
-  /host-provided in-app\s+Browser capability[\s\S]*best-effort/i,
+  /host-provided in-app Browser[\s\S]*immediately use it[\s\S]*exactly once[\s\S]*before the final response/i,
+);
+assert.match(
+  skill,
+  /Never silently switch modes[\s\S]*Switch only after the user\s+explicitly confirms/i,
+);
+assert.match(
+  skill,
+  /Every `start_run` for a Local Codex logical generation[\s\S]*`agent: "codex"`/i,
 );
 assert.match(
   skill,
