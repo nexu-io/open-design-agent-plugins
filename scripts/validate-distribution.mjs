@@ -203,7 +203,11 @@ assert.match(
 );
 assert.match(
   skill,
-  /host-provided in-app Browser[\s\S]*immediately use it[\s\S]*exactly once[\s\S]*before the final response/i,
+  /as soon as the current run first returns a\s+`studioUrl`[\s\S]*host-provided in-app Browser[\s\S]*exactly once/i,
+);
+assert.match(
+  skill,
+  /no running-state Studio tab was opened[\s\S]*selected terminal link exactly once before the final response/i,
 );
 assert.match(
   skill,
@@ -212,6 +216,14 @@ assert.match(
 assert.match(
   skill,
   /Every `start_run` for a Local Codex logical generation[\s\S]*`agent: "codex"`/i,
+);
+assert.match(
+  skill,
+  /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*Open Design[\s>]*Cloud login/i,
+);
+assert.match(
+  skill,
+  /transport retry[\s\S]*byte-identical prompt including the child-runtime boundary/i,
 );
 assert.match(
   skill,

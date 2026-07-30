@@ -84,7 +84,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design",
-  version: "0.5.1",
+  version: "0.5.2",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }
@@ -150,32 +150,39 @@ transport retry is required.
 After `start_run` returns a `runId`, preserve it and follow this gate in every
 mode:
 
-1. Continue polling the same `runId` with `get_run` and the same
+1. Inspect the exact `start_run` result and every later `get_run` result for
+   this `runId`. On Codex Desktop, as soon as the current run first returns a
+   `studioUrl` while `queued` or `running`, immediately open that exact URL
+   with the callable host-provided in-app Browser. Open it exactly once for
+   this run; later polls and terminal delivery must not open a duplicate tab.
+   If no `studioUrl` exists yet, keep polling instead of opening a URL copied
+   from another run or project.
+2. Continue polling the same `runId` with `get_run` and the same
    `pluginWorkflowId`, normally every 30–60 seconds.
-2. Do not end the current task while `get_run` reports `queued` or `running`.
+3. Do not end the current task while `get_run` reports `queued` or `running`.
    A concise progress update is allowed, but continue the polling loop in this
    task. Never promise that a later message will arrive after the current task
    ends.
-3. Stop polling only for a terminal state, an explicit recharge/user-input
+4. Stop polling only for a terminal state, an explicit recharge/user-input
    boundary, or an explicit user request to cancel.
-4. For `succeeded`, prefer the exact `studioUrl` returned by this run and fall
+5. For `succeeded`, prefer the exact `studioUrl` returned by this run and fall
    back to the exact `previewUrl`. Render the selected value as a clickable
    Markdown link. Never copy a URL from another run, project, tool history, or
    a previously rendered output panel.
-5. If a successful result contains neither URL, say that the artifact was
+6. If a successful result contains neither URL, say that the artifact was
    generated but no usable delivery link was returned. Preserve the tool
    result for diagnosis and do not claim complete delivery. Do not call
    `get_artifact` merely to manufacture a link.
-6. For `failed` or `canceled`, report that terminal result clearly and do not
+7. For `failed` or `canceled`, report that terminal result clearly and do not
    present a stale link as success.
 
-On Codex Desktop, when the host exposes a callable host-provided in-app Browser
-capability, immediately use it to open the selected terminal link exactly once
-before the final response. This is a required delivery step whenever that
-capability is available, not an optional suggestion, and must not wait for the
-user to ask for a preview or remind the agent to open it. Do not install another
-plugin, substitute the system browser, or claim the link was opened unless the
-Browser call succeeded.
+On Codex Desktop, when no running-state Studio tab was opened but the host
+exposes a callable host-provided in-app Browser capability, immediately use it
+to open the selected terminal link exactly once before the final response. This
+is a required delivery fallback whenever that capability is available, not an
+optional suggestion, and must not wait for the user to ask for a preview or
+remind the agent to open it. Do not install another plugin, substitute the
+system browser, or claim the link was opened unless the Browser call succeeded.
 
 In Codex CLI, when the Browser capability is unavailable, or if its call fails,
 return the clickable link and explain the open-action limitation without
@@ -235,11 +242,22 @@ Use this only when the user explicitly chose Local Codex:
    authenticated, carrying the workflow id.
 4. Check `get_active_context` or list/create the target project with the same
    workflow id.
-5. Create one `requestId`, then call `start_run` with that `requestId`,
-   `pluginWorkflowId`, `agent: "codex"`, and no BYOK profile or credential.
+5. Build the `start_run` prompt from the user's confirmed brief, then append
+   this child-runtime boundary:
+
+   > This run is already the selected Local Codex execution inside Open
+   > Design. Work directly in the current Open Design project. Do not invoke
+   > `@open-design`, the `open-design` MCP server, `collect_brief`, Open Design
+   > Cloud login, or another Open Design Plugin workflow. Do not route this
+   > request through Open Design again.
+
+6. Create one `requestId`, then call `start_run` with that exact prompt,
+   `requestId`, `pluginWorkflowId`, `agent: "codex"`, and no BYOK profile or
+   credential.
    Every `start_run` for a Local Codex logical generation, including an
-   identical transport retry, must carry `agent: "codex"`.
-6. Follow the terminal delivery gate above for this exact run.
+   identical transport retry, must carry `agent: "codex"` and reuse the
+   byte-identical prompt including the child-runtime boundary.
+7. Follow the terminal delivery gate above for this exact run.
 
 If Codex CLI is missing, ask the user to install it. If its authentication is
 missing or unknown, ask the user to run `codex login` and rescan agents. Local

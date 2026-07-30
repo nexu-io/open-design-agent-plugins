@@ -17,9 +17,9 @@
   },
   "plugin": {
     "name": "open-design",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "path": "plugins/codex/open-design",
-    "contentListSha256": "d1849adbd482a14c612cd7c486608351b45a60d95ffce43271306e6f8d21ae21",
+    "contentListSha256": "f1a1811a3b558fa4e062e2fba1a70b3363b0919a35debf287062e4546257b808",
     "minimumCodexCliVersion": "0.144.6",
     "minimumOpenDesignVersion": "0.17.0",
     "telemetrySchemaVersion": 3
@@ -34,16 +34,16 @@
     "commit": null,
     "treeState": "pending-plugin-attribution-release"
   },
-  "generatedAt": "2026-07-30T04:31:53Z",
+  "generatedAt": "2026-07-30T05:08:28Z",
   "validation": {
     "status": "local-distribution-validated",
-    "validatedAt": "2026-07-30T04:31:53Z",
+    "validatedAt": "2026-07-30T05:08:28Z",
     "codexCliVersion": "0.145.0",
     "packageTests": "10 passed",
     "distributionValidator": "passed",
     "pluginCreatorValidator": "helper-schema-lacks-supportURL; codex-cli-0.145.0-ingestion-passed",
     "skillValidator": "passed",
-    "isolatedMarketplaceInstall": "passed-local-open-design-0.5.1",
+    "isolatedMarketplaceInstall": "passed-local-open-design-0.5.2",
     "compatibleOpenDesignRuntime": "pending-0.17.0-release",
     "telemetryV3EndToEnd": "pending-open-design-and-vela-compatible-releases"
   }
