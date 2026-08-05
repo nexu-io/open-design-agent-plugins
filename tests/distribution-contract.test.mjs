@@ -35,7 +35,7 @@ function sorted(values) {
   return [...values].sort();
 }
 
-test("candidate versions and telemetry compatibility are explicit", () => {
+test("published versions and runtime compatibility are explicit", () => {
   const packageContract = JSON.parse(
     readPlugin("open-design.package.json"),
   );
@@ -59,7 +59,47 @@ test("candidate versions and telemetry compatibility are explicit", () => {
       mediaType: "text/html;profile=mcp-app",
     },
   ]);
-  assert.equal(releaseManifest.distributionStatus, "unreleased-candidate");
+  assert.equal(releaseManifest.distributionStatus, "published-git-marketplace");
+  assert.deepEqual(releaseManifest.source, {
+    repository: "https://github.com/nexu-io/open-design",
+    compatibilityRange: ">=0.17.0",
+    minimumRelease: {
+      version: "0.17.0",
+      ref: "refs/tags/open-design-v0.17.0",
+      commit: "90a660add511da6408464a1bf3d4d5945ad06400",
+    },
+    recommendedRelease: {
+      version: "0.18.0",
+      ref: "refs/heads/release/v0.18.0",
+      commit: "1a3cfd0fd625736e8b63249b38163c999b741f36",
+      tagObserved: false,
+    },
+    treeState: "compatible-open-design-runtime-at-or-above-v0.17.0",
+  });
+  assert.equal(
+    releaseManifest.velaCompatibility.bundledPackage,
+    "@powerformer/vela-cli",
+  );
+  assert.equal(
+    releaseManifest.velaCompatibility.minimumBundledVersion,
+    "0.0.27",
+  );
+  assert.equal(
+    releaseManifest.velaCompatibility.recommendedBundledVersion,
+    "0.0.28",
+  );
+  assert.equal(
+    releaseManifest.validation.compatibleOpenDesignRuntime,
+    ">=0.17.0",
+  );
+  assert.equal(
+    releaseManifest.validation.recommendedOpenDesignRuntime,
+    "release/v0.18.0@1a3cfd0fd625736e8b63249b38163c999b741f36",
+  );
+  assert.equal(
+    releaseManifest.validation.telemetryV3EndToEnd,
+    "pending-vela-production-validation-and-controlled-e2e",
+  );
 });
 
 test("capabilities match the real core and mode workflows", () => {
@@ -309,7 +349,7 @@ test("portable payload contains no remote MCP, secret, or machine path", () => {
   assert.doesNotMatch(content, /[A-Za-z]:\\Users\\/);
 });
 
-test("telemetry document distinguishes candidate implementation from production evidence", () => {
+test("telemetry document distinguishes the released runtime from production evidence", () => {
   const telemetry = readFileSync(
     join(new URL("../docs/", import.meta.url).pathname, "TELEMETRY.md"),
     "utf8",
@@ -321,7 +361,12 @@ test("telemetry document distinguishes candidate implementation from production 
     telemetry,
     /compatible Vela candidate branch[\s\S]*bounded Plugin correlation/i,
   );
-  assert.match(telemetry, /not production evidence/i);
+  assert.match(
+    telemetry,
+    /Open Design 0\.17\.0 and later[\s\S]*telemetry schema v3/i,
+  );
+  assert.match(telemetry, /recommended `release\/v0\.18\.0` branch/i);
+  assert.match(telemetry, /not production\s+evidence/i);
   assert.match(telemetry, /destination-specific allowlist\/projection/i);
   assert.match(telemetry, /self.reported/i);
   assert.doesNotMatch(

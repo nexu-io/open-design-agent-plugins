@@ -3,8 +3,8 @@
 ## Supported environment
 
 - Codex Desktop or Codex CLI `0.144.6` or newer
-- Open Design `0.17.0` or newer with bundled Vela CLI; its GUI does not need to
-  be open
+- Open Design `0.17.0` or newer with bundled Vela CLI; `0.18.0` is recommended.
+  Its GUI does not need to be open
 - Plugin selector `open-design@open-design`
 - Local MCP identity `open-design`
 

@@ -4,7 +4,7 @@
   "primaryAudience": "agent",
   "agentEntrypoint": "AGENTS.md",
   "distributionRepository": "https://github.com/nexu-io/open-design-agent-plugins",
-  "distributionStatus": "unreleased-candidate",
+  "distributionStatus": "published-git-marketplace",
   "supportedHosts": [
     "codex"
   ],
@@ -26,25 +26,42 @@
   },
   "source": {
     "repository": "https://github.com/nexu-io/open-design",
-    "commit": null,
-    "treeState": "pending-compatible-open-design-release"
+    "compatibilityRange": ">=0.17.0",
+    "minimumRelease": {
+      "version": "0.17.0",
+      "ref": "refs/tags/open-design-v0.17.0",
+      "commit": "90a660add511da6408464a1bf3d4d5945ad06400"
+    },
+    "recommendedRelease": {
+      "version": "0.18.0",
+      "ref": "refs/heads/release/v0.18.0",
+      "commit": "1a3cfd0fd625736e8b63249b38163c999b741f36",
+      "tagObserved": false
+    },
+    "treeState": "compatible-open-design-runtime-at-or-above-v0.17.0"
   },
   "velaCompatibility": {
     "repository": "https://github.com/powerformer/vela",
-    "commit": null,
-    "treeState": "pending-plugin-attribution-release"
+    "bundledPackage": "@powerformer/vela-cli",
+    "minimumBundledVersion": "0.0.27",
+    "recommendedBundledVersion": "0.0.28",
+    "runtimeState": "bundled-with-open-design-v0.17.0-or-newer",
+    "telemetryState": "pending-production-plugin-correlation-validation"
   },
   "generatedAt": "2026-07-30T05:08:28Z",
+  "releaseProvenanceValidatedAt": "2026-08-05T10:32:35Z",
   "validation": {
-    "status": "local-distribution-validated",
-    "validatedAt": "2026-07-30T05:08:28Z",
+    "status": "published-distribution-and-released-open-design-source-validated",
+    "validatedAt": "2026-08-05T10:32:35Z",
     "codexCliVersion": "0.145.0",
     "packageTests": "10 passed",
     "distributionValidator": "passed",
     "pluginCreatorValidator": "helper-schema-lacks-supportURL; codex-cli-0.145.0-ingestion-passed",
     "skillValidator": "passed",
     "isolatedMarketplaceInstall": "passed-local-open-design-0.5.2",
-    "compatibleOpenDesignRuntime": "pending-0.17.0-release",
-    "telemetryV3EndToEnd": "pending-open-design-and-vela-compatible-releases"
+    "compatibleOpenDesignRuntime": ">=0.17.0",
+    "minimumCompatibleOpenDesignRuntime": "open-design-v0.17.0@90a660add511da6408464a1bf3d4d5945ad06400",
+    "recommendedOpenDesignRuntime": "release/v0.18.0@1a3cfd0fd625736e8b63249b38163c999b741f36",
+    "telemetryV3EndToEnd": "pending-vela-production-validation-and-controlled-e2e"
   }
 }

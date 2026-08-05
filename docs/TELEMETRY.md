@@ -64,17 +64,24 @@ Design PostHog project. It does not create a second billing or analytics
 pipeline, and it does not mirror account, payment, balance, cost, prompt, raw
 error, or credential data into Open Design PostHog.
 
-The compatible Open Design candidate validates the bounded context, issues the
-workflow identifier, persists logical-run and Artifact origin correlation, and
-emits telemetry schema v3 through the existing consented Open Design analytics
-path. These candidate implementations are not production evidence until their
-reviewed commits are released together and a controlled production smoke
-confirms the same schemas. There is still no Codex publisher install receipt or
-`platformInstalls` implementation; official install count remains unavailable.
+Open Design 0.17.0 and later validate the bounded context, issue the workflow
+identifier, persist logical-run and Artifact origin correlation, and emit
+telemetry schema v3 through the existing consented Open Design analytics path.
+The minimum compatible tag `open-design-v0.17.0` resolves to
+`90a660add511da6408464a1bf3d4d5945ad06400` and bundles
+`@powerformer/vela-cli@0.0.27`. The recommended `release/v0.18.0` branch was
+verified at `1a3cfd0fd625736e8b63249b38163c999b741f36` and bundles Vela CLI
+`0.0.28`; no `open-design-v0.18.0` tag was observed at verification time. This
+release evidence does not by itself prove that Plugin-correlated events reached
+production Vela or PostHog.
+The released source and package pin are compatibility evidence, not production
+evidence for Plugin-correlated event delivery.
+There is still no Codex publisher install receipt or `platformInstalls`
+implementation; official install count remains unavailable.
 
-The 0.5.2 distribution candidate declares telemetry schema v3 and sends only
-this bounded self-reported context on `collect_brief`. A skipped interactive
-Brief still calls `collect_brief` once with `skip: true`:
+The published 0.5.2 Git marketplace distribution declares telemetry schema v3
+and sends only this bounded self-reported context on `collect_brief`. A skipped
+interactive Brief still calls `collect_brief` once with `skip: true`:
 
 ```json
 {
@@ -89,14 +96,14 @@ Open Design 0.17.0 or newer must validate that object, issue one
 `pluginWorkflowId`, and carry the workflow through Brief, login, project, run,
 terminal delivery, and optional Artifact context. A compatible Vela release
 must contain the destination-specific projection before Plugin-attributed Cloud
-events are mirrored. Until both compatible product versions and production
-validation exist, this repository's metadata is a contract declaration, not
-evidence that the events were received.
+events are mirrored. Until Vela production validation and a controlled
+end-to-end smoke exist, this repository's telemetry metadata is a contract
+declaration, not evidence that the events were received.
 
 Before Git-based public distribution is claimed as measured:
 
-1. validate the bounded context and mode-aware workflow against a compatible
-   Open Design release;
+1. keep the bounded context and mode-aware workflow pinned to the released Open
+   Design provenance recorded in `release-manifest.json`;
 2. release and production-validate Vela's bounded schemas and safe Open Design
    PostHog projection for Cloud-only Plugin correlation;
 3. keep `official_installs=N/A / source_unavailable` until a trustworthy

@@ -91,7 +91,47 @@ assert.deepEqual(packageContract.customUiResources, [
     mediaType: "text/html;profile=mcp-app",
   },
 ]);
-assert.equal(releaseManifest.distributionStatus, "unreleased-candidate");
+assert.equal(releaseManifest.distributionStatus, "published-git-marketplace");
+assert.deepEqual(releaseManifest.source, {
+  repository: "https://github.com/nexu-io/open-design",
+  compatibilityRange: ">=0.17.0",
+  minimumRelease: {
+    version: "0.17.0",
+    ref: "refs/tags/open-design-v0.17.0",
+    commit: "90a660add511da6408464a1bf3d4d5945ad06400",
+  },
+  recommendedRelease: {
+    version: "0.18.0",
+    ref: "refs/heads/release/v0.18.0",
+    commit: "1a3cfd0fd625736e8b63249b38163c999b741f36",
+    tagObserved: false,
+  },
+  treeState: "compatible-open-design-runtime-at-or-above-v0.17.0",
+});
+assert.equal(
+  releaseManifest.velaCompatibility.bundledPackage,
+  "@powerformer/vela-cli",
+);
+assert.equal(
+  releaseManifest.velaCompatibility.minimumBundledVersion,
+  "0.0.27",
+);
+assert.equal(
+  releaseManifest.velaCompatibility.recommendedBundledVersion,
+  "0.0.28",
+);
+assert.equal(
+  releaseManifest.validation.compatibleOpenDesignRuntime,
+  ">=0.17.0",
+);
+assert.equal(
+  releaseManifest.validation.recommendedOpenDesignRuntime,
+  "release/v0.18.0@1a3cfd0fd625736e8b63249b38163c999b741f36",
+);
+assert.equal(
+  releaseManifest.validation.telemetryV3EndToEnd,
+  "pending-vela-production-validation-and-controlled-e2e",
+);
 
 assert.equal(
   pluginManifest.interface.displayName,
