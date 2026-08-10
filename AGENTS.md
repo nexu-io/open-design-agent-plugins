@@ -119,6 +119,15 @@ If Open Design is running, a runtime smoke may additionally verify that
 contains `amr`. An unauthenticated `start_run(..., agent: "amr")` must stop at
 the Vela sign-in boundary, not fall back to another runtime.
 
+For the unpublished `0.5.3` Local Codex candidate, additionally propagate any
+explicit current-task `model` and reasoning effort as `model` and `reasoning`
+on `start_run(..., agent: "codex")`. Keep optional `serviceTier` separate. Omit
+unspecified settings and report child-CLI default use as unconfirmed parity;
+stop before generation when compatibility for an explicit setting cannot be
+proven. Keep start plus terminal polling in one long-lived orchestration call
+when the host boundary requires it. This smoke remains pending until a
+compatible Open Design runtime is released.
+
 ### 6. Hand back
 
 Report:

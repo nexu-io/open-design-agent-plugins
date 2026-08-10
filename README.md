@@ -40,8 +40,8 @@ There is no remote MCP dependency and no Codex-side Vela credential.
 - Plugin: `open-design`
 - Display name: `Open Design`
 - Stable plugin selector: `open-design@open-design`
-- Plugin version: `0.5.2`
-- Distribution: published Git marketplace from `main`
+- Plugin candidate: `0.5.3` (unpublished)
+- Published Git marketplace version: `0.5.2` from `main`
 - Host: Codex only
 - Minimum Open Design: `0.17.0`
 - Recommended Open Design: `release/v0.18.0`
@@ -53,6 +53,8 @@ There is no remote MCP dependency and no Codex-side Vela credential.
 - MCP: local `open-design` stdio registration
 - Cloud runtime: remote Vela/AMR via Open Design's bundled Vela CLI
 - Optional modes: Local Codex and Local BYOK, explicit and never fallbacks
+- Local Codex exact model/reasoning transfer: pending a compatible Open Design
+  runtime release before candidate publication
 
 ## Direct installation
 

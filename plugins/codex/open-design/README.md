@@ -81,12 +81,26 @@ od mcp install codex
 ```
 
 When Local Codex is explicitly selected, require `list_agents` to report the
-exact `codex` runtime and call every Local Codex
-`start_run(..., agent: "codex")`. Keep that mode selected through terminal
-delivery. If it is unavailable or out of quota, explain the failure and offer
-retry or an explicit switch; never enter Cloud sign-in or BYOK automatically.
-The run prompt also carries a bounded child-runtime instruction that prevents
-the child Codex from invoking the Open Design Plugin or local MCP recursively.
+exact `codex` runtime. Resolve any explicitly selected current-task model,
+reasoning effort, and service tier from host task metadata or, when necessary,
+the task-bound latest authoritative `turn_context`. Pass explicit values as
+`model`, `reasoning`, and the separate `serviceTier` to one
+`start_run(..., agent: "codex")`. An explicit incompatible setting stops before
+generation. An unspecified setting is omitted, uses the child CLI default, and
+leaves execution parity unconfirmed. The Local Codex route never switches
+modes.
+
+Where the host boundary could release the packaged runtime between nested tool
+calls, one long-lived code-mode orchestration owns the single `start_run` and
+every `get_run` poll through terminal delivery. The run prompt also carries a
+bounded child-runtime instruction that prevents the child Codex from invoking
+the Open Design Plugin or local MCP recursively.
+
+Ordinary polling never retries `start_run`. If its initial response is lost
+before a run id is observed, retry once with the byte-identical workflow,
+request, project, prompt, agent, model, reasoning, and optional service-tier
+arguments so the runtime returns the same logical run rather than creating a
+duplicate.
 
 On Codex Desktop, the first current-run `studioUrl` returned while generation
 is running opens immediately in the host-provided in-app Browser when that
@@ -106,7 +120,8 @@ only the non-secret profile id.
 - `.codex-plugin/plugin.json` is the only Codex plugin manifest.
 - There is no bundled `.mcp.json` and no remote MCP domain.
 - `open-design.package.json` pins the local MCP registration contract,
-  Open Design `0.17.0` minimum, telemetry schema v3, mode-aware tools,
+  Open Design `0.17.0` minimum for the existing product modes, telemetry
+  schema v3, mode-aware tools, the Local Codex exact-setting arguments,
   canonical Vela endpoints, `agent: "amr"`, and the versioned MCP Apps
   resource.
 - `skills/open-design-mode/SKILL.md` keeps Cloud, Local Codex, and BYOK routing

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "open-design-codex-cloud-package/v3",
   "name": "open-design",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "minimumCodexCliVersion": "0.144.6",
   "minimumOpenDesignVersion": "0.17.0",
   "telemetrySchemaVersion": 3,
@@ -77,7 +77,7 @@
     "pluginWorkflowContract": {
       "context": {
         "id": "open-design",
-        "version": "0.5.2",
+        "version": "0.5.3",
         "distributionMechanism": "git_marketplace",
         "publisherClass": "open_design_first_party"
       },
@@ -112,7 +112,25 @@
       "agent": "codex",
       "authentication": "codex-login",
       "loginCommand": "codex login",
-      "requestId": "required"
+      "requestId": "required",
+      "settingsSource": {
+        "preferred": "host-active-task-metadata",
+        "fallback": "CODEX_THREAD_ID-latest-turn_context",
+        "identifierHandling": "lookup-only-never-print-or-persist"
+      },
+      "startRunArguments": {
+        "required": [
+          "agent"
+        ],
+        "optional": [
+          "model",
+          "reasoning",
+          "serviceTier"
+        ]
+      },
+      "compatibility": "require-explicit-exact-or-stop-before-generation",
+      "orchestration": "single-long-lived-start-poll-call",
+      "transportRetry": "byte-identical-same-logical-run-on-lost-response-only"
     },
     "byok": {
       "status": "secure-profile",

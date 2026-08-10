@@ -84,7 +84,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design",
-  version: "0.5.2",
+  version: "0.5.3",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }
@@ -93,10 +93,12 @@ externalPluginContext = {
 Do not add host names, paths, branch names, prompts, brief answers, account
 data, or credentials.
 
-1. Send `externalPluginContext` with `collect_brief`. If the user explicitly
-   skips the interactive questions, still call `collect_brief` once with
-   `skip: true` and the same Context so the local MCP can establish attribution
-   before login, project, or run work begins.
+1. Send `externalPluginContext` with `collect_brief`. When the current context
+   already provides a complete brief, call `collect_brief` exactly once with
+   `skip: true`, the required attribution, and the current locale. If the user
+   explicitly skips interactive questions, use that same one-call path. When
+   material brief details are missing, call `collect_brief` once without
+   skipping and let the user complete that same card.
    For one logical artifact request, call `collect_brief` exactly once. If its
    card is still loading, wait for that same card to receive its result; do not
    issue a second `collect_brief` to replace it. Only a new artifact request or
@@ -231,18 +233,51 @@ billing truth.
 
 ## Local Codex workflow
 
-Use this only when the user explicitly chose Local Codex:
+Use this only when the user explicitly chose Local Codex.
+The official Local Codex route uses only `agent: "codex"` and the user's
+existing Codex login.
+Once selected for a logical generation, this route is locked through terminal
+delivery.
+
+### Resolve exact current-task settings
+
+Before Brief or project work, resolve the exact settings of the current Codex
+task:
+
+1. Prefer host-provided active-task metadata. Capture an exact `model`,
+   reasoning effort, and service tier only when the current task explicitly
+   supplies each setting. Keep service tier as a separate optional value.
+2. When the host does not directly expose those exact values, use the current
+   task binding in `CODEX_THREAD_ID` only to locate this task's latest
+   authoritative `turn_context` in the local Codex session store. Read the
+   explicitly selected `model`, reasoning effort, and service tier from that
+   record. Do not inspect unrelated task records.
+3. Never print, log, persist, or expose the thread or session identifier. Use
+   it only as the lookup key and discard it from all prompts, MCP arguments,
+   reports, and user-facing text.
+4. Never guess, clamp, substitute, or reinterpret an explicitly selected model,
+   reasoning effort, or service tier.
+
+Call `list_agents` with the workflow id and require the exact `codex` agent to
+be available and authenticated. When the task has an explicit model or
+reasoning setting, require the runtime to prove compatibility with every
+explicit value. If explicit model or reasoning compatibility cannot be proven,
+stop with a visible blocker before generation. Do not start a run with inferred
+or downgraded settings.
+
+When a setting is absent from both authoritative sources, omit the
+corresponding field from `start_run`. State in the result that the child used
+its CLI default for that setting and that execution parity is unconfirmed; an
+absent setting is not permission to invent a value.
+
+### Build the one Local Codex run
 
 1. Start the attributed workflow above and confirm the requested artifact type
-   and readable brief.
-2. Do not call `get_vela_login_status` or `start_vela_login` while Local Codex
-   remains selected. A Local Codex request must not enter the Open Design Cloud
-   sign-in or credit flow.
-3. Call `list_agents` and require the exact `codex` agent to be available and
-   authenticated, carrying the workflow id.
-4. Check `get_active_context` or list/create the target project with the same
+   and readable brief. If the current context already provides a complete brief,
+   call `collect_brief` exactly once with `skip: true`.
+2. Check `get_active_context` or list/create the target project with the same
    workflow id.
-5. Build the `start_run` prompt from the user's confirmed brief, then append
+3. Build the `start_run` prompt from the user's confirmed brief, then append
    this child-runtime boundary:
 
    > This run is already the selected Local Codex execution inside Open
@@ -251,20 +286,33 @@ Use this only when the user explicitly chose Local Codex:
    > Cloud login, or another Open Design Plugin workflow. Do not route this
    > request through Open Design again.
 
-6. Create one `requestId`, then call `start_run` with that exact prompt,
-   `requestId`, `pluginWorkflowId`, `agent: "codex"`, and no BYOK profile or
-   credential.
-   Every `start_run` for a Local Codex logical generation, including an
-   identical transport retry, must carry `agent: "codex"` and reuse the
-   byte-identical prompt including the child-runtime boundary.
-7. Follow the terminal delivery gate above for this exact run.
+4. Create one `requestId`. Call `start_run` exactly once with the same
+   `pluginWorkflowId`, the exact prompt and project, and `agent: "codex"`.
+   When the corresponding current-task values are explicit, also pass
+   `model: "<exact-current-model>"` and
+   `reasoning: "<exact-current-effort>"`.
+   The MCP schema field is `reasoning`; do not send `effort` or
+   `reasoning_effort`. Keep `serviceTier` separate and omit it unless the
+   current task explicitly selected an exact service tier.
+5. Use only `get_run` after `start_run`. Poll the same `runId`, request, and
+   workflow to a terminal state. Ordinary polling never retries `start_run`.
+   If and only if transport loses the initial `start_run` response before a
+   `runId` is observed, retry `start_run` byte-identically with the same
+   `pluginWorkflowId`, `requestId`, project, prompt, `agent`, and the same
+   presence or absence and values for `model`, `reasoning`, and `serviceTier`.
+   This idempotent recovery returns the same logical run and must never create
+   a duplicate. Once a `runId` is observed, use only `get_run`.
 
-If Codex CLI is missing, ask the user to install it. If its authentication is
-missing or unknown, ask the user to run `codex login` and rescan agents. Local
-Codex does not use OpenCode and Open Design must never receive an OpenAI key.
-If Local Codex is unavailable or out of quota, explain the cause and offer to
-retry after the user resolves it or to switch explicitly to Open Design Cloud
-or secure BYOK. Never invoke either alternative until the user confirms it.
+Where the host's nested tool boundary can release the packaged runtime between
+tool calls, use a single long-lived code-mode/orchestration call that owns
+`start_run` and every `get_run` poll. That same underlying call may yield
+progress without ending while it waits and polls; do not split start and poll
+across short-lived tool invocations.
+
+Do not offer or invoke another execution mode when this Local Codex route is
+unavailable, incompatible, unauthenticated, out of quota, or interrupted.
+Report the exact blocker and retry only the same Local Codex route after the
+user resolves it. Preserve the one workflow, request, and run identity.
 
 ## Local BYOK workflow
 

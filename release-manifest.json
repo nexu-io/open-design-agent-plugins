@@ -4,7 +4,7 @@
   "primaryAudience": "agent",
   "agentEntrypoint": "AGENTS.md",
   "distributionRepository": "https://github.com/nexu-io/open-design-agent-plugins",
-  "distributionStatus": "published-git-marketplace",
+  "distributionStatus": "unpublished-candidate",
   "supportedHosts": [
     "codex"
   ],
@@ -17,9 +17,9 @@
   },
   "plugin": {
     "name": "open-design",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "path": "plugins/codex/open-design",
-    "contentListSha256": "f1a1811a3b558fa4e062e2fba1a70b3363b0919a35debf287062e4546257b808",
+    "contentListSha256": "83a839804fc7c4cd8b4e988904dc5205f3a4090758d7ab1de208003588ac2a68",
     "minimumCodexCliVersion": "0.144.6",
     "minimumOpenDesignVersion": "0.17.0",
     "telemetrySchemaVersion": 3
@@ -40,6 +40,20 @@
     },
     "treeState": "compatible-open-design-runtime-at-or-above-v0.17.0"
   },
+  "runtimeDependency": {
+    "scope": "local-codex-current-task-settings-parity",
+    "status": "pending-local-codex-settings-compatible-release",
+    "release": null,
+    "requiredStartRunFields": [
+      "agent"
+    ],
+    "optionalStartRunFields": [
+      "model",
+      "reasoning",
+      "serviceTier"
+    ],
+    "reasoningSchemaField": "reasoning"
+  },
   "velaCompatibility": {
     "repository": "https://github.com/powerformer/vela",
     "bundledPackage": "@powerformer/vela-cli",
@@ -48,20 +62,21 @@
     "runtimeState": "bundled-with-open-design-v0.17.0-or-newer",
     "telemetryState": "pending-production-plugin-correlation-validation"
   },
-  "generatedAt": "2026-07-30T05:08:28Z",
+  "generatedAt": "2026-08-10T00:49:11Z",
   "releaseProvenanceValidatedAt": "2026-08-05T10:32:35Z",
   "validation": {
-    "status": "published-distribution-and-released-open-design-source-validated",
-    "validatedAt": "2026-08-05T10:32:35Z",
-    "codexCliVersion": "0.145.0",
-    "packageTests": "10 passed",
+    "status": "source-candidate-validated-runtime-and-full-ingestion-pending",
+    "validatedAt": "2026-08-10T00:57:06Z",
+    "codexCliVersion": "0.130.0-alpha.5",
+    "packageTests": "11 passed",
     "distributionValidator": "passed",
-    "pluginCreatorValidator": "helper-schema-lacks-supportURL; codex-cli-0.145.0-ingestion-passed",
+    "pluginCreatorValidator": "helper-schema-rejects-interface.supportURL; compatible-cli-ingestion-unavailable",
     "skillValidator": "passed",
-    "isolatedMarketplaceInstall": "passed-local-open-design-0.5.2",
+    "isolatedMarketplaceInstall": "marketplace-discovery-passed; plugin-ingestion-blocked-codex-cli-0.130.0-alpha.5-missing-plugin-install",
     "compatibleOpenDesignRuntime": ">=0.17.0",
     "minimumCompatibleOpenDesignRuntime": "open-design-v0.17.0@90a660add511da6408464a1bf3d4d5945ad06400",
     "recommendedOpenDesignRuntime": "release/v0.18.0@1a3cfd0fd625736e8b63249b38163c999b741f36",
+    "localCodexSettingsRuntime": "pending-compatible-open-design-release",
     "telemetryV3EndToEnd": "pending-vela-production-validation-and-controlled-e2e"
   }
 }

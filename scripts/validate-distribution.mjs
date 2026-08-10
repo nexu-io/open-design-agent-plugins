@@ -80,6 +80,8 @@ const skillMetadata = readFileSync(
 );
 
 assert.equal(packageContract.name, "open-design");
+assert.equal(packageContract.schemaVersion, "open-design-codex-cloud-package/v3");
+assert.equal(packageContract.version, "0.5.3");
 assert.equal(packageContract.version, pluginManifest.version);
 assert.equal(packageContract.version, releaseManifest.plugin.version);
 assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
@@ -91,7 +93,7 @@ assert.deepEqual(packageContract.customUiResources, [
     mediaType: "text/html;profile=mcp-app",
   },
 ]);
-assert.equal(releaseManifest.distributionStatus, "published-git-marketplace");
+assert.equal(releaseManifest.distributionStatus, "unpublished-candidate");
 assert.deepEqual(releaseManifest.source, {
   repository: "https://github.com/nexu-io/open-design",
   compatibilityRange: ">=0.17.0",
@@ -127,6 +129,23 @@ assert.equal(
 assert.equal(
   releaseManifest.validation.recommendedOpenDesignRuntime,
   "release/v0.18.0@1a3cfd0fd625736e8b63249b38163c999b741f36",
+);
+assert.equal(
+  releaseManifest.runtimeDependency.status,
+  "pending-local-codex-settings-compatible-release",
+);
+assert.equal(releaseManifest.runtimeDependency.release, null);
+assert.deepEqual(releaseManifest.runtimeDependency.requiredStartRunFields, [
+  "agent",
+]);
+assert.deepEqual(releaseManifest.runtimeDependency.optionalStartRunFields, [
+  "model",
+  "reasoning",
+  "serviceTier",
+]);
+assert.equal(
+  releaseManifest.validation.localCodexSettingsRuntime,
+  "pending-compatible-open-design-release",
 );
 assert.equal(
   releaseManifest.validation.telemetryV3EndToEnd,
@@ -228,6 +247,28 @@ assert.deepEqual(
 assert.deepEqual(capability.optional.tools, ["get_artifact"]);
 assert.equal(capability.optional.requiredForDefaultDelivery, false);
 assert.equal(packageContract.localMcp.requiredTools, undefined);
+assert.equal(packageContract.defaultMode, "cloud");
+assert.equal(packageContract.cloudRuntime.agent, "amr");
+const localCodex = packageContract.optionalModes.localCli;
+assert.equal(localCodex.agent, "codex");
+assert.deepEqual(localCodex.settingsSource, {
+  preferred: "host-active-task-metadata",
+  fallback: "CODEX_THREAD_ID-latest-turn_context",
+  identifierHandling: "lookup-only-never-print-or-persist",
+});
+assert.deepEqual(localCodex.startRunArguments, {
+  required: ["agent"],
+  optional: ["model", "reasoning", "serviceTier"],
+});
+assert.equal(
+  localCodex.compatibility,
+  "require-explicit-exact-or-stop-before-generation",
+);
+assert.equal(localCodex.orchestration, "single-long-lived-start-poll-call");
+assert.equal(
+  localCodex.transportRetry,
+  "byte-identical-same-logical-run-on-lost-response-only",
+);
 
 assert.match(skill, /externalPluginContext/);
 assert.match(skill, /same `pluginWorkflowId`[\s\S]*get_artifact/i);
@@ -255,16 +296,45 @@ assert.match(
 );
 assert.match(
   skill,
-  /Every `start_run` for a Local Codex logical generation[\s\S]*`agent: "codex"`/i,
+  /host-provided active-task metadata[\s\S]*`CODEX_THREAD_ID`[\s\S]*latest\s+authoritative `turn_context`/i,
 );
 assert.match(
   skill,
-  /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*Open Design[\s>]*Cloud login/i,
+  /`start_run`[\s\S]*`agent: "codex"`[\s\S]*`model: "<exact-current-model>"`[\s\S]*`reasoning: "<exact-current-effort>"`/i,
 );
 assert.match(
   skill,
-  /transport retry[\s\S]*byte-identical prompt including the child-runtime boundary/i,
+  /Keep `serviceTier` separate[\s\S]*omit it unless[\s\S]*explicitly selected/i,
 );
+assert.match(
+  skill,
+  /setting is absent[\s\S]*omit[\s\S]*corresponding field[\s\S]*CLI default[\s\S]*execution parity[\s\S]*unconfirmed/i,
+);
+assert.match(
+  skill,
+  /single long-lived[\s\S]*(?:code-mode|orchestration) call[\s\S]*owns\s+`start_run`[\s\S]*every `get_run` poll/i,
+);
+assert.match(
+  skill,
+  /Do not offer or invoke another execution mode[\s\S]*retry only the same Local Codex route/i,
+);
+assert.match(
+  skill,
+  /transport loses the initial `start_run` response[\s\S]*retry `start_run` byte-identically/i,
+);
+assert.match(
+  skill,
+  /same[\s\S]*`pluginWorkflowId`, `requestId`, project, prompt[\s\S]*`model`, `reasoning`, and `serviceTier`/i,
+);
+assert.match(
+  skill,
+  /idempotent recovery[\s\S]*same logical run[\s\S]*duplicate/i,
+);
+assert.match(
+  skill,
+  /child-runtime boundary[\s\S]*Open Design[\s>]*Cloud login/i,
+);
+assert.doesNotMatch(skill, /gpt-5\.6-sol|\bxhigh\b/i);
 assert.match(
   skill,
   /Before every `collect_brief` call[\s\S]*normalized BCP-47 `locale`[\s\S]*current message/i,

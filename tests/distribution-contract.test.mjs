@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
@@ -35,7 +34,15 @@ function sorted(values) {
   return [...values].sort();
 }
 
-test("published versions and runtime compatibility are explicit", () => {
+function localCodexSection(skill) {
+  const section = skill.match(
+    /## Local Codex workflow([\s\S]*?)(?=\n## |$)/i,
+  )?.[1];
+  assert.ok(section, "Local Codex workflow section must exist");
+  return section;
+}
+
+test("candidate versions and pending runtime compatibility are explicit", () => {
   const packageContract = JSON.parse(
     readPlugin("open-design.package.json"),
   );
@@ -48,9 +55,9 @@ test("published versions and runtime compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.5.2");
-  assert.equal(pluginManifest.version, "0.5.2");
-  assert.equal(releaseManifest.plugin.version, "0.5.2");
+  assert.equal(packageContract.version, "0.5.3");
+  assert.equal(pluginManifest.version, "0.5.3");
+  assert.equal(releaseManifest.plugin.version, "0.5.3");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
   assert.deepEqual(packageContract.customUiResources, [
@@ -59,7 +66,7 @@ test("published versions and runtime compatibility are explicit", () => {
       mediaType: "text/html;profile=mcp-app",
     },
   ]);
-  assert.equal(releaseManifest.distributionStatus, "published-git-marketplace");
+  assert.equal(releaseManifest.distributionStatus, "unpublished-candidate");
   assert.deepEqual(releaseManifest.source, {
     repository: "https://github.com/nexu-io/open-design",
     compatibilityRange: ">=0.17.0",
@@ -89,6 +96,19 @@ test("published versions and runtime compatibility are explicit", () => {
     "0.0.28",
   );
   assert.equal(
+    releaseManifest.runtimeDependency.status,
+    "pending-local-codex-settings-compatible-release",
+  );
+  assert.equal(releaseManifest.runtimeDependency.release, null);
+  assert.deepEqual(releaseManifest.runtimeDependency.requiredStartRunFields, [
+    "agent",
+  ]);
+  assert.deepEqual(releaseManifest.runtimeDependency.optionalStartRunFields, [
+    "model",
+    "reasoning",
+    "serviceTier",
+  ]);
+  assert.equal(
     releaseManifest.validation.compatibleOpenDesignRuntime,
     ">=0.17.0",
   );
@@ -97,12 +117,12 @@ test("published versions and runtime compatibility are explicit", () => {
     "release/v0.18.0@1a3cfd0fd625736e8b63249b38163c999b741f36",
   );
   assert.equal(
-    releaseManifest.validation.telemetryV3EndToEnd,
-    "pending-vela-production-validation-and-controlled-e2e",
+    releaseManifest.validation.localCodexSettingsRuntime,
+    "pending-compatible-open-design-release",
   );
 });
 
-test("capabilities match the real core and mode workflows", () => {
+test("capabilities preserve every product mode and pin the Local Codex route", () => {
   const packageContract = JSON.parse(
     readPlugin("open-design.package.json"),
   );
@@ -114,6 +134,10 @@ test("capabilities match the real core and mode workflows", () => {
     sorted(coreTools),
   );
   assert.deepEqual(
+    sorted(capabilities.localCodex.requiredTools),
+    sorted([...coreTools, "list_agents"]),
+  );
+  assert.deepEqual(
     sorted(capabilities.cloud.requiredTools),
     sorted([
       ...coreTools,
@@ -123,15 +147,34 @@ test("capabilities match the real core and mode workflows", () => {
     ]),
   );
   assert.deepEqual(
-    sorted(capabilities.localCodex.requiredTools),
-    sorted([...coreTools, "list_agents"]),
-  );
-  assert.deepEqual(
     sorted(capabilities.byok.requiredTools),
     sorted([...coreTools, "list_byok_profiles"]),
   );
   assert.deepEqual(capabilities.optional.tools, ["get_artifact"]);
   assert.equal(capabilities.optional.requiredForDefaultDelivery, false);
+  assert.equal(packageContract.defaultMode, "cloud");
+  assert.equal(packageContract.cloudRuntime.agent, "amr");
+  assert.ok(packageContract.optionalModes.byok);
+  const localCodex = packageContract.optionalModes.localCli;
+  assert.equal(localCodex.agent, "codex");
+  assert.deepEqual(localCodex.settingsSource, {
+    preferred: "host-active-task-metadata",
+    fallback: "CODEX_THREAD_ID-latest-turn_context",
+    identifierHandling: "lookup-only-never-print-or-persist",
+  });
+  assert.deepEqual(localCodex.startRunArguments, {
+    required: ["agent"],
+    optional: ["model", "reasoning", "serviceTier"],
+  });
+  assert.equal(
+    localCodex.compatibility,
+    "require-explicit-exact-or-stop-before-generation",
+  );
+  assert.equal(localCodex.orchestration, "single-long-lived-start-poll-call");
+  assert.equal(
+    localCodex.transportRetry,
+    "byte-identical-same-logical-run-on-lost-response-only",
+  );
 });
 
 test("skill carries one bounded plugin workflow through delivery", () => {
@@ -139,7 +182,7 @@ test("skill carries one bounded plugin workflow through delivery", () => {
 
   for (const requiredFragment of [
     'id: "open-design"',
-    'version: "0.5.2"',
+    'version: "0.5.3"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -278,40 +321,87 @@ test("skill keeps one run alive and proactively opens terminal delivery when sup
   );
 });
 
-test("skill preserves an explicit mode until the user confirms a switch", () => {
+test("skill resolves exact current-task settings and fails closed", () => {
   const skill = readPlugin("skills/open-design-mode/SKILL.md");
 
   assert.match(
     skill,
-    /Resolve the execution mode[\s\S]*before calling\s+`collect_brief`/i,
+    /host-provided active-task metadata[\s\S]*exact `model`[\s\S]*reasoning effort/i,
   );
   assert.match(
     skill,
-    /remains selected through Brief collection[\s\S]*terminal delivery/i,
+    /`CODEX_THREAD_ID`[\s\S]*only to locate[\s\S]*latest[\s\S]*authoritative `turn_context`[\s\S]*local Codex session store/i,
   );
   assert.match(
     skill,
-    /Never silently switch modes[\s\S]*Switch only after the user\s+explicitly confirms/i,
+    /Never print, log, persist, or expose[\s\S]*(?:thread|session) identifier/i,
+  );
+  assert.doesNotMatch(skill, /gpt-5\.6-sol|\bxhigh\b/i);
+  assert.match(
+    skill,
+    /`start_run`[\s\S]*`agent: "codex"`[\s\S]*`model: "<exact-current-model>"`[\s\S]*`reasoning: "<exact-current-effort>"`/i,
   );
   assert.match(
     skill,
-    /Local Codex[\s\S]*Do not call `get_vela_login_status` or `start_vela_login`/i,
+    /Keep `serviceTier` separate[\s\S]*omit it unless[\s\S]*explicitly selected/i,
   );
   assert.match(
     skill,
-    /Every `start_run` for a Local Codex logical generation[\s\S]*`agent: "codex"`/i,
+    /explicit model[\s\S]*reasoning[\s\S]*compatibility cannot be proven[\s\S]*visible blocker[\s\S]*before generation/i,
   );
   assert.match(
     skill,
-    /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*Open Design[\s>]*Cloud login/i,
+    /setting is absent[\s\S]*omit[\s\S]*corresponding field[\s\S]*CLI default[\s\S]*execution parity[\s\S]*unconfirmed/i,
   );
   assert.match(
     skill,
-    /transport retry[\s\S]*byte-identical prompt including the child-runtime boundary/i,
+    /single long-lived[\s\S]*(?:code-mode|orchestration) call[\s\S]*owns[\s\S]*`start_run`[\s\S]*every `get_run` poll[\s\S]*yield[\s\S]*progress[\s\S]*without ending/i,
   );
   assert.match(
     skill,
-    /out of quota[\s\S]*offer[\s\S]*switch explicitly[\s\S]*Never invoke either alternative until the user confirms/i,
+    /current context already provides a complete brief[\s\S]*call `collect_brief` exactly once[\s\S]*`skip: true`/i,
+  );
+});
+
+test("Local Codex stays on its official route for one logical run", () => {
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+  const localSection = localCodexSection(skill);
+
+  assert.match(
+    localSection,
+    /official Local Codex route[\s\S]*only `agent: "codex"`/i,
+  );
+  assert.match(
+    localSection,
+    /Call `start_run` exactly once[\s\S]*Use only `get_run`[\s\S]*same `runId`[\s\S]*terminal/i,
+  );
+  assert.match(
+    localSection,
+    /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*another Open Design Plugin workflow/i,
+  );
+  assert.match(
+    localSection,
+    /Do not offer or invoke another execution mode[\s\S]*retry only the same Local Codex route/i,
+  );
+  assert.match(
+    localSection,
+    /transport loses the initial `start_run` response[\s\S]*retry `start_run` byte-identically/i,
+  );
+  assert.match(
+    localSection,
+    /same[\s\S]*`pluginWorkflowId`, `requestId`, project, prompt[\s\S]*`model`, `reasoning`, and `serviceTier`/i,
+  );
+  assert.match(
+    localSection,
+    /idempotent recovery[\s\S]*same logical run[\s\S]*never create[\s\S]*duplicate/i,
+  );
+  assert.match(
+    localSection,
+    /child-runtime boundary[\s\S]*Open Design[\s>]*Cloud login/i,
+  );
+  assert.doesNotMatch(
+    localSection,
+    /agent:\s*"amr"|get_vela_login_status|start_vela_login|list_byok_profiles|byokProfile|byok-opencode/i,
   );
 });
 
@@ -351,7 +441,7 @@ test("portable payload contains no remote MCP, secret, or machine path", () => {
 
 test("telemetry document distinguishes the released runtime from production evidence", () => {
   const telemetry = readFileSync(
-    join(new URL("../docs/", import.meta.url).pathname, "TELEMETRY.md"),
+    new URL("../docs/TELEMETRY.md", import.meta.url),
     "utf8",
   );
 

@@ -74,6 +74,16 @@ identical arguments and `requestId` must resolve to the same logical run. An
 unauthenticated Cloud request must stop at the Vela sign-in boundary, not
 switch modes. Remove the smoke project and stop the isolated runtime.
 
+The unpublished `0.5.3` candidate adds a Local Codex-only compatibility gate:
+any explicitly selected current-task model and reasoning effort must be passed
+as `model` and `reasoning`, while optional `serviceTier` stays separate.
+Unspecified settings are omitted and use the child CLI default, with execution
+parity reported as unconfirmed. One long-lived orchestration call owns the
+single `start_run` and terminal `get_run` polling where the host boundary could
+otherwise release the packaged runtime. This runtime smoke is pending a
+compatible Open Design release; do not publish or represent it as passed until
+that release exists.
+
 Delete only the exact temporary roots created by the smoke.
 
 ## Unpublished candidate smoke

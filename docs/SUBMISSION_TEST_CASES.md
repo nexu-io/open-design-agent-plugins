@@ -7,7 +7,7 @@ with this file for every submission.
 ## Submission under test
 
 - Plugin: `open-design`
-- Candidate version: `0.5.2`
+- Candidate version: `0.5.3`
 - Submission type: Skills only
 - Supported host in this revision: Codex
 - Minimum Codex CLI version: `0.144.6`
@@ -15,6 +15,8 @@ with this file for every submission.
 - Recommended Open Design version: `0.18.0`
 - Status: draft; every case must be rerun against the final candidate before
   submission
+- Local Codex exact-setting acceptance remains blocked on a compatible Open
+  Design runtime release; the candidate is not publication-ready.
 
 Do not put reviewer credentials, access tokens, API keys, or other secrets in
 this repository. Supply reviewer credentials only through the Portal's
