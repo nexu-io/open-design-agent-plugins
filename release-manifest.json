@@ -19,7 +19,7 @@
     "name": "open-design",
     "version": "0.5.3",
     "path": "plugins/codex/open-design",
-    "contentListSha256": "83a839804fc7c4cd8b4e988904dc5205f3a4090758d7ab1de208003588ac2a68",
+    "contentListSha256": "7d034b5d9ef4cba3099e05e6be22d8515dd58e148a4a25a572efaa028c04e206",
     "minimumCodexCliVersion": "0.144.6",
     "minimumOpenDesignVersion": "0.17.0",
     "telemetrySchemaVersion": 3
@@ -62,13 +62,13 @@
     "runtimeState": "bundled-with-open-design-v0.17.0-or-newer",
     "telemetryState": "pending-production-plugin-correlation-validation"
   },
-  "generatedAt": "2026-08-10T00:49:11Z",
+  "generatedAt": "2026-08-10T02:21:49Z",
   "releaseProvenanceValidatedAt": "2026-08-05T10:32:35Z",
   "validation": {
     "status": "source-candidate-validated-runtime-pending",
-    "validatedAt": "2026-08-10T01:01:10Z",
+    "validatedAt": "2026-08-10T02:21:49Z",
     "codexCliVersion": "0.146.1",
-    "packageTests": "11 passed",
+    "packageTests": "16 passed",
     "distributionValidator": "passed",
     "pluginCreatorValidator": "helper-schema-rejects-interface.supportURL; codex-cli-ingestion-passed",
     "skillValidator": "passed",

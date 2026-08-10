@@ -112,6 +112,12 @@
       "agent": "codex",
       "authentication": "codex-login",
       "loginCommand": "codex login",
+      "authenticationPreflight": {
+        "source": "list_agents.chatgptAuthStatus",
+        "requiredValue": "ok",
+        "missingOrNonOk": "stop-before-generation",
+        "runtimeStartRunMode": "auto-inject-chatgpt"
+      },
       "requestId": "required",
       "settingsSource": {
         "preferred": "host-active-task-metadata",

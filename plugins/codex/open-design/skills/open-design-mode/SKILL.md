@@ -44,16 +44,24 @@ selection, generation, polling, and terminal delivery for that logical
 generation.
 
 Never silently switch modes because authentication, balance, transport, quota,
-or generation failed. Explain the failure and offer the user applicable
-choices, such as retrying the selected mode, completing its authentication, or
-switching to another available mode. State when the alternative uses an Open
-Design Cloud account or a BYOK provider account. Switch only after the user
-explicitly confirms the new mode.
+runtime, or generation failed. Mode-switch recovery choices apply only to
+Open Design Cloud and secure BYOK; they never apply to Local Codex. When Local
+Codex is selected, report the blocker and never offer or invoke Open Design
+Cloud or secure BYOK after an authentication, quota, transport, runtime, or
+generation failure. Retry only the same Local Codex route after the blocker is
+resolved.
 
-After an explicit switch, start a new execution context and request identifier.
-Reuse only the human-readable confirmed brief; never repeat its signed machine
-envelope. The selected mode may change between logical generations, but one
-logical generation must never drift between modes.
+When Open Design Cloud or secure BYOK is selected, explain the failure and
+offer applicable choices such as retrying the selected mode, completing its
+authentication, or switching to the other non-Local mode. State when the
+alternative uses an Open Design Cloud account or a BYOK provider account.
+Switch only after the user explicitly confirms the new mode.
+
+After an explicit Open Design Cloud or secure BYOK switch, start a new execution
+context and request identifier. Reuse only the human-readable confirmed brief;
+never repeat its signed machine envelope. The selected mode may change between
+logical generations, but one logical generation must never drift between
+modes.
 
 ## Keep implementation names out of user-facing copy
 
@@ -133,15 +141,19 @@ one-confirmation rule.
 ## One confirmed action, one request
 
 After the brief and execution mode are confirmed, create one opaque stable
-`requestId` for that logical generation. Keep the exact `start_run` arguments
-and reuse both the arguments and `requestId` if the MCP response is lost or a
-transport retry is required.
+`requestId` for that logical generation. Across every mode, the only
+`start_run` retry exception is when its initial response is lost before any
+`start_run` response or `runId` is observed. In that case only, retry
+`start_run` byte-identically with the same arguments, `requestId`, and
+`pluginWorkflowId`. After any `start_run` response or `runId` is observed,
+ordinary reconnect and polling recovery use only `get_run`.
 
-- Call `start_run` once for the confirmed action.
+- Call `start_run` once for the confirmed action, except for the bounded
+  lost-response retry above.
 - Use only `get_run` to poll. Polling must never call `start_run` again.
-- Keep the same `requestId` and `pluginWorkflowId` for retries and recharge
-  resume. The workflow id attributes the whole Plugin journey; the request id
-  deduplicates one confirmed generation.
+- Keep the same `requestId` and `pluginWorkflowId` for that one retry exception
+  and for an explicit Cloud recharge resume. The workflow id attributes the
+  whole Plugin journey; the request id deduplicates one confirmed generation.
 - A changed prompt, project, confirmed mode, agent, or BYOK profile is a new
   logical generation and receives a new `requestId`.
 - Never reuse a `requestId` with different arguments.
@@ -258,12 +270,19 @@ task:
 4. Never guess, clamp, substitute, or reinterpret an explicitly selected model,
    reasoning effort, or service tier.
 
-Call `list_agents` with the workflow id and require the exact `codex` agent to
-be available and authenticated. When the task has an explicit model or
-reasoning setting, require the runtime to prove compatibility with every
-explicit value. If explicit model or reasoning compatibility cannot be proven,
-stop with a visible blocker before generation. Do not start a run with inferred
-or downgraded settings.
+Call `list_agents` with the workflow id and require the exact `codex` agent plus
+`chatgptAuthStatus: "ok"` before generation. Treat `chatgptAuthMessage` only as
+a non-secret diagnostic explanation. If `chatgptAuthStatus` is absent or has
+any value other than `ok`, report a visible blocker and do not call `start_run`.
+Do not request, expose, or pass an OpenAI API key. After this preflight, the
+runtime automatically injects its optional machine-only
+`codexAuthMode: "chatgpt"` for the final Codex agent; do not derive or override
+that field from task metadata or the prompt.
+
+When the task has an explicit model or reasoning setting, require the runtime
+to prove compatibility with every explicit value. If explicit model or
+reasoning compatibility cannot be proven, stop with a visible blocker before
+generation. Do not start a run with inferred or downgraded settings.
 
 When a setting is absent from both authoritative sources, omit the
 corresponding field from `start_run`. State in the result that the child used
@@ -296,12 +315,13 @@ absent setting is not permission to invent a value.
    current task explicitly selected an exact service tier.
 5. Use only `get_run` after `start_run`. Poll the same `runId`, request, and
    workflow to a terminal state. Ordinary polling never retries `start_run`.
-   If and only if transport loses the initial `start_run` response before a
-   `runId` is observed, retry `start_run` byte-identically with the same
-   `pluginWorkflowId`, `requestId`, project, prompt, `agent`, and the same
-   presence or absence and values for `model`, `reasoning`, and `serviceTier`.
+   If and only if transport loses the initial `start_run` response before any
+   `start_run` response or `runId` is observed, retry `start_run` byte-identically
+   with the same `pluginWorkflowId`, `requestId`, project, prompt, `agent`, and
+   the same presence or absence and values for `model`, `reasoning`, and `serviceTier`.
    This idempotent recovery returns the same logical run and must never create
-   a duplicate. Once a `runId` is observed, use only `get_run`.
+   a duplicate. Once any `start_run` response
+   or `runId` is observed, use only `get_run` for reconnect and polling recovery.
 
 Where the host's nested tool boundary can release the packaged runtime between
 tool calls, use a single long-lived code-mode/orchestration call that owns

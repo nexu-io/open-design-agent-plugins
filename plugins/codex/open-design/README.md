@@ -81,14 +81,17 @@ od mcp install codex
 ```
 
 When Local Codex is explicitly selected, require `list_agents` to report the
-exact `codex` runtime. Resolve any explicitly selected current-task model,
-reasoning effort, and service tier from host task metadata or, when necessary,
-the task-bound latest authoritative `turn_context`. Pass explicit values as
-`model`, `reasoning`, and the separate `serviceTier` to one
-`start_run(..., agent: "codex")`. An explicit incompatible setting stops before
-generation. An unspecified setting is omitted, uses the child CLI default, and
-leaves execution parity unconfirmed. The Local Codex route never switches
-modes.
+exact `codex` runtime. Its `chatgptAuthStatus: "ok"` result is required before
+generation. Missing or non-`ok` status is a visible blocker and causes no
+`start_run`. The runtime then auto-injects machine-only
+`codexAuthMode: "chatgpt"`; the plugin never requests or passes an OpenAI API
+key. Resolve any explicitly selected current-task model, reasoning effort, and
+service tier from host task metadata or, when necessary, the task-bound latest
+authoritative `turn_context`. Pass explicit values as `model`, `reasoning`, and
+the separate `serviceTier` to one `start_run(..., agent: "codex")`. An explicit
+incompatible setting stops before generation. An unspecified setting is
+omitted, uses the child CLI default, and leaves execution parity unconfirmed.
+The Local Codex route never switches modes.
 
 Where the host boundary could release the packaged runtime between nested tool
 calls, one long-lived code-mode orchestration owns the single `start_run` and
@@ -96,11 +99,13 @@ every `get_run` poll through terminal delivery. The run prompt also carries a
 bounded child-runtime instruction that prevents the child Codex from invoking
 the Open Design Plugin or local MCP recursively.
 
-Ordinary polling never retries `start_run`. If its initial response is lost
-before a run id is observed, retry once with the byte-identical workflow,
-request, project, prompt, agent, model, reasoning, and optional service-tier
-arguments so the runtime returns the same logical run rather than creating a
-duplicate.
+Ordinary polling never retries `start_run`. The only `start_run` retry exception
+is when its initial response is lost before any `start_run` response or
+`runId` is observed. Retry once with the byte-identical workflow, request,
+project, prompt, agent, model, reasoning, and optional service-tier arguments
+so the runtime returns the same logical run rather than creating a duplicate.
+Once any `start_run` response or `runId` is observed, reconnect and poll with
+only `get_run`.
 
 On Codex Desktop, the first current-run `studioUrl` returned while generation
 is running opens immediately in the host-provided in-app Browser when that

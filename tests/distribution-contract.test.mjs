@@ -166,6 +166,12 @@ test("capabilities preserve every product mode and pin the Local Codex route", (
     required: ["agent"],
     optional: ["model", "reasoning", "serviceTier"],
   });
+  assert.deepEqual(localCodex.authenticationPreflight, {
+    source: "list_agents.chatgptAuthStatus",
+    requiredValue: "ok",
+    missingOrNonOk: "stop-before-generation",
+    runtimeStartRunMode: "auto-inject-chatgpt",
+  });
   assert.equal(
     localCodex.compatibility,
     "require-explicit-exact-or-stop-before-generation",
@@ -347,7 +353,7 @@ test("skill resolves exact current-task settings and fails closed", () => {
   );
   assert.match(
     skill,
-    /explicit model[\s\S]*reasoning[\s\S]*compatibility cannot be proven[\s\S]*visible blocker[\s\S]*before generation/i,
+    /explicit model[\s\S]*reasoning[\s\S]*compatibility cannot be proven[\s\S]*visible blocker[\s\S]*before\s+generation/i,
   );
   assert.match(
     skill,
@@ -361,6 +367,84 @@ test("skill resolves exact current-task settings and fails closed", () => {
     skill,
     /current context already provides a complete brief[\s\S]*call `collect_brief` exactly once[\s\S]*`skip: true`/i,
   );
+});
+
+test("whole skill excludes Local Codex from mode-switch recovery", () => {
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+
+  assert.match(
+    skill,
+    /Mode-switch recovery choices apply only to\s+Open Design Cloud and secure BYOK[\s\S]*never apply to Local Codex/i,
+  );
+  assert.match(
+    skill,
+    /When Local\s+Codex is selected[\s\S]*never offer or invoke\s+Open Design\s+Cloud or secure BYOK[\s\S]*authentication, quota, transport, runtime, or\s+generation failure/i,
+  );
+  assert.doesNotMatch(
+    skill,
+    /Local Codex[\s\S]{0,300}switching to another available mode/i,
+  );
+});
+
+test("whole skill defines the sole start retry exception", () => {
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+
+  assert.match(
+    skill,
+    /Across every mode, the only\s+`start_run` retry exception[\s\S]*initial response is lost[\s\S]*before any\s+`start_run` response or `runId` is observed[\s\S]*byte-identically/i,
+  );
+  assert.match(
+    skill,
+    /After any `start_run` response or `runId` is observed[\s\S]*ordinary reconnect and polling recovery use only `get_run`/i,
+  );
+  assert.doesNotMatch(
+    skill,
+    /if the MCP response is lost or a\s+transport retry is required/i,
+  );
+});
+
+test("whole skill requires healthy ChatGPT auth before Local Codex generation", () => {
+  const skill = readPlugin("skills/open-design-mode/SKILL.md");
+
+  assert.match(
+    skill,
+    /`list_agents`[\s\S]*`chatgptAuthStatus: "ok"`[\s\S]*before\s+generation/i,
+  );
+  assert.match(
+    skill,
+    /absent or has\s+any value other than `ok`[\s\S]*visible blocker[\s\S]*do not call `start_run`/i,
+  );
+  assert.match(
+    skill,
+    /Do not request, expose, or pass an OpenAI API key/i,
+  );
+});
+
+test("package README limits Local Codex start retry to a lost initial response", () => {
+  const readme = readPlugin("README.md");
+
+  assert.match(
+    readme,
+    /initial response is lost before any `start_run` response or\s+`runId` is observed[\s\S]*byte-identical/i,
+  );
+  assert.match(
+    readme,
+    /Once any `start_run` response or `runId` is observed[\s\S]*only\s+`get_run`/i,
+  );
+});
+
+test("package README documents ChatGPT auth preflight without an API-key path", () => {
+  const readme = readPlugin("README.md");
+
+  assert.match(
+    readme,
+    /`chatgptAuthStatus: "ok"`[\s\S]*required before\s+generation/i,
+  );
+  assert.match(
+    readme,
+    /missing or non-`ok`[\s\S]*visible blocker[\s\S]*no\s+`start_run`/i,
+  );
+  assert.match(readme, /never requests or passes an OpenAI API\s+key/i);
 });
 
 test("Local Codex stays on its official route for one logical run", () => {
@@ -385,15 +469,15 @@ test("Local Codex stays on its official route for one logical run", () => {
   );
   assert.match(
     localSection,
-    /transport loses the initial `start_run` response[\s\S]*retry `start_run` byte-identically/i,
+    /transport loses the initial `start_run` response[\s\S]*retry `start_run`\s+byte-identically/i,
   );
   assert.match(
     localSection,
-    /same[\s\S]*`pluginWorkflowId`, `requestId`, project, prompt[\s\S]*`model`, `reasoning`, and `serviceTier`/i,
+    /same[\s\S]*`pluginWorkflowId`, `requestId`, project,\s+prompt[\s\S]*`model`,\s+`reasoning`,\s+and `serviceTier`/i,
   );
   assert.match(
     localSection,
-    /idempotent recovery[\s\S]*same logical run[\s\S]*never create[\s\S]*duplicate/i,
+    /idempotent recovery[\s\S]*same\s+logical run[\s\S]*never create[\s\S]*duplicate/i,
   );
   assert.match(
     localSection,
