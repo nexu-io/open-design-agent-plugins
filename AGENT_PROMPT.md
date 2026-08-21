@@ -4,10 +4,10 @@ Use this instruction in Codex Desktop or Codex CLI:
 
 > Read
 > `https://github.com/nexu-io/open-design-agent-plugins/blob/main/AGENTS.md`.
-> Install the Open Design plugin into Codex using the **Install into Codex** lane.
+> Install the OpenDesign plugin into Codex using the **Install into Codex** lane.
 > Preserve unrelated plugins, marketplaces, MCP servers, and auth state.
 > Connect the plugin to the existing local `open-design` MCP if present. If it
-> is absent, verify that Open Design 0.17.0 or newer is installed. If it is
+> is absent, verify that OpenDesign 0.17.0 or newer is installed. If it is
 > missing or older, ask before opening `https://open-design.ai/download/`; do
 > not silently run an installer. If it is installed, use its resolved signed
 > headless MCP-install operation.

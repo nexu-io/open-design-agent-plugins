@@ -1,9 +1,9 @@
 {
   "name": "open-design",
-  "version": "0.5.2",
-  "description": "Create and refine websites, slides, prototypes, and design systems with Open Design from Codex.",
+  "version": "0.5.3",
+  "description": "Create and refine websites, slides, prototypes, and design systems with OpenDesign from Codex.",
   "author": {
-    "name": "Open Design",
+    "name": "OpenDesign",
     "email": "support@open-design.ai",
     "url": "https://open-design.ai/"
   },
@@ -18,10 +18,10 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Open Design",
+    "displayName": "OpenDesign",
     "shortDescription": "Create websites, slides, and design systems from Codex.",
-    "longDescription": "Generate and edit websites, presentations, prototypes, and design systems with Open Design directly from Codex.",
-    "developerName": "Open Design",
+    "longDescription": "Generate and edit websites, presentations, prototypes, and design systems with OpenDesign directly from Codex.",
+    "developerName": "OpenDesign",
     "category": "Creativity",
     "capabilities": [
       "Interactive",
@@ -32,7 +32,7 @@
     "privacyPolicyURL": "https://open-design.ai/privacy/",
     "termsOfServiceURL": "https://open-design.ai/terms/",
     "defaultPrompt": [
-      "Recreate the Open Design landing page: https://open-design.ai/",
+      "Recreate the OpenDesign landing page: https://open-design.ai/",
       "Create an academic presentation on generative AI and design.",
       "Create an Apple-style design system with tokens and core components."
     ],

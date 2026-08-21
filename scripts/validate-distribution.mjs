@@ -135,7 +135,7 @@ assert.equal(
 
 assert.equal(
   pluginManifest.interface.displayName,
-  "Open Design",
+  "OpenDesign",
 );
 assert.equal(
   pluginManifest.interface.shortDescription,
@@ -143,14 +143,14 @@ assert.equal(
 );
 assert.equal(
   pluginManifest.interface.longDescription,
-  "Generate and edit websites, presentations, prototypes, and design systems with Open Design directly from Codex.",
+  "Generate and edit websites, presentations, prototypes, and design systems with OpenDesign directly from Codex.",
 );
 assert.equal(
   pluginManifest.interface.supportURL,
   "https://github.com/nexu-io/open-design/issues",
 );
 assert.deepEqual(pluginManifest.interface.defaultPrompt, [
-  "Recreate the Open Design landing page: https://open-design.ai/",
+  "Recreate the OpenDesign landing page: https://open-design.ai/",
   "Create an academic presentation on generative AI and design.",
   "Create an Apple-style design system with tokens and core components.",
 ]);
@@ -160,7 +160,7 @@ assert.equal(
 );
 assert.equal(pluginManifest.interface.logo, "./assets/open-design.png");
 assert.equal(existsSync(join(pluginRoot, "assets", "open-design.png")), true);
-assert.match(skillMetadata, /display_name: "Create with Open Design"/);
+assert.match(skillMetadata, /display_name: "Create with OpenDesign"/);
 assert.match(
   skillMetadata,
   /short_description: "Generate and refine websites, slides, prototypes, and design systems\."/,
@@ -232,7 +232,7 @@ assert.equal(packageContract.localMcp.requiredTools, undefined);
 assert.match(skill, /externalPluginContext/);
 assert.match(skill, /same `pluginWorkflowId`[\s\S]*get_artifact/i);
 assert.match(skill, /same `requestId`/i);
-assert.match(skill, /Open Design 0\.17\.0 or newer/);
+assert.match(skill, /OpenDesign 0\.17\.0 or newer/);
 assert.match(
   skill,
   /Do not end the current task while `get_run` reports `queued` or\s+`running`/i,
@@ -259,7 +259,7 @@ assert.match(
 );
 assert.match(
   skill,
-  /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*Open Design[\s>]*Cloud login/i,
+  /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*OpenDesign[\s>]*Cloud login/i,
 );
 assert.match(
   skill,

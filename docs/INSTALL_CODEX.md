@@ -3,7 +3,7 @@
 ## Supported environment
 
 - Codex Desktop or Codex CLI `0.144.6` or newer
-- Open Design `0.17.0` or newer with bundled Vela CLI; `0.18.0` is recommended.
+- OpenDesign `0.17.0` or newer with bundled Vela CLI; `0.18.0` is recommended.
   Its GUI does not need to be open
 - Plugin selector `open-design@open-design`
 - Local MCP identity `open-design`
@@ -15,7 +15,7 @@ codex plugin marketplace add nexu-io/open-design-agent-plugins --ref main --json
 codex plugin add open-design@open-design --json
 ```
 
-If Open Design is not installed, ask before opening the official
+If OpenDesign is not installed, ask before opening the official
 `https://open-design.ai/download/` page. The user completes the operating
 system's signed-app installation. Do not silently download or execute an
 installer.
@@ -35,8 +35,8 @@ Expected MCP identity:
 
 - Name: `open-design`
 - Transport: stdio
-- Command: absolute Open Design Node/CLI launch command
-- Authentication: Vela login remains in Open Design and is initiated through
+- Command: absolute OpenDesign Node/CLI launch command
+- Authentication: Vela login remains in OpenDesign and is initiated through
   `start_vela_login` when required
 
 The plugin has no `.mcp.json` and no remote MCP endpoint. Start a new Codex task
@@ -57,7 +57,7 @@ CODEX_HOME="$OD_CODEX_PLUGIN_TEST_HOME" codex plugin list --json
 ```
 
 Plugin installation alone does not create the independent local MCP. For a full
-smoke, start an isolated Open Design runtime and run its resolved
+smoke, start an isolated OpenDesign runtime and run its resolved
 `od mcp install codex` operation with the same isolated `CODEX_HOME`, then:
 
 ```bash
@@ -106,9 +106,9 @@ Report all of:
 
 ## Authentication boundary
 
-Do not run `codex mcp login`. Vela sign-in is initiated through Open Design's
+Do not run `codex mcp login`. Vela sign-in is initiated through OpenDesign's
 `start_vela_login` MCP tool and stored by the local Vela CLI integration. Codex
-uses that login state only through the local MCP; opening the Open Design GUI is
+uses that login state only through the local MCP; opening the OpenDesign GUI is
 not required.
 
 ## Run and billing recovery contract
@@ -131,5 +131,5 @@ codex plugin marketplace remove open-design --json
 ```
 
 Removing the plugin does not remove the independently registered `open-design`
-MCP or Open Design application data. Remove those only on a separate explicit
+MCP or OpenDesign application data. Remove those only on a separate explicit
 request.

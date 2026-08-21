@@ -13,13 +13,13 @@
     "gitSource": "nexu-io/open-design-agent-plugins",
     "gitRef": "main",
     "manifest": ".agents/plugins/marketplace.json",
-    "sha256": "40ff1b5e1d623714569571dc258e15aeee2a2fd730201e5b3a904ed49e4edb81"
+    "sha256": "2e7c5fe76a283fbfc2d1f449630a68a424e730b9060f0c4c87fd3a412275d785"
   },
   "plugin": {
     "name": "open-design",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "path": "plugins/codex/open-design",
-    "contentListSha256": "f1a1811a3b558fa4e062e2fba1a70b3363b0919a35debf287062e4546257b808",
+    "contentListSha256": "1e56c78c33d4ef334ba002a62bbc425003ab0cfafa9748a3bc0e0a44ad492bdc",
     "minimumCodexCliVersion": "0.144.6",
     "minimumOpenDesignVersion": "0.17.0",
     "telemetrySchemaVersion": 3
@@ -48,17 +48,17 @@
     "runtimeState": "bundled-with-open-design-v0.17.0-or-newer",
     "telemetryState": "pending-production-plugin-correlation-validation"
   },
-  "generatedAt": "2026-07-30T05:08:28Z",
+  "generatedAt": "2026-08-21T03:53:28Z",
   "releaseProvenanceValidatedAt": "2026-08-05T10:32:35Z",
   "validation": {
     "status": "published-distribution-and-released-open-design-source-validated",
-    "validatedAt": "2026-08-05T10:32:35Z",
-    "codexCliVersion": "0.145.0",
+    "validatedAt": "2026-08-21T03:53:28Z",
+    "codexCliVersion": "0.147.0",
     "packageTests": "10 passed",
     "distributionValidator": "passed",
-    "pluginCreatorValidator": "helper-schema-lacks-supportURL; codex-cli-0.145.0-ingestion-passed",
-    "skillValidator": "passed",
-    "isolatedMarketplaceInstall": "passed-local-open-design-0.5.2",
+    "pluginCreatorValidator": "not-rerun-for-0.5.3; 0.5.2 result: helper-schema-lacks-supportURL; codex-cli-0.145.0-ingestion-passed",
+    "skillValidator": "not-rerun-for-0.5.3; passed at 0.5.2",
+    "isolatedMarketplaceInstall": "passed-local-open-design-0.5.3",
     "compatibleOpenDesignRuntime": ">=0.17.0",
     "minimumCompatibleOpenDesignRuntime": "open-design-v0.17.0@90a660add511da6408464a1bf3d4d5945ad06400",
     "recommendedOpenDesignRuntime": "release/v0.18.0@1a3cfd0fd625736e8b63249b38163c999b741f36",

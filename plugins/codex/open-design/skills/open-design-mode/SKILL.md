@@ -1,11 +1,11 @@
 ---
 name: open-design-mode
-description: Create and refine websites, slides, prototypes, and design systems through the local Open Design MCP. Use Open Design Cloud by default, or Local Codex and secure BYOK only when the user explicitly selects them.
+description: Create and refine websites, slides, prototypes, and design systems through the local OpenDesign MCP. Use OpenDesign Cloud by default, or Local Codex and secure BYOK only when the user explicitly selects them.
 ---
 
-# Open Design execution mode
+# OpenDesign execution mode
 
-Use this workflow whenever a user asks the Open Design plugin to create
+Use this workflow whenever a user asks the OpenDesign plugin to create
 or continue an artifact.
 
 ## Required local boundary
@@ -13,18 +13,18 @@ or continue an artifact.
 All modes use the independently registered local `open-design` MCP server. The
 plugin does not include an MCP transport and does not call a remote MCP domain.
 
-Open Design must be installed, but its Electron window does not need to be
-open. A packaged MCP registration starts the signed Open Design runtime
+OpenDesign must be installed, but its Electron window does not need to be
+open. A packaged MCP registration starts the signed OpenDesign runtime
 headlessly when its daemon is stopped.
 
 If `open-design` is unavailable:
 
-1. Check whether Open Design is installed and whether an `open-design` MCP
+1. Check whether OpenDesign is installed and whether an `open-design` MCP
    registration already exists. Preserve all unrelated MCP servers.
-2. If Open Design is missing, ask the user before opening the official download
+2. If OpenDesign is missing, ask the user before opening the official download
    page at `https://open-design.ai/download/`. Do not silently download or
    execute an installer, and do not use an unverified install script.
-3. If Open Design is installed, use its resolved signed packaged executable
+3. If OpenDesign is installed, use its resolved signed packaged executable
    with `--headless --mcp-install codex`, or use the `od mcp install codex`
    operation supplied by that installation. Do not guess a source checkout
    path, a localhost URL, or run the unrelated macOS `/usr/bin/od` utility.
@@ -33,12 +33,12 @@ If `open-design` is unavailable:
 
 ## Choose the mode
 
-Open Design Cloud is the default mode. It uses the local Open Design daemon and
+OpenDesign Cloud is the default mode. It uses the local OpenDesign daemon and
 its bundled cloud runtime. Local Codex and BYOK are available only when the
 user explicitly selects them.
 
 Resolve the execution mode from the user's current request before calling
-`collect_brief`. An explicit choice such as Local Codex, Open Design Cloud, or
+`collect_brief`. An explicit choice such as Local Codex, OpenDesign Cloud, or
 secure BYOK remains selected through Brief collection, confirmation, project
 selection, generation, polling, and terminal delivery for that logical
 generation.
@@ -46,8 +46,8 @@ generation.
 Never silently switch modes because authentication, balance, transport, quota,
 or generation failed. Explain the failure and offer the user applicable
 choices, such as retrying the selected mode, completing its authentication, or
-switching to another available mode. State when the alternative uses an Open
-Design Cloud account or a BYOK provider account. Switch only after the user
+switching to another available mode. State when the alternative uses an
+OpenDesign Cloud account or a BYOK provider account. Switch only after the user
 explicitly confirms the new mode.
 
 After an explicit switch, start a new execution context and request identifier.
@@ -59,7 +59,7 @@ logical generation must never drift between modes.
 
 Match status updates, errors, and final delivery prose to the language of the
 user's current request. In user-facing text, use only these product terms:
-Open Design Cloud, Local Codex, secure BYOK, and Open Design Cloud account or
+OpenDesign Cloud, Local Codex, secure BYOK, and OpenDesign Cloud account or
 credits.
 
 Some MCP tool names and machine parameters below retain compatibility
@@ -84,7 +84,7 @@ This first-party Git marketplace package uses this exact bounded
 ```text
 externalPluginContext = {
   id: "open-design",
-  version: "0.5.2",
+  version: "0.5.3",
   distributionMechanism: "git_marketplace",
   publisherClass: "open_design_first_party"
 }
@@ -110,7 +110,7 @@ data, or credentials.
    latest run, or attach it to an unrelated direct MCP call.
 
 If the MCP rejects these fields or does not return a workflow id, stop and
-report that this plugin requires Open Design 0.17.0 or newer. Do not remove the
+report that this plugin requires OpenDesign 0.17.0 or newer. Do not remove the
 context, silently lose attribution, use a remote MCP, or change execution mode.
 
 ### If the brief card cannot render
@@ -190,18 +190,18 @@ treating it as a generation failure. Repeated polls, transport retries,
 recharge resume, and repeated terminal reads must not open duplicate tabs for
 the same deliverable.
 
-## Open Design Cloud workflow
+## OpenDesign Cloud workflow
 
 1. Start the attributed workflow above by calling `collect_brief` on the
    `open-design` MCP server with the requested artifact type and a concise
    project title.
-2. Let the user complete the rendered Open Design brief card. Use the readable
+2. Let the user complete the rendered OpenDesign brief card. Use the readable
    confirmed summary returned by the card; do not display or ask the user to
    paste a signed confirmation token.
 3. Call `get_vela_login_status` with the workflow id. If signed out, call
    `start_vela_login` with the same id, show the returned activation URL and
-   user code, then poll `get_vela_login_status` with the same id. The Open
-   Design GUI is not required.
+   user code, then poll `get_vela_login_status` with the same id. The
+   OpenDesign GUI is not required.
 4. Call `list_agents` with the workflow id and require the machine-only `amr`
    runtime selector.
 5. Check `get_active_context` or list/create the target project, always carrying
@@ -212,7 +212,7 @@ the same deliverable.
 7. Follow the terminal delivery gate above for this exact run.
 
 Never request, copy, or store a cloud credential in chat or plugin files. Tell
-the user that their Open Design Cloud account bears Cloud usage costs.
+the user that their OpenDesign Cloud account bears Cloud usage costs.
 
 If `get_run` reports insufficient balance:
 
@@ -226,7 +226,7 @@ If `get_run` reports insufficient balance:
    id.
 
 Do not create another project or logical run, and do not infer whether the
-account was charged. Open Design Cloud owns the remote operation, credits, and
+account was charged. OpenDesign Cloud owns the remote operation, credits, and
 billing truth.
 
 ## Local Codex workflow
@@ -236,7 +236,7 @@ Use this only when the user explicitly chose Local Codex:
 1. Start the attributed workflow above and confirm the requested artifact type
    and readable brief.
 2. Do not call `get_vela_login_status` or `start_vela_login` while Local Codex
-   remains selected. A Local Codex request must not enter the Open Design Cloud
+   remains selected. A Local Codex request must not enter the OpenDesign Cloud
    sign-in or credit flow.
 3. Call `list_agents` and require the exact `codex` agent to be available and
    authenticated, carrying the workflow id.
@@ -245,11 +245,11 @@ Use this only when the user explicitly chose Local Codex:
 5. Build the `start_run` prompt from the user's confirmed brief, then append
    this child-runtime boundary:
 
-   > This run is already the selected Local Codex execution inside Open
-   > Design. Work directly in the current Open Design project. Do not invoke
-   > `@open-design`, the `open-design` MCP server, `collect_brief`, Open Design
-   > Cloud login, or another Open Design Plugin workflow. Do not route this
-   > request through Open Design again.
+   > This run is already the selected Local Codex execution inside
+   > OpenDesign. Work directly in the current OpenDesign project. Do not invoke
+   > `@open-design`, the `open-design` MCP server, `collect_brief`, OpenDesign
+   > Cloud login, or another OpenDesign Plugin workflow. Do not route this
+   > request through OpenDesign again.
 
 6. Create one `requestId`, then call `start_run` with that exact prompt,
    `requestId`, `pluginWorkflowId`, `agent: "codex"`, and no BYOK profile or
@@ -261,9 +261,9 @@ Use this only when the user explicitly chose Local Codex:
 
 If Codex CLI is missing, ask the user to install it. If its authentication is
 missing or unknown, ask the user to run `codex login` and rescan agents. Local
-Codex does not use OpenCode and Open Design must never receive an OpenAI key.
+Codex does not use OpenCode and OpenDesign must never receive an OpenAI key.
 If Local Codex is unavailable or out of quota, explain the cause and offer to
-retry after the user resolves it or to switch explicitly to Open Design Cloud
+retry after the user resolves it or to switch explicitly to OpenDesign Cloud
 or secure BYOK. Never invoke either alternative until the user confirms it.
 
 ## Local BYOK workflow
@@ -273,7 +273,7 @@ BYOK is a separate explicit mode, not a fallback:
 1. Start the attributed workflow above and confirm the requested artifact type
    and readable brief.
 2. Call `list_byok_profiles` with the workflow id.
-3. If no profile exists, direct the user to Open Design Settings or the
+3. If no profile exists, direct the user to OpenDesign Settings or the
    stdin-only `od byok save --api-key-stdin` command.
 4. If multiple profiles exist, ask the user to choose by non-secret profile id.
 5. Check `get_active_context` or list/create the target project with the same
