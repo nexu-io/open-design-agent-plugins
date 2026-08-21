@@ -5,6 +5,7 @@
   "packageManager": "pnpm@10.33.2",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "validate": "node scripts/validate-distribution.mjs"
+    "validate": "node scripts/validate-distribution.mjs",
+    "package": "node scripts/package-plugin.mjs"
   }
 }

@@ -48,9 +48,9 @@ test("published versions and runtime compatibility are explicit", () => {
     packageContract.schemaVersion,
     "open-design-codex-cloud-package/v3",
   );
-  assert.equal(packageContract.version, "0.5.2");
-  assert.equal(pluginManifest.version, "0.5.2");
-  assert.equal(releaseManifest.plugin.version, "0.5.2");
+  assert.equal(packageContract.version, "0.5.3");
+  assert.equal(pluginManifest.version, "0.5.3");
+  assert.equal(releaseManifest.plugin.version, "0.5.3");
   assert.equal(packageContract.minimumOpenDesignVersion, "0.17.0");
   assert.equal(packageContract.telemetrySchemaVersion, 3);
   assert.deepEqual(packageContract.customUiResources, [
@@ -139,7 +139,7 @@ test("skill carries one bounded plugin workflow through delivery", () => {
 
   for (const requiredFragment of [
     'id: "open-design"',
-    'version: "0.5.2"',
+    'version: "0.5.3"',
     'distributionMechanism: "git_marketplace"',
     'publisherClass: "open_design_first_party"',
     "externalPluginContext",
@@ -177,7 +177,7 @@ test("public plugin and skill metadata match the approved acceptance copy", () =
 
   assert.equal(
     pluginManifest.interface.displayName,
-    "Open Design",
+    "OpenDesign",
   );
   assert.equal(
     pluginManifest.interface.shortDescription,
@@ -185,25 +185,25 @@ test("public plugin and skill metadata match the approved acceptance copy", () =
   );
   assert.equal(
     pluginManifest.interface.longDescription,
-    "Generate and edit websites, presentations, prototypes, and design systems with Open Design directly from Codex.",
+    "Generate and edit websites, presentations, prototypes, and design systems with OpenDesign directly from Codex.",
   );
   assert.equal(
     pluginManifest.interface.supportURL,
     "https://github.com/nexu-io/open-design/issues",
   );
   assert.deepEqual(pluginManifest.interface.defaultPrompt, [
-    "Recreate the Open Design landing page: https://open-design.ai/",
+    "Recreate the OpenDesign landing page: https://open-design.ai/",
     "Create an academic presentation on generative AI and design.",
     "Create an Apple-style design system with tokens and core components.",
   ]);
-  assert.match(skillMetadata, /display_name: "Create with Open Design"/);
+  assert.match(skillMetadata, /display_name: "Create with OpenDesign"/);
   assert.match(
     skillMetadata,
     /short_description: "Generate and refine websites, slides, prototypes, and design systems\."/,
   );
   assert.match(
     skillMetadata,
-    /default_prompt: "Use \$open-design-mode to create or refine an Open Design artifact\."/,
+    /default_prompt: "Use \$open-design-mode to create or refine an OpenDesign artifact\."/,
   );
 
   const frontmatter = skill.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
@@ -217,7 +217,7 @@ test("public plugin and skill metadata match the approved acceptance copy", () =
   assert.doesNotMatch(publicMetadata, /\b(?:Vela|AMR|amr)\b|agent\s*:/i);
 });
 
-test("official Open Design artwork is packaged for plugin and skill surfaces", () => {
+test("official OpenDesign artwork is packaged for plugin and skill surfaces", () => {
   const pluginManifest = JSON.parse(
     readPlugin(".codex-plugin/plugin.json"),
   );
@@ -303,7 +303,7 @@ test("skill preserves an explicit mode until the user confirms a switch", () => 
   );
   assert.match(
     skill,
-    /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*Open Design[\s>]*Cloud login/i,
+    /child-runtime boundary[\s\S]*Do not invoke[\s\S]*`open-design` MCP server[\s\S]*OpenDesign[\s>]*Cloud login/i,
   );
   assert.match(
     skill,
@@ -363,7 +363,7 @@ test("telemetry document distinguishes the released runtime from production evid
   );
   assert.match(
     telemetry,
-    /Open Design 0\.17\.0 and later[\s\S]*telemetry schema v3/i,
+    /OpenDesign 0\.17\.0 and later[\s\S]*telemetry schema v3/i,
   );
   assert.match(telemetry, /recommended `release\/v0\.18\.0` branch/i);
   assert.match(telemetry, /not production\s+evidence/i);
@@ -371,6 +371,6 @@ test("telemetry document distinguishes the released runtime from production evid
   assert.match(telemetry, /self.reported/i);
   assert.doesNotMatch(
     telemetry,
-    /Vela currently stores the consent-gated Open Design Cloud funnel/i,
+    /Vela currently stores the consent-gated OpenDesign Cloud funnel/i,
   );
 });

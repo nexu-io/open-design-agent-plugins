@@ -7,12 +7,12 @@ with this file for every submission.
 ## Submission under test
 
 - Plugin: `open-design`
-- Candidate version: `0.5.2`
+- Candidate version: `0.5.3`
 - Submission type: Skills only
 - Supported host in this revision: Codex
 - Minimum Codex CLI version: `0.144.6`
-- Minimum Open Design version: `0.17.0`
-- Recommended Open Design version: `0.18.0`
+- Minimum OpenDesign version: `0.17.0`
+- Recommended OpenDesign version: `0.18.0`
 - Status: draft; every case must be rerun against the final candidate before
   submission
 
@@ -26,13 +26,13 @@ Unless a case overrides it, prepare this environment before running the case:
 
 1. Install a supported Codex Desktop or Codex CLI release.
 2. Install the candidate `open-design@open-design` plugin.
-3. Install Open Design `0.17.0` or newer (`0.18.0` recommended) and register its
+3. Install OpenDesign `0.17.0` or newer (`0.18.0` recommended) and register its
    local `open-design` stdio MCP server with Codex.
-4. Use a reviewer Open Design Cloud account that is already signed in, can run
+4. Use a reviewer OpenDesign Cloud account that is already signed in, can run
    every positive case, and requires no MFA, SMS, email confirmation, private
    network, or additional purchase during review.
 5. Start a new Codex task after installing or refreshing the plugin.
-6. Record the Codex version, Open Design version, plugin version, verification
+6. Record the Codex version, OpenDesign version, plugin version, verification
    date, result, and evidence URL for each run.
 
 ## Positive test cases
@@ -41,14 +41,14 @@ Unless a case overrides it, prepare this environment before running the case:
 
 **User prompt**
 
-> Use Open Design to create a responsive landing page for a sustainable coffee
+> Use OpenDesign to create a responsive landing page for a sustainable coffee
 > subscription. Include a hero, three benefits, monthly pricing, testimonials,
 > and a mobile layout.
 
 **Expected skill or workflow behavior**
 
-- Activate the Open Design skill for an explicit artifact-creation request.
-- Use Open Design Cloud because the user did not explicitly select another
+- Activate the OpenDesign skill for an explicit artifact-creation request.
+- Use OpenDesign Cloud because the user did not explicitly select another
   mode.
 - Collect and confirm one brief before generation.
 - Create or select the intended project, start one logical generation, and
@@ -71,13 +71,13 @@ Unless a case overrides it, prepare this environment before running the case:
 
 **User prompt**
 
-> Create an eight-slide investor update deck in Open Design for a B2B SaaS
+> Create an eight-slide investor update deck in OpenDesign for a B2B SaaS
 > company. Cover the title, highlights, product progress, key metrics, customer
 > stories, challenges, next-quarter priorities, and closing ask.
 
 **Expected skill or workflow behavior**
 
-- Activate the Open Design skill and keep the default Open Design Cloud mode.
+- Activate the OpenDesign skill and keep the default OpenDesign Cloud mode.
 - Preserve the presentation artifact type through brief confirmation,
   generation, polling, and delivery.
 - Start only one logical generation for the confirmed request.
@@ -96,14 +96,14 @@ Unless a case overrides it, prepare this environment before running the case:
 
 **User prompt**
 
-> Create a clickable mobile onboarding prototype in Open Design for a habit
+> Create a clickable mobile onboarding prototype in OpenDesign for a habit
 > tracker. Include welcome, goal selection, reminder setup, and home screens,
 > with a clear path through the onboarding flow.
 
 **Expected skill or workflow behavior**
 
-- Activate the Open Design skill for the prototype request.
-- Keep the confirmed prototype scope and default Open Design Cloud mode through
+- Activate the OpenDesign skill for the prototype request.
+- Keep the confirmed prototype scope and default OpenDesign Cloud mode through
   delivery.
 - Continue polling the same run until it succeeds, fails, or is canceled.
 
@@ -122,13 +122,13 @@ Unless a case overrides it, prepare this environment before running the case:
 
 **User prompt**
 
-> Create a design system in Open Design for a B2B analytics product. Define
+> Create a design system in OpenDesign for a B2B analytics product. Define
 > color, typography, spacing, buttons, form controls, and cards, and show the
 > components in representative product examples.
 
 **Expected skill or workflow behavior**
 
-- Activate the Open Design skill and preserve the design-system artifact type.
+- Activate the OpenDesign skill and preserve the design-system artifact type.
 - Confirm the brief before starting generation.
 - Use the current run's result for delivery rather than a previous project or
   run.
@@ -147,7 +147,7 @@ Unless a case overrides it, prepare this environment before running the case:
 
 **User prompt**
 
-> Use Open Design to refine the existing "Reviewer Fixture - Coffee Landing
+> Use OpenDesign to refine the existing "Reviewer Fixture - Coffee Landing
 > Page" artifact. Keep every current section and all price values, rewrite the
 > hero for a more premium tone, and improve text contrast without changing the
 > pricing.
@@ -185,7 +185,7 @@ Unless a case overrides it, prepare this environment before running the case:
 
 **Expected refusal, clarification, or safe fallback**
 
-- Do not activate the Open Design skill or call the `open-design` MCP server.
+- Do not activate the OpenDesign skill or call the `open-design` MCP server.
 - Handle the request with the host's normal coding capabilities.
 
 **Why the plugin should not complete the action**
@@ -197,7 +197,7 @@ Unless a case overrides it, prepare this environment before running the case:
 
 **User prompt**
 
-> Use Open Design to make my previous website homepage look more premium.
+> Use OpenDesign to make my previous website homepage look more premium.
 
 **Expected refusal, clarification, or safe fallback**
 
@@ -228,7 +228,7 @@ Unless a case overrides it, prepare this environment before running the case:
 
 - Do not request, consume, echo, save, or pass the raw credential through chat
   or MCP arguments.
-- Direct the user to configure the credential in Open Design Settings or with
+- Direct the user to configure the credential in OpenDesign Settings or with
   the stdin-only `od byok save --api-key-stdin` command.
 - Continue only after a non-secret BYOK profile exists and the user selects it.
 
@@ -245,7 +245,7 @@ secret-free release report:
 | Field | Required value |
 | --- | --- |
 | Candidate version | Exact plugin version submitted to the Portal |
-| Product version | Exact compatible Open Design version |
+| Product version | Exact compatible OpenDesign version |
 | Host version | Exact Codex Desktop or CLI version |
 | Verification time | UTC timestamp |
 | Result | Pass or fail |

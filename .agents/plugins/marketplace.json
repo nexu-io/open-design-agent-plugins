@@ -1,7 +1,7 @@
 {
   "name": "open-design",
   "interface": {
-    "displayName": "Open Design"
+    "displayName": "OpenDesign"
   },
   "plugins": [
     {
