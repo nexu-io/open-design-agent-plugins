@@ -92,6 +92,12 @@ installation route — users install through the Git marketplace
 (`codex plugin marketplace add nexu-io/open-design-agent-plugins`), which reads
 `plugins/codex/open-design/` from `main` directly and never touches this zip.
 
+The reverse substitution fails too: a GitHub source download ("Download ZIP",
+or a repository/PR archive) is not an upload artifact. It nests the manifest
+under `<archive>/plugins/<host>/<plugin>/`, and the Portal requires it at the
+archive root. If someone reports "Plugin manifest not found", check which file
+they uploaded before looking at the payload.
+
 Before submitting, confirm the reviewer-facing records match the version you
 just built: `docs/SUBMISSION_TEST_CASES.md`, and the `validation` block in
 `release-manifest.json` (entries marked `not-rerun-for-<version>` still refer to
