@@ -53,6 +53,11 @@ There is no remote MCP dependency and no Codex-side Vela credential.
 - MCP: local `open-design` stdio registration
 - Cloud runtime: remote Vela/AMR via OpenDesign's bundled Vela CLI
 - Optional modes: Local Codex and Local BYOK, explicit and never fallbacks
+- Portal upload artifact: build it with `pnpm package`. A source download
+  from GitHub — "Download ZIP", or any repository/PR archive — is not an
+  installable plugin, because it nests the plugin manifest under
+  `<archive>/plugins/codex/open-design/` instead of at the archive root, and
+  the Portal rejects it with "Plugin manifest not found".
 
 ## Direct installation
 

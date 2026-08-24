@@ -15,6 +15,10 @@ with this file for every submission.
 - Recommended OpenDesign version: `0.18.0`
 - Status: draft; every case must be rerun against the final candidate before
   submission
+- Upload artifact: the `pnpm package` output only. Never upload a GitHub
+  source download ("Download ZIP" or a repository/PR archive) — the Portal
+  requires the plugin manifest at the archive root and rejects a repository
+  snapshot with "Plugin manifest not found".
 
 Do not put reviewer credentials, access tokens, API keys, or other secrets in
 this repository. Supply reviewer credentials only through the Portal's
